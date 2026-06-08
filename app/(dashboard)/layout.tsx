@@ -66,15 +66,21 @@ export default async function DashboardLayout({
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-h-screen overflow-hidden z-10 pb-16 md:pb-0">
         {/* Navbar */}
-        <header className="flex h-16 items-center justify-between border-b-2 border-zinc-900 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-6 transition-colors duration-300">
-          <h1 className="font-black text-xl text-zinc-900 dark:text-white uppercase tracking-tight">Dashboard</h1>
-          <div className="flex items-center gap-4">
+        <header className="flex h-16 items-center justify-between border-b-2 border-zinc-900 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 md:px-6 transition-colors duration-300">
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center bg-violet-500 text-white border-2 border-zinc-900 shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] md:hidden shrink-0">
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={3} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+            </div>
+            <h1 className="font-black text-lg md:text-xl text-zinc-900 dark:text-white uppercase tracking-tight hidden sm:block">Dashboard</h1>
+          </div>
+          <div className="flex items-center gap-2 md:gap-4 ml-auto">
             <WalletConnect />
             <ThemeToggle />
-            <span className="text-sm text-zinc-900 dark:text-zinc-300 font-bold hidden sm:inline-block">{user.email}</span>
+            <span className="text-sm text-zinc-900 dark:text-zinc-300 font-bold hidden lg:inline-block">{user.email}</span>
             <form action="/auth/signout" method="post">
-              <button className="text-sm font-bold uppercase px-4 py-1.5 border-2 border-zinc-900 dark:border-white bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all">
-                Sign Out
+              <button className="flex items-center justify-center h-9 md:h-auto px-3 md:px-4 py-1.5 border-2 border-zinc-900 dark:border-white bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all">
+                <span className="hidden sm:inline-block text-xs md:text-sm font-bold uppercase">Sign Out</span>
+                <svg className="h-4 w-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
               </button>
             </form>
           </div>
@@ -85,32 +91,32 @@ export default async function DashboardLayout({
         </div>
 
         {/* Mobile Bottom Navigation */}
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white dark:bg-zinc-950 border-t-2 border-zinc-900 dark:border-zinc-800 flex items-center justify-around px-4 z-50">
-          <Link href="/" className="flex flex-col items-center gap-1 font-bold text-zinc-900 dark:text-zinc-400">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white dark:bg-zinc-950 border-t-2 border-zinc-900 dark:border-zinc-800 flex items-center gap-6 overflow-x-auto px-6 z-50 scrollbar-hide">
+          <Link href="/" className="flex flex-col items-center gap-1 font-bold text-zinc-900 dark:text-zinc-400 min-w-fit">
             <Home className="h-5 w-5" />
             <span className="text-[10px] uppercase tracking-wider">Home</span>
           </Link>
-          <Link href="/projects" className="flex flex-col items-center gap-1 font-bold text-zinc-900 dark:text-zinc-400">
+          <Link href="/projects" className="flex flex-col items-center gap-1 font-bold text-zinc-900 dark:text-zinc-400 min-w-fit">
             <FolderOpen className="h-5 w-5" />
             <span className="text-[10px] uppercase tracking-wider">Projects</span>
           </Link>
-          <Link href="/calendar" className="flex flex-col items-center gap-1 font-bold text-zinc-900 dark:text-zinc-400">
+          <Link href="/calendar" className="flex flex-col items-center gap-1 font-bold text-zinc-900 dark:text-zinc-400 min-w-fit">
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="square" strokeLinejoin="miter" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
             <span className="text-[10px] uppercase tracking-wider">Calendar</span>
           </Link>
-          <Link href="/logs" className="flex flex-col items-center gap-1 font-bold text-zinc-900 dark:text-zinc-400">
+          <Link href="/logs" className="flex flex-col items-center gap-1 font-bold text-zinc-900 dark:text-zinc-400 min-w-fit">
             <ScrollText className="h-5 w-5" />
             <span className="text-[10px] uppercase tracking-wider">Logs</span>
           </Link>
-          <Link href="/plan" className="flex flex-col items-center gap-1 font-bold text-zinc-900 dark:text-zinc-400">
+          <Link href="/plan" className="flex flex-col items-center gap-1 font-bold text-zinc-900 dark:text-zinc-400 min-w-fit">
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="square" strokeLinejoin="miter" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
             <span className="text-[10px] uppercase tracking-wider">Plan</span>
           </Link>
-          <Link href="/import" className="flex flex-col items-center gap-1 font-bold text-zinc-900 dark:text-zinc-400 hidden sm:flex">
+          <Link href="/import" className="flex flex-col items-center gap-1 font-bold text-zinc-900 dark:text-zinc-400 min-w-fit">
             <Upload className="h-5 w-5" />
             <span className="text-[10px] uppercase tracking-wider">Import</span>
           </Link>
-          <a href="/api/export" className="flex flex-col items-center gap-1 font-bold text-zinc-900 dark:text-zinc-400">
+          <a href="/api/export" className="flex flex-col items-center gap-1 font-bold text-zinc-900 dark:text-zinc-400 min-w-fit">
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="square" strokeLinejoin="miter" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
             <span className="text-[10px] uppercase tracking-wider">Export</span>
           </a>

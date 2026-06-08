@@ -31,7 +31,7 @@ export function WalletConnect() {
       <div className="flex items-center gap-2">
         <button 
           onClick={() => setShowModal(true)}
-          className="text-xs font-black uppercase px-4 py-2 border-2 border-zinc-900 dark:border-white bg-emerald-200 dark:bg-emerald-800 text-emerald-900 dark:text-emerald-100 shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
+          className="text-[10px] sm:text-xs font-black uppercase px-2 sm:px-4 py-1.5 sm:py-2 border-2 border-zinc-900 dark:border-white bg-emerald-200 dark:bg-emerald-800 text-emerald-900 dark:text-emerald-100 shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all whitespace-nowrap"
         >
           {address?.slice(0, 6)}...{address?.slice(-4)}
         </button>
@@ -104,7 +104,7 @@ export function WalletConnect() {
   return (
     <button 
       onClick={handleConnect}
-      className="text-xs font-black uppercase px-4 py-2 border-2 border-zinc-900 dark:border-white bg-blue-200 dark:bg-blue-800 text-blue-900 dark:text-blue-100 shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all"
+      className="text-[10px] sm:text-xs font-black uppercase px-2 sm:px-4 py-1.5 sm:py-2 border-2 border-zinc-900 dark:border-white bg-blue-200 dark:bg-blue-800 text-blue-900 dark:text-blue-100 shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all whitespace-nowrap"
     >
       Connect Wallet
     </button>
