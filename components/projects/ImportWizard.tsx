@@ -201,7 +201,7 @@ export function ImportWizard() {
               { label: 'Farming Status', field: 'status' },
               { label: 'Estimated Reward ($)', field: 'estimated_reward' },
               { label: 'Website / Link', field: 'website' }
-            ] as const).map(({ label, field, required }) => (
+            ] as { label: string; field: string; required?: boolean }[]).map(({ label, field, required }) => (
               <div key={field} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-black/5 dark:border-white/5 rounded-xl bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm gap-4">
                 <div className="flex flex-col">
                   <span className="font-semibold text-zinc-800 dark:text-zinc-200">{label}</span>
