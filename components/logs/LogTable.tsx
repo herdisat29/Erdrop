@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useOptimistic, useTransition } from 'react'
 import { Log } from '@/types'
 import { format } from 'date-fns'
 import { MoreHorizontal, Edit2, Trash2, Copy, ExternalLink, ScrollText, Download } from 'lucide-react'
@@ -21,6 +21,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -37,24 +47,32 @@ interface LogTableProps {
 
 export function LogTable({ logs, projectId }: LogTableProps) {
   const [editingLog, setEditingLog] = useState<Log | null>(null)
-  const [isDeleting, setIsDeleting] = useState(false)
+  const [logToDelete, setLogToDelete] = useState<Log | null>(null)
+  
+  const [optimisticLogs, addOptimisticDelete] = useOptimistic(
+    logs,
+    (state, idToRemove: string) => state.filter((log) => log.id !== idToRemove)
+  )
+  const [isPending, startTransition] = useTransition()
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
     toast.success('Wallet copied to clipboard')
   }
 
-  const handleDelete = async (logId: string, itemProjectId: string) => {
-    if (confirm('Are you sure you want to delete this log?')) {
-      setIsDeleting(true)
-      const result = await deleteLog(logId, itemProjectId)
-      if (result.error) {
+  const handleDelete = () => {
+    if (!logToDelete) return
+    
+    startTransition(async () => {
+      addOptimisticDelete(logToDelete.id)
+      const result = await deleteLog(logToDelete.id, logToDelete.project_id)
+      if (result?.error) {
         toast.error('Failed to delete log: ' + result.error)
       } else {
         toast.success('Log deleted')
       }
-      setIsDeleting(false)
-    }
+    })
+    setLogToDelete(null)
   }
 
   const exportToCSV = () => {
@@ -104,7 +122,7 @@ export function LogTable({ logs, projectId }: LogTableProps) {
     return `${address.slice(0, 6)}...${address.slice(-4)}`
   }
 
-  if (logs.length === 0) {
+  if (optimisticLogs.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center rounded-xl border border-dashed border-zinc-800 bg-zinc-900/20">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-800/50 mb-4">
@@ -141,7 +159,7 @@ export function LogTable({ logs, projectId }: LogTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {logs.map((log) => (
+            {optimisticLogs.map((log) => (
               <TableRow key={log.id} className="border-zinc-800 hover:bg-zinc-900/50 transition-colors">
                 <TableCell className="font-medium text-zinc-200">
                   <div className="flex flex-col gap-1">
@@ -222,7 +240,7 @@ export function LogTable({ logs, projectId }: LogTableProps) {
                           <Edit2 className="h-4 w-4 mr-2" />
                           Edit
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleDelete(log.id, log.project_id)} disabled={isDeleting} className="text-red-400 focus:text-red-300 hover:bg-zinc-800 focus:bg-zinc-800 cursor-pointer">
+                        <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setLogToDelete(log); }} className="text-red-400 focus:text-red-300 hover:bg-zinc-800 focus:bg-zinc-800 cursor-pointer">
                           <Trash2 className="h-4 w-4 mr-2" />
                           Delete
                         </DropdownMenuItem>
@@ -244,6 +262,23 @@ export function LogTable({ logs, projectId }: LogTableProps) {
           onOpenChange={(open) => !open && setEditingLog(null)}
         />
       )}
+
+      <AlertDialog open={!!logToDelete} onOpenChange={(open) => !open && setLogToDelete(null)}>
+        <AlertDialogContent className="bg-white dark:bg-zinc-950 border border-black/10 dark:border-zinc-800 text-zinc-900 dark:text-zinc-200">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Log Entry</AlertDialogTitle>
+            <AlertDialogDescription className="text-zinc-500 dark:text-zinc-400">
+              Are you sure you want to delete this log? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-transparent border-black/10 dark:border-zinc-800 text-zinc-700 dark:text-white hover:bg-black/5 dark:hover:bg-zinc-800">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={(e) => { e.preventDefault(); handleDelete(); }} className="bg-red-500 text-white hover:bg-red-600">
+              Delete Log
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

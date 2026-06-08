@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useOptimistic, useTransition } from 'react'
 import { Project } from '@/types'
 import { ProjectCard } from './ProjectCard'
 import { CreateProjectDialog } from './CreateProjectDialog'
@@ -22,10 +22,15 @@ export function ProjectList({ projects }: ProjectListProps) {
   const [chainFilter, setChainFilter] = useState<string>('All')
   const [viewMode, setViewMode] = useState<'list' | 'board'>('board')
 
-  // Derive unique chains from projects for the filter dropdown
-  const uniqueChains = Array.from(new Set(projects.map(p => p.chain).filter(Boolean)))
+  const [optimisticProjects, addOptimisticDelete] = useOptimistic(
+    projects,
+    (state, idToRemove: string) => state.filter((p) => p.id !== idToRemove)
+  )
 
-  const filteredProjects = projects.filter((project) => {
+  // Derive unique chains from projects for the filter dropdown
+  const uniqueChains = Array.from(new Set(optimisticProjects.map(p => p.chain).filter(Boolean)))
+
+  const filteredProjects = optimisticProjects.filter((project) => {
     const matchStatus = statusFilter === 'All' || project.status === statusFilter
     const matchChain = chainFilter === 'All' || project.chain === chainFilter
     return matchStatus && matchChain
@@ -34,7 +39,7 @@ export function ProjectList({ projects }: ProjectListProps) {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Your Projects</h1>
+        <h1 className="text-3xl font-black uppercase tracking-tight text-zinc-900 dark:text-white">Your Projects</h1>
         
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <Select value={statusFilter} onValueChange={(val) => setStatusFilter(val || 'All')}>
@@ -63,16 +68,16 @@ export function ProjectList({ projects }: ProjectListProps) {
             </SelectContent>
           </Select>
 
-          <div className="flex bg-white/50 dark:bg-zinc-900/50 rounded-lg p-1 border border-black/5 dark:border-white/5 backdrop-blur-md">
+          <div className="flex bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white p-1">
             <button
               onClick={() => setViewMode('list')}
-              className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}
+              className={`p-1.5 transition-all ${viewMode === 'list' ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'}`}
             >
               <ListIcon className="h-4 w-4" />
             </button>
             <button
               onClick={() => setViewMode('board')}
-              className={`p-1.5 rounded-md transition-all ${viewMode === 'board' ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}
+              className={`p-1.5 transition-all ${viewMode === 'board' ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'}`}
             >
               <LayoutGrid className="h-4 w-4" />
             </button>
@@ -82,23 +87,23 @@ export function ProjectList({ projects }: ProjectListProps) {
         </div>
       </div>
 
-      {projects.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center rounded-xl border border-dashed border-zinc-800 bg-zinc-900/20">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-800/50 mb-4">
-            <Ghost className="h-8 w-8 text-zinc-500" />
+      {optimisticProjects.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-24 text-center border-2 border-dashed border-zinc-900 dark:border-white bg-white dark:bg-zinc-950 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)]">
+          <div className="flex h-16 w-16 items-center justify-center border-2 border-zinc-900 dark:border-white bg-zinc-100 dark:bg-zinc-900 mb-4 shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
+            <Ghost className="h-8 w-8 text-zinc-900 dark:text-white" />
           </div>
-          <h3 className="text-xl font-semibold text-white mb-2">No projects yet</h3>
-          <p className="text-zinc-500 max-w-sm mb-6">
+          <h3 className="text-2xl font-black uppercase tracking-tight text-zinc-900 dark:text-white mb-2">No projects yet</h3>
+          <p className="text-zinc-600 dark:text-zinc-400 font-medium max-w-sm mb-6">
             You haven't added any airdrop projects. Start tracking your first airdrop to stay organized.
           </p>
           <CreateProjectDialog />
         </div>
       ) : filteredProjects.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center rounded-xl border border-dashed border-zinc-800 bg-zinc-900/20">
-          <p className="text-zinc-500">No projects match the selected filters.</p>
+        <div className="flex flex-col items-center justify-center py-24 text-center border-2 border-dashed border-zinc-900 dark:border-white bg-white dark:bg-zinc-950 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)]">
+          <p className="text-zinc-900 dark:text-white font-bold uppercase tracking-wider">No projects match the selected filters.</p>
           <button 
             onClick={() => { setStatusFilter('All'); setChainFilter('All'); }}
-            className="mt-4 text-violet-400 hover:text-violet-300 transition-colors text-sm"
+            className="mt-4 font-bold border-b-2 border-zinc-900 dark:border-white text-zinc-900 dark:text-white hover:text-violet-600 dark:hover:text-violet-400 hover:border-violet-600 dark:hover:border-violet-400 transition-colors uppercase tracking-wider text-sm"
           >
             Clear filters
           </button>
@@ -106,7 +111,7 @@ export function ProjectList({ projects }: ProjectListProps) {
       ) : viewMode === 'list' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
           {filteredProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <ProjectCard key={project.id} project={project} onOptimisticDelete={() => addOptimisticDelete(project.id)} />
           ))}
         </div>
       ) : (
@@ -116,17 +121,17 @@ export function ProjectList({ projects }: ProjectListProps) {
             return (
               <div key={status} className="flex-shrink-0 w-80 snap-start flex flex-col gap-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider text-xs">{status}</h3>
-                  <span className="bg-black/5 dark:bg-zinc-900 border border-black/10 dark:border-white/10 text-zinc-600 dark:text-zinc-400 text-xs py-0.5 px-2 rounded-full">
+                  <h3 className="font-black text-zinc-900 dark:text-white uppercase tracking-widest text-sm">{status}</h3>
+                  <span className="bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white text-zinc-900 dark:text-white font-bold text-xs py-0.5 px-2">
                     {columnProjects.length}
                   </span>
                 </div>
                 <div className="flex flex-col gap-3">
                   {columnProjects.map(project => (
-                    <ProjectCard key={project.id} project={project} />
+                    <ProjectCard key={project.id} project={project} onOptimisticDelete={() => addOptimisticDelete(project.id)} />
                   ))}
                   {columnProjects.length === 0 && (
-                    <div className="border-2 border-dashed border-black/5 dark:border-white/5 rounded-xl h-24 flex items-center justify-center text-xs text-zinc-500 dark:text-zinc-600 italic">
+                    <div className="border-2 border-dashed border-zinc-400 dark:border-zinc-700 h-24 flex items-center justify-center text-xs font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-600">
                       Empty
                     </div>
                   )}

@@ -8,6 +8,14 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { ProjectInsert, ProjectStatus } from '@/types'
 import { createClient } from '@/lib/supabase/client'
+import { predictColumnMapping } from '@/app/actions/import'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 interface ParsedProject {
   Name: string
@@ -18,6 +26,18 @@ interface ParsedProject {
 }
 
 export function ImportWizard() {
+  type MappingState = 'idle' | 'analyzing' | 'reviewing' | 'ready'
+  const [mappingState, setMappingState] = useState<MappingState>('idle')
+  const [headers, setHeaders] = useState<string[]>([])
+  const [rawRows, setRawRows] = useState<any[]>([])
+  const [mapping, setMapping] = useState<{
+    name: string | null
+    chain: string | null
+    status: string | null
+    estimated_reward: string | null
+    website: string | null
+  }>({ name: null, chain: null, status: null, estimated_reward: null, website: null })
+
   const [isDragging, setIsDragging] = useState(false)
   const [parsedData, setParsedData] = useState<ParsedProject[]>([])
   const [isImporting, setIsImporting] = useState(false)
@@ -28,20 +48,65 @@ export function ImportWizard() {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
-      complete: (results) => {
-        const data = results.data as ParsedProject[]
-        const validData = data.filter(row => row.Name && row.Name.trim() !== '')
-        if (validData.length > 0) {
-          setParsedData(validData)
-          toast.success(`Found ${validData.length} projects to import`)
-        } else {
-          toast.error('No valid projects found in CSV. Make sure you have a "Name" column.')
+      complete: async (results) => {
+        const rows = results.data as any[]
+        if (rows.length === 0) {
+          toast.error('No valid data found in CSV.')
+          return
         }
+        
+        const extractedHeaders = results.meta.fields || Object.keys(rows[0] || {})
+        setHeaders(extractedHeaders)
+        setRawRows(rows)
+        
+        setMappingState('analyzing')
+        toast.info('AI is analyzing your columns...')
+        
+        const res = await predictColumnMapping(extractedHeaders)
+        if (res.error || !res.data) {
+          toast.error('AI mapping failed, please map manually.')
+          setMapping({ name: null, chain: null, status: null, estimated_reward: null, website: null })
+        } else {
+          toast.success('AI successfully mapped your columns!')
+          const ai = res.data
+          setMapping({
+            name: extractedHeaders.includes(ai.name) ? ai.name : null,
+            chain: extractedHeaders.includes(ai.chain) ? ai.chain : null,
+            status: extractedHeaders.includes(ai.status) ? ai.status : null,
+            estimated_reward: extractedHeaders.includes(ai.estimated_reward) ? ai.estimated_reward : null,
+            website: extractedHeaders.includes(ai.website) ? ai.website : null,
+          })
+        }
+        setMappingState('reviewing')
       },
       error: (error) => {
         toast.error(`Error parsing CSV: ${error.message}`)
       }
     })
+  }
+
+  const confirmMapping = () => {
+    if (!mapping.name || mapping.name === 'none') {
+      toast.error('You must select a column for "Name"')
+      return
+    }
+
+    const data: ParsedProject[] = rawRows.map(row => ({
+      Name: row[mapping.name as string],
+      Chain: mapping.chain && mapping.chain !== 'none' ? row[mapping.chain] : undefined,
+      Status: mapping.status && mapping.status !== 'none' ? row[mapping.status] : undefined,
+      EstimatedReward: mapping.estimated_reward && mapping.estimated_reward !== 'none' ? row[mapping.estimated_reward] : undefined,
+      Website: mapping.website && mapping.website !== 'none' ? row[mapping.website] : undefined,
+    }))
+
+    const validData = data.filter(row => row.Name && row.Name.trim() !== '')
+    if (validData.length > 0) {
+      setParsedData(validData)
+      setMappingState('ready')
+      toast.success(`Ready to import ${validData.length} projects`)
+    } else {
+      toast.error('No valid projects found after mapping.')
+    }
   }
 
   const onDragOver = (e: React.DragEvent) => {
@@ -100,6 +165,9 @@ export function ImportWizard() {
 
       toast.success(`Successfully imported ${parsedData.length} projects!`)
       setParsedData([])
+      setMappingState('idle')
+      setRawRows([])
+      setHeaders([])
     } catch (err: any) {
       toast.error(err.message || 'Failed to import projects')
     } finally {
@@ -109,7 +177,68 @@ export function ImportWizard() {
 
   return (
     <div className="space-y-6">
-      {!parsedData.length ? (
+      {mappingState === 'analyzing' && (
+        <div className="flex flex-col items-center justify-center py-24 text-center rounded-2xl border-2 border-dashed border-zinc-800 bg-zinc-900/20">
+          <Loader2 className="h-12 w-12 text-violet-500 animate-spin mb-4" />
+          <h3 className="text-xl font-semibold text-zinc-900 dark:text-white mb-2">AI is analyzing columns...</h3>
+          <p className="text-zinc-500">Mapping your spreadsheet format to Erdrop...</p>
+        </div>
+      )}
+
+      {mappingState === 'reviewing' && (
+        <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
+          <div className="text-center space-y-2 mb-8">
+            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">Review Column Mapping</h2>
+            <p className="text-zinc-500 max-w-lg mx-auto">
+              Our AI has predicted how your spreadsheet maps to Erdrop. Please review and adjust if necessary.
+            </p>
+          </div>
+
+          <div className="space-y-3 max-w-2xl mx-auto">
+            {([
+              { label: 'Project Name', field: 'name', required: true },
+              { label: 'Blockchain / Network', field: 'chain' },
+              { label: 'Farming Status', field: 'status' },
+              { label: 'Estimated Reward ($)', field: 'estimated_reward' },
+              { label: 'Website / Link', field: 'website' }
+            ] as const).map(({ label, field, required }) => (
+              <div key={field} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-black/5 dark:border-white/5 rounded-xl bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm gap-4">
+                <div className="flex flex-col">
+                  <span className="font-semibold text-zinc-800 dark:text-zinc-200">{label}</span>
+                  {required && <span className="text-xs text-red-500 font-medium mt-1">Required</span>}
+                </div>
+                <div className="w-full sm:w-72">
+                  <Select 
+                    value={mapping[field] || 'none'} 
+                    onValueChange={(val) => setMapping(prev => ({ ...prev, [field]: val === 'none' ? null : val }))}
+                  >
+                    <SelectTrigger className="w-full bg-white dark:bg-zinc-950 border-black/10 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300">
+                      <SelectValue placeholder="Select column..." />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white dark:bg-zinc-950 border-black/10 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300">
+                      <SelectItem value="none" className="text-zinc-500 italic">-- Ignore (None) --</SelectItem>
+                      {headers.map(h => (
+                        <SelectItem key={h} value={h}>{h}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            ))}
+
+            <div className="flex gap-4 justify-end pt-6">
+              <Button variant="outline" onClick={() => { setMappingState('idle'); setRawRows([]); setHeaders([]); }} className="bg-transparent border-black/10 dark:border-zinc-800 hover:bg-black/5 dark:hover:bg-zinc-800">
+                Cancel
+              </Button>
+              <Button onClick={confirmMapping} className="bg-violet-600 hover:bg-violet-700 text-white">
+                Confirm Mapping
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {mappingState === 'idle' && (
         <div 
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
@@ -150,7 +279,9 @@ export function ImportWizard() {
             </ul>
           </div>
         </div>
-      ) : (
+      )}
+
+      {mappingState === 'ready' && (
         <div className="space-y-6">
           <Card className="bg-emerald-500/10 border-emerald-500/20">
             <CardContent className="flex items-center justify-between py-4">
@@ -162,7 +293,7 @@ export function ImportWizard() {
                 </div>
               </div>
               <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setParsedData([])} className="bg-transparent border-black/10 dark:border-white/10 text-zinc-700 dark:text-white hover:bg-black/5 dark:hover:bg-white/5">
+                <Button variant="outline" onClick={() => { setParsedData([]); setMappingState('idle'); }} className="bg-transparent border-black/10 dark:border-white/10 text-zinc-700 dark:text-white hover:bg-black/5 dark:hover:bg-white/5">
                   Cancel
                 </Button>
                 <Button onClick={handleImport} disabled={isImporting} className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] transition-all">
