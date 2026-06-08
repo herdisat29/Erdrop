@@ -145,27 +145,27 @@ export function LogTable({ logs, projectId }: LogTableProps) {
           Export CSV
         </Button>
       </div>
-      <div className="rounded-xl border border-zinc-800 bg-zinc-950 overflow-x-auto w-full">
+      <div className="bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] overflow-x-auto w-full">
         <div className="min-w-[800px]">
         <Table>
-          <TableHeader className="bg-zinc-900/50">
-            <TableRow className="border-zinc-800 hover:bg-transparent">
-              <TableHead className="text-zinc-400 w-[250px]">Task / Description</TableHead>
-              <TableHead className="text-zinc-400">Wallet</TableHead>
-              <TableHead className="text-zinc-400">Est. Value</TableHead>
-              <TableHead className="text-zinc-400">Status</TableHead>
-              <TableHead className="text-zinc-400">Date</TableHead>
-              <TableHead className="text-right text-zinc-400">Actions</TableHead>
+          <TableHeader className="bg-zinc-100 dark:bg-zinc-900 border-b-2 border-zinc-900 dark:border-zinc-800">
+            <TableRow className="border-b-2 border-zinc-900 dark:border-zinc-800 hover:bg-transparent">
+              <TableHead className="text-zinc-900 dark:text-zinc-400 font-black uppercase tracking-widest w-[250px]">Task / Description</TableHead>
+              <TableHead className="text-zinc-900 dark:text-zinc-400 font-black uppercase tracking-widest">Wallet</TableHead>
+              <TableHead className="text-zinc-900 dark:text-zinc-400 font-black uppercase tracking-widest">Est. Value</TableHead>
+              <TableHead className="text-zinc-900 dark:text-zinc-400 font-black uppercase tracking-widest">Status</TableHead>
+              <TableHead className="text-zinc-900 dark:text-zinc-400 font-black uppercase tracking-widest">Date</TableHead>
+              <TableHead className="text-right text-zinc-900 dark:text-zinc-400 font-black uppercase tracking-widest">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {optimisticLogs.map((log) => (
-              <TableRow key={log.id} className="border-zinc-800 hover:bg-zinc-900/50 transition-colors">
-                <TableCell className="font-medium text-zinc-200">
+              <TableRow key={log.id} className="border-b-2 border-zinc-900 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900/50 transition-colors">
+                <TableCell className="font-bold text-zinc-900 dark:text-zinc-200">
                   <div className="flex flex-col gap-1">
                     <span>{log.task}</span>
                     {log.notes && (
-                      <span className="text-xs text-zinc-500 font-normal line-clamp-1">{log.notes}</span>
+                      <span className="text-xs text-zinc-600 dark:text-zinc-500 font-normal line-clamp-1">{log.notes}</span>
                     )}
                   </div>
                 </TableCell>
@@ -174,7 +174,7 @@ export function LogTable({ logs, projectId }: LogTableProps) {
                     <div className="flex items-center gap-2">
                       <Tooltip>
                         <TooltipTrigger render={
-                          <span className="text-sm text-zinc-400 cursor-default font-mono">
+                          <span className="text-sm text-zinc-600 dark:text-zinc-400 cursor-default font-mono font-bold">
                             {shortenAddress(log.wallet)}
                           </span>
                         } />
@@ -193,20 +193,16 @@ export function LogTable({ logs, projectId }: LogTableProps) {
                     <span className="text-zinc-600 text-sm">-</span>
                   )}
                 </TableCell>
-                <TableCell>
-                  {log.estimated_value ? (
-                    <span className="text-emerald-400 font-medium">${log.estimated_value}</span>
-                  ) : (
-                    <span className="text-zinc-600">-</span>
-                  )}
+                <TableCell className="text-zinc-900 dark:text-zinc-300 font-bold">
+                  {log.estimated_value ? `$${log.estimated_value}` : '-'}
                 </TableCell>
                 <TableCell>
-                  <Badge variant="outline" className={getStatusColor(log.status)}>
+                  <Badge variant="outline" className={`rounded-none border-2 px-2 py-0.5 ${getStatusColor(log.status)}`}>
                     {log.status}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-sm text-zinc-400">
-                  {format(new Date(log.logged_at), 'MMM d, yyyy')}
+                <TableCell className="text-zinc-600 dark:text-zinc-400 font-bold text-sm">
+                  {formatDistanceToNow(new Date(log.logged_at), { addSuffix: true })}
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-2">
@@ -228,20 +224,24 @@ export function LogTable({ logs, projectId }: LogTableProps) {
                       </Tooltip>
                     )}
                     <DropdownMenu>
-                      <DropdownMenuTrigger 
-                        render={
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-400 hover:text-white">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        } 
-                      />
-                      <DropdownMenuContent align="end" className="bg-zinc-900 border-zinc-800 text-zinc-300">
-                        <DropdownMenuItem onClick={() => setEditingLog(log)} className="hover:bg-zinc-800 focus:bg-zinc-800 cursor-pointer">
-                          <Edit2 className="h-4 w-4 mr-2" />
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-none border-2 border-transparent hover:border-zinc-900 dark:hover:border-zinc-700 transition-all">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-zinc-800 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] rounded-none">
+                        <DropdownMenuItem 
+                          onClick={() => handleEditClick(log)}
+                          className="text-zinc-900 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 cursor-pointer font-bold uppercase tracking-widest rounded-none"
+                        >
+                          <Edit2 className="mr-2 h-4 w-4" />
                           Edit
                         </DropdownMenuItem>
-                        <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setLogToDelete(log); }} className="text-red-400 focus:text-red-300 hover:bg-zinc-800 focus:bg-zinc-800 cursor-pointer">
-                          <Trash2 className="h-4 w-4 mr-2" />
+                        <DropdownMenuItem 
+                          onClick={() => handleDeleteClick(log)}
+                          className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer font-bold uppercase tracking-widest rounded-none"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
                           Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>

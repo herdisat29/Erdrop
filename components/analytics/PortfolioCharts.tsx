@@ -49,9 +49,9 @@ export function PortfolioCharts({ projects }: PortfolioChartsProps) {
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-zinc-950 border border-zinc-800 p-3 shadow-lg">
-          <p className="text-zinc-100 font-bold">{payload[0].name}</p>
-          <p className="text-zinc-400 text-sm">{`Count: ${payload[0].value}`}</p>
+        <div className="bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] p-3">
+          <p className="text-zinc-900 dark:text-white font-black uppercase tracking-tight">{payload[0].name}</p>
+          <p className="text-zinc-600 dark:text-zinc-400 text-sm font-bold">{`Count: ${payload[0].value}`}</p>
         </div>
       )
     }
@@ -60,8 +60,8 @@ export function PortfolioCharts({ projects }: PortfolioChartsProps) {
 
   if (projects.length === 0) {
     return (
-      <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-8 text-center">
-        <p className="text-zinc-400">Add projects to see analytics.</p>
+      <div className="bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] p-8 text-center min-h-[300px] flex items-center justify-center">
+        <p className="text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-widest">Add projects to see analytics</p>
       </div>
     )
   }
@@ -69,8 +69,8 @@ export function PortfolioCharts({ projects }: PortfolioChartsProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
       {/* Status Distribution */}
-      <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6">
-        <h3 className="text-zinc-100 font-bold mb-6">Status Distribution</h3>
+      <div className="bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] p-6">
+        <h3 className="text-zinc-900 dark:text-white font-black text-lg uppercase tracking-tight mb-6">Status Distribution</h3>
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
@@ -92,7 +92,7 @@ export function PortfolioCharts({ projects }: PortfolioChartsProps) {
               <Legend 
                 verticalAlign="bottom" 
                 height={36}
-                formatter={(value) => <span className="text-zinc-400 text-sm ml-1">{value}</span>}
+                formatter={(value) => <span className="text-zinc-600 dark:text-zinc-400 text-xs font-bold uppercase tracking-widest ml-1">{value}</span>}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -100,8 +100,8 @@ export function PortfolioCharts({ projects }: PortfolioChartsProps) {
       </div>
 
       {/* Chain Distribution */}
-      <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6">
-        <h3 className="text-zinc-100 font-bold mb-6">Top Chains</h3>
+      <div className="bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] p-6">
+        <h3 className="text-zinc-900 dark:text-white font-black text-lg uppercase tracking-tight mb-6">Top Chains</h3>
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={barData} margin={{ top: 20, right: 30, left: -20, bottom: 5 }}>
@@ -120,7 +120,7 @@ export function PortfolioCharts({ projects }: PortfolioChartsProps) {
                 axisLine={false}
                 allowDecimals={false}
               />
-              <RechartsTooltip content={<CustomTooltip />} cursor={{ fill: '#27272a' }} />
+              <RechartsTooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(161, 161, 170, 0.1)' }} />
               <Bar dataKey="count" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>

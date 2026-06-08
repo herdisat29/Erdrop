@@ -37,10 +37,10 @@ export function EditProjectDialog({ project, open, onOpenChange }: EditProjectDi
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] bg-zinc-950 border-zinc-800 text-white max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[500px] bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white text-zinc-900 dark:text-white max-h-[90vh] overflow-y-auto shadow-[8px_8px_0px_0px_rgba(24,24,27,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] rounded-none">
         <DialogHeader>
-          <DialogTitle>Edit Project</DialogTitle>
-          <DialogDescription className="text-zinc-400">
+          <DialogTitle className="font-black uppercase tracking-tight text-xl border-b-2 border-zinc-900 dark:border-white pb-2 inline-block w-fit">Edit Project</DialogTitle>
+          <DialogDescription className="text-zinc-600 dark:text-zinc-400 font-bold uppercase tracking-widest text-xs pt-4">
             Make changes to {project.name}.
           </DialogDescription>
         </DialogHeader>

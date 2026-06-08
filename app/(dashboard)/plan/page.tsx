@@ -65,7 +65,7 @@ export default function FarmingPlanPage() {
           </p>
           
           {error && (
-            <div className="mb-6 p-4 bg-red-100 border-2 border-red-900 text-red-900 font-bold">
+            <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/20 border-2 border-red-900 dark:border-red-500 text-red-900 dark:text-red-400 font-bold">
               {error}
             </div>
           )}
