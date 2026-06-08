@@ -10,13 +10,13 @@ export default async function DashboardPage() {
   // Fetch projects
   const { data: projectsData, error: projectsError } = await supabase
     .from('projects')
-    .select('id, status')
+    .select('*')
 
   if (projectsError) {
     throw new Error(`Failed to load projects: ${projectsError.message}`)
   }
 
-  const projects = (projectsData as { id: string; status: Project['status'] }[]) || []
+  const projects = (projectsData as Project[]) || []
   const totalProjects = projects.length
   const activeFarming = projects.filter(
     (p) => p.status === 'In Progress' || p.status === 'Eligible'
