@@ -1,0 +1,247 @@
+'use client'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+
+import { Button } from '@/components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { ProjectDifficulty, ProjectInsert, ProjectStatus } from '@/types'
+import { useEffect } from 'react'
+
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: 'Name must be at least 2 characters.',
+  }),
+  chain: z.string().optional(),
+  website: z.string().url({ message: 'Please enter a valid URL.' }).optional().or(z.literal('')),
+  status: z.enum(['Not Started', 'In Progress', 'Eligible', 'Claimed', 'Missed']),
+  difficulty: z.enum(['Easy', 'Medium', 'Hard']).optional().or(z.literal('')),
+  estimated_reward: z.string().optional(),
+  deadline: z.string().refine((val) => !val || /^\\d{4}-\\d{2}-\\d{2}$/.test(val), {
+    message: 'Format must be YYYY-MM-DD',
+  }).optional(),
+  notes: z.string().optional(),
+})
+
+interface ProjectFormProps {
+  initialData?: Partial<ProjectInsert>
+  onSubmit: (data: ProjectInsert) => Promise<void>
+  isLoading: boolean
+}
+
+export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormProps) {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: initialData?.name || '',
+      chain: initialData?.chain || '',
+      website: initialData?.website || '',
+      status: initialData?.status || 'Not Started',
+      difficulty: initialData?.difficulty || undefined,
+      estimated_reward: initialData?.estimated_reward || '',
+      deadline: initialData?.deadline || '',
+      notes: initialData?.notes || '',
+    },
+  })
+
+  // Reset form when initialData changes (useful for edit mode)
+  useEffect(() => {
+    if (initialData) {
+      form.reset({
+        name: initialData.name || '',
+        chain: initialData.chain || '',
+        website: initialData.website || '',
+        status: initialData.status || 'Not Started',
+        difficulty: initialData.difficulty || undefined,
+        estimated_reward: initialData.estimated_reward || '',
+        deadline: initialData.deadline || '',
+        notes: initialData.notes || '',
+      })
+    }
+  }, [initialData, form])
+
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    const dataToSubmit: ProjectInsert = {
+      name: values.name,
+      chain: values.chain || null,
+      website: values.website || null,
+      status: values.status as ProjectStatus,
+      difficulty: values.difficulty ? (values.difficulty as ProjectDifficulty) : null,
+      estimated_reward: values.estimated_reward || null,
+      deadline: values.deadline || null,
+      notes: values.notes || null,
+      logo_url: initialData?.logo_url || null, // Preserve if editing
+    }
+    await onSubmit(dataToSubmit)
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-zinc-300">Project Name</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g. Arbitrum, LayerZero" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="chain"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-zinc-300">Chain</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. Ethereum" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-zinc-300">Status</FormLabel>
+                <Select onValueChange={(val) => field.onChange(val || '')} value={field.value ?? null}>
+                  <FormControl>
+                    <SelectTrigger className="bg-zinc-900/50 border-zinc-800 text-white">
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                    <SelectItem value="Not Started">Not Started</SelectItem>
+                    <SelectItem value="In Progress">In Progress</SelectItem>
+                    <SelectItem value="Eligible">Eligible</SelectItem>
+                    <SelectItem value="Claimed">Claimed</SelectItem>
+                    <SelectItem value="Missed">Missed</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="website"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-zinc-300">Website / Twitter</FormLabel>
+              <FormControl>
+                <Input placeholder="https://..." className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="difficulty"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-zinc-300">Difficulty</FormLabel>
+                <Select onValueChange={(val) => field.onChange(val || '')} value={field.value ?? null}>
+                  <FormControl>
+                    <SelectTrigger className="bg-zinc-900/50 border-zinc-800 text-white">
+                      <SelectValue placeholder="Select difficulty" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                    <SelectItem value="Easy">Easy</SelectItem>
+                    <SelectItem value="Medium">Medium</SelectItem>
+                    <SelectItem value="Hard">Hard</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="estimated_reward"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-zinc-300">Est. Reward</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. $1000 or 500 Pts" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="deadline"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-zinc-300">Deadline (YYYY-MM-DD)</FormLabel>
+              <FormControl>
+                <Input type="date" className="bg-zinc-900/50 border-zinc-800 text-white w-full dark:[color-scheme:dark]" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="notes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-zinc-300">Notes / Tasks</FormLabel>
+              <FormControl>
+                <Textarea 
+                  placeholder="Bridge 0.1 ETH, swap 3 times..." 
+                  className="resize-none bg-zinc-900/50 border-zinc-800 text-white h-24" 
+                  {...field} 
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="pt-4 flex justify-end">
+          <Button type="submit" disabled={isLoading} className="w-full sm:w-auto bg-violet-600 hover:bg-violet-700 text-white">
+            {isLoading ? 'Saving...' : (initialData ? 'Update Project' : 'Add Project')}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  )
+}
