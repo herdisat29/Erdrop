@@ -2,7 +2,8 @@
 
 import { useState, useTransition, useEffect } from 'react'
 import { generateFarmingPlan, getFarmingPlan } from '@/app/actions/plan'
-import { BrainCircuit } from 'lucide-react'
+import { BrainCircuit, Loader2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 interface PlanWeek {
   weekNumber: number
@@ -41,89 +42,107 @@ export default function FarmingPlanPage() {
 
   return (
     <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500 max-w-4xl mx-auto">
-      <div className="flex flex-col gap-2 border-b-4 border-zinc-900 dark:border-white pb-6">
-        <h1 className="text-4xl font-black uppercase tracking-tighter text-zinc-900 dark:text-white flex items-center gap-3">
-          <BrainCircuit className="h-10 w-10" />
+      <div className="flex flex-col gap-2 pb-6">
+        <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface flex items-center gap-3">
+          <span className="material-symbols-outlined text-primary text-3xl">psychology</span>
           Masterplan
         </h1>
-        <p className="text-zinc-600 dark:text-zinc-400 font-bold uppercase tracking-widest text-sm">
+        <p className="font-body-md text-on-surface-variant text-sm">
           AI-Generated Weekly Farming Strategy
         </p>
       </div>
 
       {isLoading ? (
         <div className="flex justify-center items-center py-24">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-zinc-900 dark:border-white"></div>
+          <Loader2 className="h-10 w-10 text-primary animate-spin" />
         </div>
       ) : !plan ? (
-        <div className="bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white shadow-[8px_8px_0px_0px_rgba(24,24,27,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] p-8 text-center">
-          <p className="text-zinc-900 dark:text-white font-bold text-lg uppercase tracking-tight mb-4">
+        <div className="bg-surface-container-lowest rounded-3xl border border-outline-variant sticky-note-shadow p-8 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary-container/20 mx-auto mb-4">
+            <BrainCircuit className="h-8 w-8 text-primary" />
+          </div>
+          <p className="text-on-surface font-headline-md mb-2">
             Ready to generate your optimal route?
           </p>
-          <p className="text-zinc-600 dark:text-zinc-400 mb-8 max-w-md mx-auto">
+          <p className="text-on-surface-variant font-label-sm mb-8 max-w-md mx-auto">
             Our AI will analyze your active projects, difficulty, and deadlines to construct a step-by-step 4-week execution plan.
           </p>
           
           {error && (
-            <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/20 border-2 border-red-900 dark:border-red-500 text-red-900 dark:text-red-400 font-bold">
+            <div className="mb-6 p-4 bg-error-container/50 border border-error/30 text-error rounded-2xl font-label-bold text-sm">
               {error}
             </div>
           )}
 
-          <button
+          <Button
             onClick={handleGenerate}
             disabled={isPending}
-            className="font-black text-xl uppercase px-8 py-4 border-2 border-zinc-900 dark:border-white bg-violet-200 dark:bg-violet-900 text-violet-900 dark:text-violet-100 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none disabled:opacity-50 disabled:transform-none transition-all"
+            className="font-label-bold uppercase tracking-widest bg-primary text-on-primary hover:bg-primary/90 rounded-full squishy-interaction gap-2 shadow-md px-8 py-3 text-base"
           >
-            {isPending ? 'Generating Pipeline...' : 'Generate Masterplan'}
-          </button>
+            {isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Generating Pipeline...
+              </>
+            ) : (
+              'Generate Masterplan'
+            )}
+          </Button>
         </div>
       ) : (
-        <div className="space-y-12">
+        <div className="space-y-6">
           {plan.map((week, index) => (
             <div key={index} className="relative">
               {/* Timeline Connector */}
               {index !== plan.length - 1 && (
-                <div className="absolute left-8 top-20 bottom-[-3rem] w-1 bg-zinc-900 dark:bg-white z-0 hidden md:block" />
+                <div className="absolute left-8 top-20 bottom-[-1.5rem] w-0.5 bg-outline-variant z-0 hidden md:block" />
               )}
               
-              <div className="relative z-10 bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white shadow-[8px_8px_0px_0px_rgba(24,24,27,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] p-6 md:p-8">
+              <div className="relative z-10 bg-surface-container-lowest rounded-3xl border border-outline-variant sticky-note-shadow p-6 md:p-8 hover:scale-[1.01] transition-transform duration-200">
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="h-16 w-16 shrink-0 border-2 border-zinc-900 dark:border-white bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center font-black text-2xl text-zinc-900 dark:text-white">
+                  <div className="h-14 w-14 shrink-0 rounded-2xl bg-primary-container flex items-center justify-center font-black text-xl text-on-primary-container">
                     {week.weekNumber}
                   </div>
-                  <h2 className="text-2xl font-black uppercase tracking-tight text-zinc-900 dark:text-white">
+                  <h2 className="font-headline-md text-on-surface">
                     {week.title}
                   </h2>
                 </div>
 
-                <div className="space-y-4 pl-0 md:pl-20">
+                <div className="space-y-3 pl-0 md:pl-[4.5rem]">
                   {week.tasks.map((task, tIdx) => (
-                    <div key={tIdx} className="border-l-4 border-violet-500 pl-4 py-1">
-                      <h4 className="font-bold text-zinc-900 dark:text-white uppercase tracking-widest text-sm mb-1">
+                    <div key={tIdx} className="border-l-2 border-primary pl-4 py-1.5">
+                      <h4 className="font-label-bold text-primary uppercase tracking-widest text-xs mb-1">
                         {task.projectName}
                       </h4>
-                      <p className="text-zinc-700 dark:text-zinc-300">
+                      <p className="text-on-surface-variant text-sm leading-relaxed">
                         {task.actionItem}
                       </p>
                     </div>
                   ))}
                   {week.tasks.length === 0 && (
-                    <p className="text-zinc-500 italic">No specific tasks for this week.</p>
+                    <p className="text-on-surface-variant italic text-sm">No specific tasks for this week.</p>
                   )}
                 </div>
               </div>
             </div>
           ))}
 
-          <div className="pt-8 text-center flex justify-center">
-             <button
+          <div className="pt-4 text-center flex justify-center">
+            <Button
               onClick={handleGenerate}
               disabled={isPending}
-              className="font-bold uppercase px-6 py-3 border-2 border-zinc-900 dark:border-white bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none disabled:opacity-50 transition-all"
+              variant="outline"
+              className="font-label-bold uppercase tracking-widest bg-surface-container border border-outline-variant text-on-surface hover:bg-surface-container-high rounded-full squishy-interaction gap-2 px-6"
             >
-              {isPending ? 'Regenerating...' : 'Regenerate Plan'}
-            </button>
+              {isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Regenerating...
+                </>
+              ) : (
+                'Regenerate Plan'
+              )}
+            </Button>
           </div>
         </div>
       )}

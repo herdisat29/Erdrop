@@ -53,6 +53,7 @@ export function ProjectList({ projects }: ProjectListProps) {
               <SelectItem value="Not Started">Not Started</SelectItem>
               <SelectItem value="In Progress">In Progress</SelectItem>
               <SelectItem value="Eligible">Eligible</SelectItem>
+              <SelectItem value="Vesting">Vesting</SelectItem>
               <SelectItem value="Claimed">Claimed</SelectItem>
               <SelectItem value="Missed">Missed</SelectItem>
             </SelectContent>
@@ -129,7 +130,7 @@ export function ProjectList({ projects }: ProjectListProps) {
         </div>
       ) : (
         <div className="flex gap-6 overflow-x-auto pb-4 snap-x animate-in fade-in zoom-in-95 duration-500 min-h-[60vh]">
-          {['Not Started', 'In Progress', 'Eligible', 'Claimed'].map((status) => {
+          {['Not Started', 'In Progress', 'Eligible', 'Vesting', 'Claimed'].map((status) => {
             const columnProjects = filteredProjects.filter(p => p.status === status)
             return (
               <div key={status} className="flex-shrink-0 w-80 snap-start flex flex-col gap-4">

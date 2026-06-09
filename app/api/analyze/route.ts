@@ -62,6 +62,7 @@ export async function POST(req: Request) {
       Deadline: ${project.deadline || 'Unknown'}
       Notes/Context: ${project.notes || 'None'}
       Website: ${project.website || 'None'}
+      Twitter/X: ${project.twitter_url || 'None'}
 
       Based on the provided details, your extensive knowledge of the crypto ecosystem, airdrop meta, and historical project performance, provide an analysis in strictly JSON format matching this schema:
       {

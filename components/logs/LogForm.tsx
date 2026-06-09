@@ -91,9 +91,9 @@ export function LogForm({ projectId, initialData, onSubmit, isLoading }: LogForm
           name="task"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-zinc-300">Task / Description</FormLabel>
+              <FormLabel className="text-on-surface font-label-bold">Task / Description</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. Daily Check-in, Swap USDC to ETH" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                <Input placeholder="e.g. Daily Check-in, Swap USDC to ETH" className="bg-surface-container border-outline-variant text-on-surface rounded-xl" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -106,9 +106,9 @@ export function LogForm({ projectId, initialData, onSubmit, isLoading }: LogForm
             name="wallet"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-zinc-300">Wallet Used</FormLabel>
+                <FormLabel className="text-on-surface font-label-bold">Wallet Used</FormLabel>
                 <FormControl>
-                  <Input placeholder="0x..." className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                  <Input placeholder="0x..." className="bg-surface-container border-outline-variant text-on-surface rounded-xl" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -120,14 +120,14 @@ export function LogForm({ projectId, initialData, onSubmit, isLoading }: LogForm
             name="status"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-zinc-300">Status</FormLabel>
+                <FormLabel className="text-on-surface font-label-bold">Status</FormLabel>
                 <Select onValueChange={(val) => field.onChange(val || '')} value={field.value ?? null}>
                   <FormControl>
-                    <SelectTrigger className="bg-zinc-900/50 border-zinc-800 text-white">
+                    <SelectTrigger className="bg-surface-container border-outline-variant text-on-surface rounded-xl">
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                  <SelectContent className="bg-surface-container-lowest border-outline-variant text-on-surface rounded-xl">
                     <SelectItem value="Pending">Pending</SelectItem>
                     <SelectItem value="Completed">Completed</SelectItem>
                     <SelectItem value="Claimed">Claimed</SelectItem>
@@ -146,11 +146,11 @@ export function LogForm({ projectId, initialData, onSubmit, isLoading }: LogForm
             name="estimated_value"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-zinc-300">Estimated Value</FormLabel>
+                <FormLabel className="text-on-surface font-label-bold">Estimated Value</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="150" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                  <Input type="number" placeholder="150" className="bg-surface-container border-outline-variant text-on-surface rounded-xl" {...field} />
                 </FormControl>
-                <FormDescription className="text-xs text-zinc-500">Estimasi nilai dalam USD atau Points</FormDescription>
+                <FormDescription className="text-xs text-on-surface-variant">Estimasi nilai dalam USD atau Points</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -161,9 +161,9 @@ export function LogForm({ projectId, initialData, onSubmit, isLoading }: LogForm
             name="tx_hash"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-zinc-300">Tx Hash (Optional)</FormLabel>
+                <FormLabel className="text-on-surface font-label-bold">Tx Hash (Optional)</FormLabel>
                 <FormControl>
-                  <Input placeholder="0x..." className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                  <Input placeholder="0x..." className="bg-surface-container border-outline-variant text-on-surface rounded-xl" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -176,11 +176,11 @@ export function LogForm({ projectId, initialData, onSubmit, isLoading }: LogForm
           name="notes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-zinc-300">Notes</FormLabel>
+              <FormLabel className="text-on-surface font-label-bold">Notes</FormLabel>
               <FormControl>
                 <Textarea 
                   placeholder="Additional info (e.g. 500 pts, used bridge X)" 
-                  className="resize-none bg-zinc-900/50 border-zinc-800 text-white h-20" 
+                  className="resize-none bg-surface-container border-outline-variant text-on-surface h-20 rounded-xl" 
                   {...field} 
                 />
               </FormControl>
@@ -190,7 +190,7 @@ export function LogForm({ projectId, initialData, onSubmit, isLoading }: LogForm
         />
 
         <div className="pt-4 flex justify-end">
-          <Button type="submit" disabled={isLoading} className="w-full sm:w-auto bg-violet-600 hover:bg-violet-700 text-white">
+          <Button type="submit" disabled={isLoading} className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-on-primary rounded-full squishy-interaction font-label-bold px-6">
             {isLoading ? 'Saving...' : (initialData ? 'Update Log' : 'Add Log')}
           </Button>
         </div>

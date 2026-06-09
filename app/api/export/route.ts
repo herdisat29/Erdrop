@@ -21,17 +21,22 @@ export async function GET() {
   }
 
   // Create CSV header
-  const headers = ['Name', 'Chain', 'Status', 'Difficulty', 'Est. Reward', 'Deadline', 'Notes', 'Created At']
+  const headers = ['Name', 'Type', 'Chain', 'Status', 'Difficulty', 'Est. Reward', 'Mint Price', 'Collection Size', 'Deadline', 'Twitter', 'Website', 'Notes', 'Created At']
   
   // Create CSV rows
   const rows = (projects || []).map(p => {
     return [
       `"${(p.name || '').replace(/"/g, '""')}"`,
+      `"${(p.project_type || 'Token')}"`,
       `"${(p.chain || '').replace(/"/g, '""')}"`,
       `"${(p.status || '').replace(/"/g, '""')}"`,
       `"${(p.difficulty || '').replace(/"/g, '""')}"`,
       `"${(p.estimated_reward || '').replace(/"/g, '""')}"`,
+      `"${(p.mint_price || '').replace(/"/g, '""')}"`,
+      `"${(p.collection_size || '').replace(/"/g, '""')}"`,
       `"${(p.deadline || '').replace(/"/g, '""')}"`,
+      `"${(p.twitter_url || '').replace(/"/g, '""')}"`,
+      `"${(p.website || '').replace(/"/g, '""')}"`,
       `"${(p.notes || '').replace(/"/g, '""')}"`,
       `"${p.created_at}"`
     ].join(',')

@@ -15,7 +15,7 @@ import {
 import { deleteProject } from '@/app/actions/projects'
 import { toast } from 'sonner'
 import { EditProjectDialog } from './EditProjectDialog'
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow, parseISO, format, isValid } from 'date-fns'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -61,6 +61,7 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
       case 'Claimed': return 'bg-secondary-container text-on-secondary-container font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
       case 'Eligible': return 'bg-primary-container text-on-primary-container font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
       case 'In Progress': return 'bg-tertiary-container text-on-tertiary-container font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
+      case 'Vesting': return 'bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-300 font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
       case 'Missed': return 'bg-error-container text-on-error-container font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
       default: return 'bg-surface-container-high text-on-surface-variant font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
     }
@@ -150,7 +151,12 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
                   <p className="font-label-bold text-secondary uppercase tracking-wider mb-1">
                     {project.project_type === 'NFT' ? 'Mint Date' : 'Deadline'}
                   </p>
-                  <p className="font-headline-md text-on-surface-variant">{project.deadline}</p>
+                  <p className="font-headline-md text-on-surface-variant">
+                    {(() => {
+                      const d = parseISO(project.deadline)
+                      return isValid(d) ? format(d, 'MMM dd, yyyy') : project.deadline
+                    })()}
+                  </p>
                 </div>
               )}
             </div>

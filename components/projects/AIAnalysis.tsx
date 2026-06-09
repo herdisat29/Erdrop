@@ -43,37 +43,43 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
 
   const getRecommendationStyle = (rec: RecommendationType) => {
     switch (rec) {
-      case 'SKIP': return 'bg-red-500/10 text-red-500 border-red-500/20'
-      case 'WATCH': return 'bg-blue-500/10 text-blue-500 border-blue-500/20'
-      case 'FARM': return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
-      case 'PRIORITY FARM': return 'bg-amber-500/10 text-amber-500 border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
-      default: return 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
+      case 'SKIP': return 'bg-error-container/50 text-error border-error/20'
+      case 'WATCH': return 'bg-tertiary-container/50 text-tertiary border-tertiary/20'
+      case 'FARM': return 'bg-primary-container/50 text-primary border-primary/20'
+      case 'PRIORITY FARM': return 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.15)]'
+      default: return 'bg-surface-container-high text-on-surface-variant border-outline-variant'
     }
   }
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-emerald-400'
-    if (score >= 50) return 'text-amber-400'
-    return 'text-red-400'
+    if (score >= 80) return 'text-emerald-500 dark:text-emerald-400'
+    if (score >= 50) return 'text-amber-500 dark:text-amber-400'
+    return 'text-red-500 dark:text-red-400'
+  }
+
+  const getScoreTrackColor = (score: number) => {
+    if (score >= 80) return 'stroke-emerald-500 dark:stroke-emerald-400'
+    if (score >= 50) return 'stroke-amber-500 dark:stroke-amber-400'
+    return 'stroke-red-500 dark:stroke-red-400'
   }
 
   if (!analysis && !isAnalyzing) {
     return (
-      <Card className="bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] overflow-hidden relative group rounded-none">
+      <Card className="bg-surface-container-lowest border border-outline-variant rounded-3xl sticky-note-shadow overflow-hidden relative group">
         <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 to-fuchsia-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         <CardContent className="flex flex-col items-center justify-center py-12 text-center relative z-10 p-6">
-          <div className="h-16 w-16 bg-zinc-100 dark:bg-zinc-900 border-2 border-zinc-900 dark:border-zinc-800 flex items-center justify-center mb-4">
-            <BrainCircuit className="h-8 w-8 text-violet-600 dark:text-violet-400" />
+          <div className="h-16 w-16 bg-primary-container/20 rounded-full flex items-center justify-center mb-4">
+            <BrainCircuit className="h-8 w-8 text-primary" />
           </div>
-          <h3 className="text-xl font-black uppercase tracking-tight text-zinc-900 dark:text-white mb-2">Gemini AI Analysis</h3>
-          <p className="text-zinc-600 dark:text-zinc-400 font-bold max-w-md mb-6">
+          <h3 className="font-headline-md text-on-surface mb-2">Gemini AI Analysis</h3>
+          <p className="text-on-surface-variant font-label-sm max-w-md mb-6">
             Get an objective assessment of this project's airdrop potential, red flags, and farming recommendations powered by Google Gemini.
           </p>
           <Button 
             onClick={handleAnalyze} 
-            className="font-bold uppercase tracking-widest bg-violet-200 dark:bg-violet-900 border-2 border-violet-900 dark:border-violet-500 text-violet-900 dark:text-violet-100 hover:bg-violet-300 dark:hover:bg-violet-800 shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all rounded-none"
+            className="font-label-bold uppercase tracking-widest bg-primary text-on-primary hover:bg-primary/90 rounded-full squishy-interaction gap-2 shadow-md px-6"
           >
-            <Sparkles className="h-4 w-4 mr-2" />
+            <Sparkles className="h-4 w-4" />
             Analyze with AI
           </Button>
         </CardContent>
@@ -83,11 +89,11 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
 
   if (isAnalyzing) {
     return (
-      <Card className="bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] rounded-none">
+      <Card className="bg-surface-container-lowest border border-outline-variant rounded-3xl sticky-note-shadow">
         <CardContent className="flex flex-col items-center justify-center py-16 p-6">
-          <Loader2 className="h-10 w-10 text-violet-600 dark:text-violet-500 animate-spin mb-4" />
-          <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 dark:text-zinc-200">Analyzing Project</h3>
-          <p className="text-sm font-bold text-zinc-600 dark:text-zinc-500 mt-2">Gemini is processing project context...</p>
+          <Loader2 className="h-10 w-10 text-primary animate-spin mb-4" />
+          <h3 className="font-headline-md text-on-surface">Analyzing Project</h3>
+          <p className="text-sm text-on-surface-variant mt-2">Gemini is processing project context...</p>
         </CardContent>
       </Card>
     )
@@ -96,14 +102,14 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
   if (!analysis) return null
 
   return (
-    <Card className="bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] rounded-none">
-      <CardHeader className="pb-4 border-b-2 border-zinc-900 dark:border-zinc-800 p-6">
+    <Card className="bg-surface-container-lowest border border-outline-variant rounded-3xl sticky-note-shadow">
+      <CardHeader className="pb-4 border-b border-outline-variant/50 p-6">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-black uppercase tracking-tight text-zinc-900 dark:text-white flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+          <CardTitle className="font-headline-md text-on-surface flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-primary" />
             AI Analysis
           </CardTitle>
-          <Badge variant="outline" className={`px-3 py-1 text-xs font-bold uppercase tracking-wider ${getRecommendationStyle(analysis.recommendation)}`}>
+          <Badge variant="outline" className={`px-3 py-1 text-xs font-label-bold uppercase tracking-wider rounded-full ${getRecommendationStyle(analysis.recommendation)}`}>
             {analysis.recommendation}
           </Badge>
         </div>
@@ -111,15 +117,15 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
       <CardContent className="pt-6 p-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           
-          {/* Score & Summary */}
-          <div className="md:col-span-1 flex flex-col items-center justify-center p-6 bg-zinc-100 dark:bg-zinc-950 border-2 border-zinc-900 dark:border-zinc-800 shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
+          {/* Score */}
+          <div className="md:col-span-1 flex flex-col items-center justify-center p-6 bg-surface-container rounded-2xl border border-outline-variant/50">
             <div className="relative flex items-center justify-center mb-3">
               <svg className="w-24 h-24 transform -rotate-90">
-                <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-zinc-300 dark:text-zinc-800" />
+                <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-surface-container-highest" />
                 <circle 
-                  cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" 
+                  cx="48" cy="48" r="40" strokeWidth="8" fill="transparent" 
                   strokeDasharray="251.2" strokeDashoffset={251.2 - (251.2 * analysis.potential_score) / 100} 
-                  className={getScoreColor(analysis.potential_score)} 
+                  className={getScoreTrackColor(analysis.potential_score)} 
                   strokeLinecap="round" 
                 />
               </svg>
@@ -127,59 +133,59 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
                 <span className={`text-3xl font-black tracking-tighter ${getScoreColor(analysis.potential_score)}`}>{analysis.potential_score}</span>
               </div>
             </div>
-            <span className="text-xs font-black text-zinc-600 dark:text-zinc-500 uppercase tracking-widest text-center mt-2">Potential Score</span>
+            <span className="font-label-bold text-on-surface-variant uppercase tracking-widest text-[10px] text-center mt-2">Potential Score</span>
           </div>
 
           <div className="md:col-span-3 space-y-6">
             <div>
-              <h4 className="text-sm font-black text-zinc-900 dark:text-zinc-300 mb-2 flex items-center gap-2 uppercase tracking-widest border-b-2 border-zinc-900 dark:border-zinc-800 pb-2 w-fit">
-                <Target className="h-4 w-4 text-violet-600 dark:text-violet-400" /> Executive Summary
+              <h4 className="font-label-bold text-on-surface mb-2 flex items-center gap-2 uppercase tracking-widest text-xs">
+                <Target className="h-4 w-4 text-primary" /> Executive Summary
               </h4>
-              <p className="text-zinc-700 dark:text-zinc-400 text-sm leading-relaxed font-medium">{analysis.summary}</p>
+              <p className="text-on-surface-variant text-sm leading-relaxed">{analysis.summary}</p>
             </div>
             
             <div>
-              <h4 className="text-sm font-black text-zinc-900 dark:text-zinc-300 mb-2 uppercase tracking-widest border-b-2 border-zinc-900 dark:border-zinc-800 pb-2 w-fit">Reasoning</h4>
-              <p className="text-zinc-700 dark:text-zinc-400 text-sm leading-relaxed font-medium">{analysis.reasoning}</p>
+              <h4 className="font-label-bold text-on-surface mb-2 uppercase tracking-widest text-xs">Reasoning</h4>
+              <p className="text-on-surface-variant text-sm leading-relaxed">{analysis.reasoning}</p>
             </div>
           </div>
         </div>
 
         {/* Flags */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-          <div className="bg-emerald-100 dark:bg-emerald-900/20 border-2 border-emerald-900 dark:border-emerald-500 p-4 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)]">
-            <h4 className="text-sm font-black text-emerald-900 dark:text-emerald-400 mb-3 flex items-center gap-2 uppercase tracking-widest border-b-2 border-emerald-900 dark:border-emerald-500 pb-2">
-              <CheckCircle2 className="h-5 w-5" /> Green Flags
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+          <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/50 p-5 rounded-2xl">
+            <h4 className="font-label-bold text-emerald-700 dark:text-emerald-400 mb-3 flex items-center gap-2 uppercase tracking-widest text-xs">
+              <CheckCircle2 className="h-4 w-4" /> Green Flags
             </h4>
             {analysis.green_flags.length > 0 ? (
-              <ul className="space-y-3 mt-4">
+              <ul className="space-y-2.5 mt-3">
                 {analysis.green_flags.map((flag, idx) => (
-                  <li key={idx} className="text-sm font-bold text-emerald-900 dark:text-zinc-300 flex items-start gap-2">
-                    <span className="text-emerald-600 dark:text-emerald-500 mt-0.5 font-black text-lg leading-none">•</span>
+                  <li key={idx} className="text-sm text-on-surface-variant flex items-start gap-2">
+                    <span className="text-emerald-500 mt-0.5">•</span>
                     <span>{flag}</span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="text-sm font-bold text-zinc-600 dark:text-zinc-500 italic mt-4">None identified</p>
+              <p className="text-sm text-on-surface-variant italic mt-3">None identified</p>
             )}
           </div>
 
-          <div className="bg-red-100 dark:bg-red-900/20 border-2 border-red-900 dark:border-red-500 p-4 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)]">
-            <h4 className="text-sm font-black text-red-900 dark:text-red-400 mb-3 flex items-center gap-2 uppercase tracking-widest border-b-2 border-red-900 dark:border-red-500 pb-2">
-              <XCircle className="h-5 w-5" /> Red Flags
+          <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800/50 p-5 rounded-2xl">
+            <h4 className="font-label-bold text-red-700 dark:text-red-400 mb-3 flex items-center gap-2 uppercase tracking-widest text-xs">
+              <XCircle className="h-4 w-4" /> Red Flags
             </h4>
             {analysis.red_flags.length > 0 ? (
-              <ul className="space-y-3 mt-4">
+              <ul className="space-y-2.5 mt-3">
                 {analysis.red_flags.map((flag, idx) => (
-                  <li key={idx} className="text-sm font-bold text-red-900 dark:text-zinc-300 flex items-start gap-2">
-                    <span className="text-red-600 dark:text-red-500 mt-0.5 font-black text-lg leading-none">•</span>
+                  <li key={idx} className="text-sm text-on-surface-variant flex items-start gap-2">
+                    <span className="text-red-500 mt-0.5">•</span>
                     <span>{flag}</span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="text-sm font-bold text-zinc-600 dark:text-zinc-500 italic mt-4">None identified</p>
+              <p className="text-sm text-on-surface-variant italic mt-3">None identified</p>
             )}
           </div>
         </div>

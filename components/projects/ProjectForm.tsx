@@ -36,11 +36,11 @@ const formSchema = z.object({
   twitter_url: z.string().url({ message: 'Please enter a valid URL.' }).optional().or(z.literal('')),
   mint_price: z.string().optional(),
   collection_size: z.string().optional(),
-  status: z.enum(['Not Started', 'In Progress', 'Eligible', 'Claimed', 'Missed']),
+  status: z.enum(['Not Started', 'In Progress', 'Eligible', 'Claimed', 'Missed', 'Vesting']),
   difficulty: z.enum(['Easy', 'Medium', 'Hard']).optional().or(z.literal('')),
   estimated_reward: z.string().optional(),
-  deadline: z.string().refine((val) => !val || /^\\d{4}-\\d{2}-\\d{2}$/.test(val), {
-    message: 'Format must be YYYY-MM-DD',
+  deadline: z.string().refine((val) => !val || /^\d{4}-\d{2}-\d{2}$/.test(val), {
+    message: 'Invalid date format',
   }).optional(),
   notes: z.string().optional(),
 })
@@ -182,6 +182,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
                       <SelectItem value="Not Started">Not Started</SelectItem>
                       <SelectItem value="In Progress">In Progress</SelectItem>
                       <SelectItem value="Eligible">Eligible</SelectItem>
+                      <SelectItem value="Vesting">Vesting</SelectItem>
                       <SelectItem value="Claimed">Claimed</SelectItem>
                       <SelectItem value="Missed">Missed</SelectItem>
                     </SelectContent>
@@ -211,6 +212,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
                       <SelectItem value="Not Started">Not Started</SelectItem>
                       <SelectItem value="In Progress">In Progress</SelectItem>
                       <SelectItem value="Eligible">Eligible</SelectItem>
+                      <SelectItem value="Vesting">Vesting</SelectItem>
                       <SelectItem value="Claimed">Claimed</SelectItem>
                       <SelectItem value="Missed">Missed</SelectItem>
                     </SelectContent>
@@ -343,7 +345,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
           name="deadline"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-zinc-300">{isNFT ? "Mint Date" : "Deadline"} (YYYY-MM-DD)</FormLabel>
+              <FormLabel className="text-zinc-300">{isNFT ? "Mint Date" : "Deadline"}</FormLabel>
               <FormControl>
                 <Input type="date" className="bg-zinc-900/50 border-zinc-800 text-white w-full dark:[color-scheme:dark]" {...field} />
               </FormControl>

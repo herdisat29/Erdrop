@@ -133,6 +133,7 @@ export function ImportWizard() {
     if (s === 'eligible') return 'Eligible'
     if (s === 'missed') return 'Missed'
     if (s === 'in progress' || s === 'farming') return 'In Progress'
+    if (s === 'vesting') return 'Vesting'
     return 'Not Started'
   }
 

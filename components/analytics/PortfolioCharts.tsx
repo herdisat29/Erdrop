@@ -10,6 +10,7 @@ interface PortfolioChartsProps {
 const COLORS = {
   Claimed: '#8b5cf6', // violet
   Active: '#10b981',  // emerald (Eligible/In Progress)
+  Vesting: '#0ea5e9', // sky (Vesting)
   Missed: '#ef4444',  // red
   Watchlist: '#f59e0b',// amber (Not Started)
   Pending: '#71717a'   // zinc
@@ -21,6 +22,7 @@ export function PortfolioCharts({ projects }: PortfolioChartsProps) {
     let category = 'Pending'
     if (project.status === 'Claimed') category = 'Claimed'
     else if (project.status === 'Eligible' || project.status === 'In Progress') category = 'Active'
+    else if (project.status === 'Vesting') category = 'Vesting'
     else if (project.status === 'Not Started') category = 'Watchlist'
     else if (project.status === 'Missed') category = 'Missed'
 

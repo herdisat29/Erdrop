@@ -1,4 +1,4 @@
-export type ProjectStatus = 'Not Started' | 'In Progress' | 'Eligible' | 'Claimed' | 'Missed'
+export type ProjectStatus = 'Not Started' | 'In Progress' | 'Eligible' | 'Claimed' | 'Missed' | 'Vesting'
 export type ProjectDifficulty = 'Easy' | 'Medium' | 'Hard'
 
 export interface Profile {
