@@ -8,12 +8,18 @@ export interface Profile {
   created_at: string
 }
 
+export type ProjectType = 'Token' | 'NFT'
+
 export interface Project {
   id: string
   user_id: string
   name: string
+  project_type: ProjectType
   chain: string | null
   website: string | null
+  twitter_url: string | null
+  mint_price: string | null
+  collection_size: string | null
   status: ProjectStatus
   difficulty: ProjectDifficulty | null
   estimated_reward: string | null

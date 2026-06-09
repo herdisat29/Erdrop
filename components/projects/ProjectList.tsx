@@ -20,6 +20,7 @@ interface ProjectListProps {
 export function ProjectList({ projects }: ProjectListProps) {
   const [statusFilter, setStatusFilter] = useState<string>('All')
   const [chainFilter, setChainFilter] = useState<string>('All')
+  const [typeFilter, setTypeFilter] = useState<string>('All')
   const [viewMode, setViewMode] = useState<'list' | 'board'>('board')
 
   const [optimisticProjects, addOptimisticDelete] = useOptimistic(
@@ -33,7 +34,8 @@ export function ProjectList({ projects }: ProjectListProps) {
   const filteredProjects = optimisticProjects.filter((project) => {
     const matchStatus = statusFilter === 'All' || project.status === statusFilter
     const matchChain = chainFilter === 'All' || project.chain === chainFilter
-    return matchStatus && matchChain
+    const matchType = typeFilter === 'All' || project.project_type === typeFilter
+    return matchStatus && matchChain && matchType
   })
 
   return (
@@ -63,8 +65,19 @@ export function ProjectList({ projects }: ProjectListProps) {
             <SelectContent className="bg-white dark:bg-zinc-900 border-black/10 dark:border-zinc-800 text-zinc-700 dark:text-white">
               <SelectItem value="All">All Chains</SelectItem>
               {uniqueChains.map(chain => (
-                <SelectItem key={chain} value={chain as string}>{chain}</SelectItem>
+                <SelectItem key={chain as string} value={chain as string}>{chain}</SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={typeFilter} onValueChange={(val) => setTypeFilter(val || 'All')}>
+            <SelectTrigger className="w-[140px] bg-white dark:bg-zinc-900 border-black/10 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300">
+              <SelectValue placeholder="Type" />
+            </SelectTrigger>
+            <SelectContent className="bg-white dark:bg-zinc-900 border-black/10 dark:border-zinc-800 text-zinc-700 dark:text-white">
+              <SelectItem value="All">All Types</SelectItem>
+              <SelectItem value="Token">Token</SelectItem>
+              <SelectItem value="NFT">NFT</SelectItem>
             </SelectContent>
           </Select>
 
@@ -102,7 +115,7 @@ export function ProjectList({ projects }: ProjectListProps) {
         <div className="flex flex-col items-center justify-center py-24 text-center border-2 border-dashed border-zinc-900 dark:border-white bg-white dark:bg-zinc-950 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)]">
           <p className="text-zinc-900 dark:text-white font-bold uppercase tracking-wider">No projects match the selected filters.</p>
           <button 
-            onClick={() => { setStatusFilter('All'); setChainFilter('All'); }}
+            onClick={() => { setStatusFilter('All'); setChainFilter('All'); setTypeFilter('All'); }}
             className="mt-4 font-bold border-b-2 border-zinc-900 dark:border-white text-zinc-900 dark:text-white hover:text-violet-600 dark:hover:text-violet-400 hover:border-violet-600 dark:hover:border-violet-400 transition-colors uppercase tracking-wider text-sm"
           >
             Clear filters

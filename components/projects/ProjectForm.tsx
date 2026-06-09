@@ -23,15 +23,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ProjectDifficulty, ProjectInsert, ProjectStatus } from '@/types'
+import { ProjectDifficulty, ProjectInsert, ProjectStatus, ProjectType } from '@/types'
 import { useEffect } from 'react'
 
 const formSchema = z.object({
+  project_type: z.enum(['Token', 'NFT']),
   name: z.string().min(2, {
     message: 'Name must be at least 2 characters.',
   }),
   chain: z.string().optional(),
   website: z.string().url({ message: 'Please enter a valid URL.' }).optional().or(z.literal('')),
+  twitter_url: z.string().url({ message: 'Please enter a valid URL.' }).optional().or(z.literal('')),
+  mint_price: z.string().optional(),
+  collection_size: z.string().optional(),
   status: z.enum(['Not Started', 'In Progress', 'Eligible', 'Claimed', 'Missed']),
   difficulty: z.enum(['Easy', 'Medium', 'Hard']).optional().or(z.literal('')),
   estimated_reward: z.string().optional(),
@@ -51,9 +55,13 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      project_type: initialData?.project_type || 'Token',
       name: initialData?.name || '',
       chain: initialData?.chain || '',
       website: initialData?.website || '',
+      twitter_url: initialData?.twitter_url || '',
+      mint_price: initialData?.mint_price || '',
+      collection_size: initialData?.collection_size || '',
       status: initialData?.status || 'Not Started',
       difficulty: initialData?.difficulty || undefined,
       estimated_reward: initialData?.estimated_reward || '',
@@ -66,9 +74,13 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
   useEffect(() => {
     if (initialData) {
       form.reset({
+        project_type: initialData.project_type || 'Token',
         name: initialData.name || '',
         chain: initialData.chain || '',
         website: initialData.website || '',
+        twitter_url: initialData.twitter_url || '',
+        mint_price: initialData.mint_price || '',
+        collection_size: initialData.collection_size || '',
         status: initialData.status || 'Not Started',
         difficulty: initialData.difficulty || undefined,
         estimated_reward: initialData.estimated_reward || '',
@@ -80,9 +92,13 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     const dataToSubmit: ProjectInsert = {
+      project_type: values.project_type as ProjectType,
       name: values.name,
       chain: values.chain || null,
       website: values.website || null,
+      twitter_url: values.twitter_url || null,
+      mint_price: values.mint_price || null,
+      collection_size: values.collection_size || null,
       status: values.status as ProjectStatus,
       difficulty: values.difficulty ? (values.difficulty as ProjectDifficulty) : null,
       estimated_reward: values.estimated_reward || null,
@@ -93,9 +109,33 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
     await onSubmit(dataToSubmit)
   }
 
+  const projectType = form.watch('project_type')
+  const isNFT = projectType === 'NFT'
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        
+        {/* Type Toggle */}
+        <div className="grid grid-cols-2 gap-2 p-1 bg-zinc-900/50 rounded-md border border-zinc-800">
+          <Button
+            type="button"
+            variant="ghost"
+            className={`rounded-sm ${!isNFT ? 'bg-zinc-800 text-white shadow-sm' : 'text-zinc-400 hover:text-white'}`}
+            onClick={() => form.setValue('project_type', 'Token')}
+          >
+            Token
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            className={`rounded-sm ${isNFT ? 'bg-zinc-800 text-white shadow-sm' : 'text-zinc-400 hover:text-white'}`}
+            onClick={() => form.setValue('project_type', 'NFT')}
+          >
+            NFT
+          </Button>
+        </div>
+
         <FormField
           control={form.control}
           name="name"
@@ -103,22 +143,107 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
             <FormItem>
               <FormLabel className="text-zinc-300">Project Name</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. Arbitrum, LayerZero" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                <Input placeholder={isNFT ? "e.g. Pudgy Penguins" : "e.g. Arbitrum, LayerZero"} className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         
+        {!isNFT && (
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="chain"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-zinc-300">Chain</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. Ethereum" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-zinc-300">Status</FormLabel>
+                  <Select onValueChange={(val) => field.onChange(val || '')} value={field.value ?? null}>
+                    <FormControl>
+                      <SelectTrigger className="bg-zinc-900/50 border-zinc-800 text-white">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                      <SelectItem value="Not Started">Not Started</SelectItem>
+                      <SelectItem value="In Progress">In Progress</SelectItem>
+                      <SelectItem value="Eligible">Eligible</SelectItem>
+                      <SelectItem value="Claimed">Claimed</SelectItem>
+                      <SelectItem value="Missed">Missed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
+
+        {isNFT && (
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-zinc-300">Status</FormLabel>
+                  <Select onValueChange={(val) => field.onChange(val || '')} value={field.value ?? null}>
+                    <FormControl>
+                      <SelectTrigger className="bg-zinc-900/50 border-zinc-800 text-white">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                      <SelectItem value="Not Started">Not Started</SelectItem>
+                      <SelectItem value="In Progress">In Progress</SelectItem>
+                      <SelectItem value="Eligible">Eligible</SelectItem>
+                      <SelectItem value="Claimed">Claimed</SelectItem>
+                      <SelectItem value="Missed">Missed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="chain"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-zinc-300">Chain</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. Ethereum" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
+
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="chain"
+            name="website"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-zinc-300">Chain</FormLabel>
+                <FormLabel className="text-zinc-300">{isNFT ? "Mint Website" : "Website"}</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. Ethereum" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                  <Input placeholder="https://..." className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -127,89 +252,98 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
 
           <FormField
             control={form.control}
-            name="status"
+            name="twitter_url"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-zinc-300">Status</FormLabel>
-                <Select onValueChange={(val) => field.onChange(val || '')} value={field.value ?? null}>
-                  <FormControl>
-                    <SelectTrigger className="bg-zinc-900/50 border-zinc-800 text-white">
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
-                    <SelectItem value="Not Started">Not Started</SelectItem>
-                    <SelectItem value="In Progress">In Progress</SelectItem>
-                    <SelectItem value="Eligible">Eligible</SelectItem>
-                    <SelectItem value="Claimed">Claimed</SelectItem>
-                    <SelectItem value="Missed">Missed</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormField
-          control={form.control}
-          name="website"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-zinc-300">Website / Twitter</FormLabel>
-              <FormControl>
-                <Input placeholder="https://..." className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="difficulty"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-zinc-300">Difficulty</FormLabel>
-                <Select onValueChange={(val) => field.onChange(val || '')} value={field.value ?? null}>
-                  <FormControl>
-                    <SelectTrigger className="bg-zinc-900/50 border-zinc-800 text-white">
-                      <SelectValue placeholder="Select difficulty" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
-                    <SelectItem value="Easy">Easy</SelectItem>
-                    <SelectItem value="Medium">Medium</SelectItem>
-                    <SelectItem value="Hard">Hard</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="estimated_reward"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-zinc-300">Est. Reward</FormLabel>
+                <FormLabel className="text-zinc-300">Twitter (X) URL</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. $1000 or 500 Pts" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                  <Input placeholder="https://x.com/..." className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
+
+        {!isNFT && (
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="difficulty"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-zinc-300">Difficulty</FormLabel>
+                  <Select onValueChange={(val) => field.onChange(val || '')} value={field.value ?? null}>
+                    <FormControl>
+                      <SelectTrigger className="bg-zinc-900/50 border-zinc-800 text-white">
+                        <SelectValue placeholder="Select difficulty" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                      <SelectItem value="Easy">Easy</SelectItem>
+                      <SelectItem value="Medium">Medium</SelectItem>
+                      <SelectItem value="Hard">Hard</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="estimated_reward"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-zinc-300">Est. Reward</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. $1000 or 500 Pts" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
+
+        {isNFT && (
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="mint_price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-zinc-300">Mint Price</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. Free, 0.01 ETH" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="collection_size"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-zinc-300">Collection Size</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. 10000, TBA" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
 
         <FormField
           control={form.control}
           name="deadline"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-zinc-300">Deadline (YYYY-MM-DD)</FormLabel>
+              <FormLabel className="text-zinc-300">{isNFT ? "Mint Date" : "Deadline"} (YYYY-MM-DD)</FormLabel>
               <FormControl>
                 <Input type="date" className="bg-zinc-900/50 border-zinc-800 text-white w-full dark:[color-scheme:dark]" {...field} />
               </FormControl>
@@ -226,7 +360,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
               <FormLabel className="text-zinc-300">Notes / Tasks</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Bridge 0.1 ETH, swap 3 times..." 
+                  placeholder={isNFT ? "Waitlist details, discord requirements..." : "Bridge 0.1 ETH, swap 3 times..."}
                   className="resize-none bg-zinc-900/50 border-zinc-800 text-white h-24" 
                   {...field} 
                 />

@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { MoreVertical, Edit2, Trash2, ExternalLink } from 'lucide-react'
+import { MoreVertical, Edit2, Trash2, ExternalLink, Twitter } from 'lucide-react'
 import { Project } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -69,13 +69,16 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
   return (
     <>
       <Card 
-        className="group relative bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-zinc-800 hover:dark:border-white shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(39,39,42,1)] hover:translate-y-[-2px] hover:translate-x-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] transition-all duration-200 cursor-pointer h-full rounded-none"
+        className="group relative bg-card dark:bg-zinc-950 border-2 border-border dark:border-zinc-800 hover:dark:border-white shadow-sm dark:shadow-[4px_4px_0px_0px_rgba(39,39,42,1)] hover:translate-y-[2px] dark:hover:translate-y-[-2px] dark:hover:translate-x-[-2px] hover:shadow-md dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] transition-all duration-200 cursor-pointer h-full rounded-2xl sticky-note-shadow dark:sticky-note-shadow-none squishy-interaction"
         onClick={() => router.push(`/projects/${project.id}`)}
       >
           <CardHeader className="pb-3 flex flex-row items-start justify-between relative z-10">
             <div className="space-y-1">
               <CardTitle className="text-xl font-black uppercase tracking-tight text-zinc-900 dark:text-white flex items-center gap-2">
                 {project.name}
+                {project.project_type === 'NFT' && (
+                  <Badge variant="outline" className="bg-pink-100 text-pink-900 border-pink-900 dark:bg-pink-900/30 dark:text-pink-300 dark:border-pink-800 rounded-sm px-1 py-0 text-[10px]">NFT</Badge>
+                )}
                 {project.website && (
                   <a
                     href={project.website}
@@ -87,11 +90,24 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
                     <ExternalLink className="h-4 w-4" />
                   </a>
                 )}
+                {project.twitter_url && (
+                  <a
+                    href={project.twitter_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-zinc-500 hover:text-white transition-colors relative z-10"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Twitter className="h-4 w-4" />
+                  </a>
+                )}
               </CardTitle>
               <div className="flex gap-2 text-sm text-zinc-500 dark:text-zinc-400">
                 {project.chain && <span>{project.chain}</span>}
-                {project.chain && project.difficulty && <span>•</span>}
-                {project.difficulty && <span>{project.difficulty}</span>}
+                {project.chain && project.difficulty && project.project_type !== 'NFT' && <span>•</span>}
+                {project.difficulty && project.project_type !== 'NFT' && <span>{project.difficulty}</span>}
+                {project.chain && project.collection_size && project.project_type === 'NFT' && <span>•</span>}
+                {project.collection_size && project.project_type === 'NFT' && <span>{project.collection_size} Supply</span>}
               </div>
             </div>
             <div className="flex items-center gap-2 relative z-10" onClick={(e) => e.stopPropagation()}>
@@ -118,14 +134,20 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
           <CardContent className="relative z-10">
             <div className="flex items-end justify-between mt-2">
               <div>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-widest">Est. Reward</p>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-widest">
+                  {project.project_type === 'NFT' ? 'Mint Price' : 'Est. Reward'}
+                </p>
                 <p className="text-2xl font-black text-zinc-900 dark:text-white tracking-tighter mt-1">
-                  {project.estimated_reward || 'TBA'}
+                  {project.project_type === 'NFT' 
+                    ? (project.mint_price || 'TBA') 
+                    : (project.estimated_reward || 'TBA')}
                 </p>
               </div>
               {project.deadline && (
                 <div className="text-right">
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-widest">Deadline</p>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-widest">
+                    {project.project_type === 'NFT' ? 'Mint Date' : 'Deadline'}
+                  </p>
                   <p className="text-sm font-bold text-zinc-900 dark:text-zinc-300 mt-1">{project.deadline}</p>
                 </div>
               )}
