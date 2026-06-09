@@ -146,8 +146,12 @@ export function ImportWizard() {
 
       const projectsToInsert: ProjectInsert[] = parsedData.map(p => ({
         name: p.Name,
+        project_type: 'Token', // Default ke Token untuk data impor
         chain: p.Chain || null,
         website: p.Website || null,
+        twitter_url: null,
+        mint_price: null,
+        collection_size: null,
         status: mapStatus(p.Status),
         difficulty: null,
         estimated_reward: p.EstimatedReward || null,
