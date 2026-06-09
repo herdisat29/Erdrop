@@ -112,7 +112,7 @@ export default async function DashboardPage() {
 
       {/* Cute Mascot Interaction */}
       <div className="flex flex-col items-center py-8 text-center space-y-4">
-        <div className="w-24 h-24 bg-primary-container/20 rounded-full flex items-center justify-center animate-bounce duration-[2000ms]">
+        <div className="w-24 h-24 bg-primary-container/20 rounded-full flex items-center justify-center squishy-interaction transition-transform cursor-pointer hover:scale-110 hover:rotate-6">
           <img 
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRIdqq6MYzdrelsyLn8EAe-L5vuzya9j8CwA3M6mUQM7s2lsPRv8w5lSCCqPAcRhTP6xUDVs7WG6krQc4e_4CVAcprHz31mxASWs_YKSEyeD7NuAI_3Reczyrnj27BUEgFSS-UrYOyHWdlJ_42_DsnrqPMXRa9vmTiFMRTj7nS8Z5IPW_dAMY3Y3ikHORX0_jpEMWMcmPhXFDgLUfgkfDtNf8F5NWEp8c_cTxaNdRNWfDEqONzD6OiNcw2xAzJj38SHmpRdjP3JQ" 
             alt="Mascot" 
