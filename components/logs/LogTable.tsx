@@ -2,7 +2,7 @@
 
 import { useState, useOptimistic, useTransition } from 'react'
 import { Log } from '@/types'
-import { format } from 'date-fns'
+import { format, formatDistanceToNow } from 'date-fns'
 import { MoreHorizontal, Edit2, Trash2, Copy, ExternalLink, ScrollText, Download } from 'lucide-react'
 import { toast } from 'sonner'
 import {
@@ -60,6 +60,14 @@ export function LogTable({ logs, projectId }: LogTableProps) {
     toast.success('Wallet copied to clipboard')
   }
 
+  const handleEditClick = (log: Log) => {
+    setEditingLog(log)
+  }
+
+  const handleDeleteClick = (log: Log) => {
+    setLogToDelete(log)
+  }
+
   const handleDelete = () => {
     if (!logToDelete) return
     
@@ -113,7 +121,7 @@ export function LogTable({ logs, projectId }: LogTableProps) {
       case 'Claimed': return 'bg-violet-500/10 text-violet-500 border-violet-500/20'
       case 'Completed': return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
       case 'Failed': return 'bg-red-500/10 text-red-500 border-red-500/20'
-      default: return 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20' // Pending
+      default: return 'bg-amber-500/10 text-amber-600 dark:text-amber-500 border-amber-500/20' // Pending
     }
   }
 
@@ -145,11 +153,11 @@ export function LogTable({ logs, projectId }: LogTableProps) {
           Export CSV
         </Button>
       </div>
-      <div className="bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] overflow-x-auto w-full">
+      <div className="bg-card dark:bg-zinc-950 border-2 border-border dark:border-zinc-800 shadow-sm dark:shadow-[4px_4px_0px_0px_rgba(39,39,42,1)] overflow-x-auto w-full rounded-2xl sticky-note-shadow dark:sticky-note-shadow-none">
         <div className="min-w-[800px]">
         <Table>
-          <TableHeader className="bg-zinc-100 dark:bg-zinc-900 border-b-2 border-zinc-900 dark:border-zinc-800">
-            <TableRow className="border-b-2 border-zinc-900 dark:border-zinc-800 hover:bg-transparent">
+          <TableHeader className="bg-muted dark:bg-zinc-900 border-b-2 border-border dark:border-zinc-800">
+            <TableRow className="border-b-2 border-border dark:border-zinc-800 hover:bg-transparent">
               <TableHead className="text-zinc-900 dark:text-zinc-400 font-black uppercase tracking-widest w-[250px]">Task / Description</TableHead>
               <TableHead className="text-zinc-900 dark:text-zinc-400 font-black uppercase tracking-widest">Wallet</TableHead>
               <TableHead className="text-zinc-900 dark:text-zinc-400 font-black uppercase tracking-widest">Est. Value</TableHead>
@@ -160,7 +168,7 @@ export function LogTable({ logs, projectId }: LogTableProps) {
           </TableHeader>
           <TableBody>
             {optimisticLogs.map((log) => (
-              <TableRow key={log.id} className="border-b-2 border-zinc-900 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900/50 transition-colors">
+              <TableRow key={log.id} className="border-b-2 border-border dark:border-zinc-800 hover:bg-muted dark:hover:bg-zinc-900/50 transition-colors">
                 <TableCell className="font-bold text-zinc-900 dark:text-zinc-200">
                   <div className="flex flex-col gap-1">
                     <span>{log.task}</span>
@@ -197,7 +205,7 @@ export function LogTable({ logs, projectId }: LogTableProps) {
                   {log.estimated_value ? `$${log.estimated_value}` : '-'}
                 </TableCell>
                 <TableCell>
-                  <Badge variant="outline" className={`rounded-none border-2 px-2 py-0.5 ${getStatusColor(log.status)}`}>
+                  <Badge variant="outline" className={`rounded-full border-2 px-3 py-0.5 font-bold ${getStatusColor(log.status)}`}>
                     {log.status}
                   </Badge>
                 </TableCell>
@@ -224,10 +232,8 @@ export function LogTable({ logs, projectId }: LogTableProps) {
                       </Tooltip>
                     )}
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-none border-2 border-transparent hover:border-zinc-900 dark:hover:border-zinc-700 transition-all">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
+                      <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap h-8 w-8 p-0 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-none border-2 border-transparent hover:border-zinc-900 dark:hover:border-zinc-700 transition-all">
+                        <MoreHorizontal className="h-4 w-4" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-zinc-800 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] rounded-none">
                         <DropdownMenuItem 
