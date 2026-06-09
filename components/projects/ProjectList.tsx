@@ -4,7 +4,7 @@ import { useState, useOptimistic, useTransition } from 'react'
 import { Project } from '@/types'
 import { ProjectCard } from './ProjectCard'
 import { CreateProjectDialog } from './CreateProjectDialog'
-import { Ghost, LayoutGrid, List as ListIcon } from 'lucide-react'
+import { LayoutGrid, List as ListIcon } from 'lucide-react'
 import {
   Select,
   SelectContent,
@@ -41,14 +41,14 @@ export function ProjectList({ projects }: ProjectListProps) {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-black uppercase tracking-tight text-zinc-900 dark:text-white">Your Projects</h1>
+        <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">YOUR PROJECTS</h1>
         
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <Select value={statusFilter} onValueChange={(val) => setStatusFilter(val || 'All')}>
-            <SelectTrigger className="w-[140px] bg-white dark:bg-zinc-900 border-black/10 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300">
+            <SelectTrigger className="w-[140px] bg-surface-container border-outline-variant text-on-surface rounded-xl">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
-            <SelectContent className="bg-white dark:bg-zinc-900 border-black/10 dark:border-zinc-800 text-zinc-700 dark:text-white">
+            <SelectContent className="bg-surface-container-lowest border-outline-variant text-on-surface rounded-xl">
               <SelectItem value="All">All Status</SelectItem>
               <SelectItem value="Not Started">Not Started</SelectItem>
               <SelectItem value="In Progress">In Progress</SelectItem>
@@ -60,10 +60,10 @@ export function ProjectList({ projects }: ProjectListProps) {
           </Select>
 
           <Select value={chainFilter} onValueChange={(val) => setChainFilter(val || 'All')}>
-            <SelectTrigger className="w-[140px] bg-white dark:bg-zinc-900 border-black/10 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300">
+            <SelectTrigger className="w-[140px] bg-surface-container border-outline-variant text-on-surface rounded-xl">
               <SelectValue placeholder="Chain" />
             </SelectTrigger>
-            <SelectContent className="bg-white dark:bg-zinc-900 border-black/10 dark:border-zinc-800 text-zinc-700 dark:text-white">
+            <SelectContent className="bg-surface-container-lowest border-outline-variant text-on-surface rounded-xl">
               <SelectItem value="All">All Chains</SelectItem>
               {uniqueChains.map(chain => (
                 <SelectItem key={chain as string} value={chain as string}>{chain}</SelectItem>
@@ -72,26 +72,26 @@ export function ProjectList({ projects }: ProjectListProps) {
           </Select>
 
           <Select value={typeFilter} onValueChange={(val) => setTypeFilter(val || 'All')}>
-            <SelectTrigger className="w-[140px] bg-white dark:bg-zinc-900 border-black/10 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300">
+            <SelectTrigger className="w-[140px] bg-surface-container border-outline-variant text-on-surface rounded-xl">
               <SelectValue placeholder="Type" />
             </SelectTrigger>
-            <SelectContent className="bg-white dark:bg-zinc-900 border-black/10 dark:border-zinc-800 text-zinc-700 dark:text-white">
+            <SelectContent className="bg-surface-container-lowest border-outline-variant text-on-surface rounded-xl">
               <SelectItem value="All">All Types</SelectItem>
               <SelectItem value="Token">Token</SelectItem>
               <SelectItem value="NFT">NFT</SelectItem>
             </SelectContent>
           </Select>
 
-          <div className="flex bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white p-1">
+          <div className="flex bg-surface-container border border-outline-variant p-1 rounded-xl">
             <button
               onClick={() => setViewMode('list')}
-              className={`p-1.5 transition-all ${viewMode === 'list' ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'}`}
+              className={`p-1.5 transition-all rounded-lg ${viewMode === 'list' ? 'bg-on-surface text-inverse-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}
             >
               <ListIcon className="h-4 w-4" />
             </button>
             <button
               onClick={() => setViewMode('board')}
-              className={`p-1.5 transition-all ${viewMode === 'board' ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'}`}
+              className={`p-1.5 transition-all rounded-lg ${viewMode === 'board' ? 'bg-on-surface text-inverse-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}
             >
               <LayoutGrid className="h-4 w-4" />
             </button>
@@ -102,22 +102,25 @@ export function ProjectList({ projects }: ProjectListProps) {
       </div>
 
       {optimisticProjects.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center border-2 border-dashed border-zinc-900 dark:border-white bg-white dark:bg-zinc-950 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)]">
-          <div className="flex h-16 w-16 items-center justify-center border-2 border-zinc-900 dark:border-white bg-zinc-100 dark:bg-zinc-900 mb-4 shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
-            <Ghost className="h-8 w-8 text-zinc-900 dark:text-white" />
+        <div className="flex flex-col items-center justify-center py-24 text-center rounded-3xl border border-dashed border-outline-variant bg-surface-container-lowest">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-surface-container mb-4">
+            <span className="material-symbols-outlined text-on-surface-variant text-3xl">folder_off</span>
           </div>
-          <h3 className="text-2xl font-black uppercase tracking-tight text-zinc-900 dark:text-white mb-2">No projects yet</h3>
-          <p className="text-zinc-600 dark:text-zinc-400 font-medium max-w-sm mb-6">
+          <h3 className="text-headline-md font-bold text-on-surface mb-2">No projects yet</h3>
+          <p className="font-label-sm text-on-surface-variant max-w-sm mb-6">
             You haven't added any airdrop projects. Start tracking your first airdrop to stay organized.
           </p>
           <CreateProjectDialog />
         </div>
       ) : filteredProjects.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center border-2 border-dashed border-zinc-900 dark:border-white bg-white dark:bg-zinc-950 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)]">
-          <p className="text-zinc-900 dark:text-white font-bold uppercase tracking-wider">No projects match the selected filters.</p>
+        <div className="flex flex-col items-center justify-center py-24 text-center rounded-3xl border border-dashed border-outline-variant bg-surface-container-lowest">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-surface-container mb-4">
+            <span className="material-symbols-outlined text-on-surface-variant text-3xl">filter_list_off</span>
+          </div>
+          <p className="font-headline-md text-on-surface mb-2">No projects match the selected filters.</p>
           <button 
             onClick={() => { setStatusFilter('All'); setChainFilter('All'); setTypeFilter('All'); }}
-            className="mt-4 font-bold border-b-2 border-zinc-900 dark:border-white text-zinc-900 dark:text-white hover:text-violet-600 dark:hover:text-violet-400 hover:border-violet-600 dark:hover:border-violet-400 transition-colors uppercase tracking-wider text-sm"
+            className="font-label-bold text-primary hover:text-primary/80 transition-colors uppercase tracking-wider text-sm mt-2"
           >
             Clear filters
           </button>
@@ -129,14 +132,14 @@ export function ProjectList({ projects }: ProjectListProps) {
           ))}
         </div>
       ) : (
-        <div className="flex gap-6 overflow-x-auto pb-4 snap-x animate-in fade-in zoom-in-95 duration-500 min-h-[60vh]">
+        <div className="flex gap-6 overflow-x-auto pb-4 snap-x animate-in fade-in zoom-in-95 duration-500 min-h-[60vh] scrollbar-hide">
           {['Not Started', 'In Progress', 'Eligible', 'Vesting', 'Claimed'].map((status) => {
             const columnProjects = filteredProjects.filter(p => p.status === status)
             return (
               <div key={status} className="flex-shrink-0 w-80 snap-start flex flex-col gap-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-black text-zinc-900 dark:text-white uppercase tracking-widest text-sm">{status}</h3>
-                  <span className="bg-white dark:bg-zinc-950 border-2 border-zinc-900 dark:border-white text-zinc-900 dark:text-white font-bold text-xs py-0.5 px-2">
+                  <h3 className="font-label-bold text-on-surface uppercase tracking-widest text-sm">{status}</h3>
+                  <span className="bg-surface-container border border-outline-variant text-on-surface-variant font-label-bold text-xs py-0.5 px-2 rounded-full">
                     {columnProjects.length}
                   </span>
                 </div>
@@ -145,7 +148,7 @@ export function ProjectList({ projects }: ProjectListProps) {
                     <ProjectCard key={project.id} project={project} onOptimisticDelete={() => addOptimisticDelete(project.id)} />
                   ))}
                   {columnProjects.length === 0 && (
-                    <div className="border-2 border-dashed border-zinc-400 dark:border-zinc-700 h-24 flex items-center justify-center text-xs font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-600">
+                    <div className="border border-dashed border-outline-variant rounded-2xl h-24 flex items-center justify-center text-xs font-label-bold uppercase tracking-widest text-on-surface-variant">
                       Empty
                     </div>
                   )}
