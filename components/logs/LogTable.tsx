@@ -153,23 +153,23 @@ export function LogTable({ logs, projectId }: LogTableProps) {
           Export CSV
         </Button>
       </div>
-      <div className="bg-card dark:bg-zinc-950 border-2 border-border dark:border-zinc-800 shadow-sm dark:shadow-[4px_4px_0px_0px_rgba(39,39,42,1)] overflow-x-auto w-full rounded-2xl sticky-note-shadow dark:sticky-note-shadow-none">
+      <div className="bg-surface-container-lowest border border-outline-variant sticky-note-shadow overflow-x-auto w-full rounded-3xl">
         <div className="min-w-[800px]">
         <Table>
-          <TableHeader className="bg-muted dark:bg-zinc-900 border-b-2 border-border dark:border-zinc-800">
-            <TableRow className="border-b-2 border-border dark:border-zinc-800 hover:bg-transparent">
-              <TableHead className="text-zinc-900 dark:text-zinc-400 font-black uppercase tracking-widest w-[250px]">Task / Description</TableHead>
-              <TableHead className="text-zinc-900 dark:text-zinc-400 font-black uppercase tracking-widest">Wallet</TableHead>
-              <TableHead className="text-zinc-900 dark:text-zinc-400 font-black uppercase tracking-widest">Est. Value</TableHead>
-              <TableHead className="text-zinc-900 dark:text-zinc-400 font-black uppercase tracking-widest">Status</TableHead>
-              <TableHead className="text-zinc-900 dark:text-zinc-400 font-black uppercase tracking-widest">Date</TableHead>
-              <TableHead className="text-right text-zinc-900 dark:text-zinc-400 font-black uppercase tracking-widest">Actions</TableHead>
+          <TableHeader className="bg-surface-container border-b border-outline-variant/50">
+            <TableRow className="border-b border-outline-variant/50 hover:bg-transparent">
+              <TableHead className="text-on-surface-variant font-label-bold uppercase tracking-widest w-[250px]">Task / Description</TableHead>
+              <TableHead className="text-on-surface-variant font-label-bold uppercase tracking-widest">Wallet</TableHead>
+              <TableHead className="text-on-surface-variant font-label-bold uppercase tracking-widest">Est. Value</TableHead>
+              <TableHead className="text-on-surface-variant font-label-bold uppercase tracking-widest">Status</TableHead>
+              <TableHead className="text-on-surface-variant font-label-bold uppercase tracking-widest">Date</TableHead>
+              <TableHead className="text-right text-on-surface-variant font-label-bold uppercase tracking-widest">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {optimisticLogs.map((log) => (
-              <TableRow key={log.id} className="border-b-2 border-border dark:border-zinc-800 hover:bg-muted dark:hover:bg-zinc-900/50 transition-colors">
-                <TableCell className="font-bold text-zinc-900 dark:text-zinc-200">
+              <TableRow key={log.id} className="border-b border-outline-variant/30 hover:bg-surface-container-lowest transition-colors">
+                <TableCell className="font-label-bold text-on-surface">
                   <div className="flex flex-col gap-1">
                     <span>{log.task}</span>
                     {log.notes && (

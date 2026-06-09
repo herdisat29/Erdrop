@@ -58,33 +58,33 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Claimed': return 'bg-violet-200 text-violet-900 border-2 border-violet-900 dark:bg-violet-900 dark:text-violet-100 dark:border-violet-400 font-bold uppercase tracking-wider'
-      case 'Eligible': return 'bg-emerald-200 text-emerald-900 border-2 border-emerald-900 dark:bg-emerald-900 dark:text-emerald-100 dark:border-emerald-400 font-bold uppercase tracking-wider'
-      case 'In Progress': return 'bg-blue-200 text-blue-900 border-2 border-blue-900 dark:bg-blue-900 dark:text-blue-100 dark:border-blue-400 font-bold uppercase tracking-wider'
-      case 'Missed': return 'bg-red-200 text-red-900 border-2 border-red-900 dark:bg-red-900 dark:text-red-100 dark:border-red-400 font-bold uppercase tracking-wider'
-      default: return 'bg-zinc-200 text-zinc-900 border-2 border-zinc-900 dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-400 font-bold uppercase tracking-wider'
+      case 'Claimed': return 'bg-secondary-container text-on-secondary-container font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
+      case 'Eligible': return 'bg-primary-container text-on-primary-container font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
+      case 'In Progress': return 'bg-tertiary-container text-on-tertiary-container font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
+      case 'Missed': return 'bg-error-container text-on-error-container font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
+      default: return 'bg-surface-container-high text-on-surface-variant font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
     }
   }
 
   return (
     <>
       <Card 
-        className="group relative bg-card dark:bg-zinc-950 border-2 border-border dark:border-zinc-800 hover:dark:border-white shadow-sm dark:shadow-[4px_4px_0px_0px_rgba(39,39,42,1)] hover:translate-y-[2px] dark:hover:translate-y-[-2px] dark:hover:translate-x-[-2px] hover:shadow-md dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] transition-all duration-200 cursor-pointer h-full rounded-2xl sticky-note-shadow dark:sticky-note-shadow-none squishy-interaction"
+        className="group relative bg-surface-container-lowest border border-outline-variant sticky-note-shadow squishy-interaction transition-all duration-200 cursor-pointer h-full rounded-2xl overflow-hidden"
         onClick={() => router.push(`/projects/${project.id}`)}
       >
           <CardHeader className="pb-3 flex flex-row items-start justify-between relative z-10">
             <div className="space-y-1">
-              <CardTitle className="text-xl font-black uppercase tracking-tight text-zinc-900 dark:text-white flex items-center gap-2">
+              <CardTitle className="font-headline-md text-on-surface flex items-center gap-2">
                 {project.name}
                 {project.project_type === 'NFT' && (
-                  <Badge variant="outline" className="bg-pink-100 text-pink-900 border-pink-900 dark:bg-pink-900/30 dark:text-pink-300 dark:border-pink-800 rounded-sm px-1 py-0 text-[10px]">NFT</Badge>
+                  <Badge variant="outline" className="bg-secondary-container text-on-secondary-container border-transparent rounded-sm px-1 py-0 text-[10px]">NFT</Badge>
                 )}
                 {project.website && (
                   <a
                     href={project.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-zinc-500 hover:text-white transition-colors relative z-10"
+                    className="text-outline hover:text-primary transition-colors relative z-10"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <ExternalLink className="h-4 w-4" />
@@ -95,7 +95,7 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
                     href={project.twitter_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-zinc-500 hover:text-white transition-colors relative z-10"
+                    className="text-outline hover:text-primary transition-colors relative z-10"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -104,7 +104,7 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
                   </a>
                 )}
               </CardTitle>
-              <div className="flex gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+              <div className="flex gap-2 font-label-sm text-on-surface-variant">
                 {project.chain && <span>{project.chain}</span>}
                 {project.chain && project.difficulty && project.project_type !== 'NFT' && <span>•</span>}
                 {project.difficulty && project.project_type !== 'NFT' && <span>{project.difficulty}</span>}
@@ -113,19 +113,19 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
               </div>
             </div>
             <div className="flex items-center gap-2 relative z-10" onClick={(e) => e.stopPropagation()}>
-              <Badge variant="outline" className={`rounded-none px-2 py-0.5 ${getStatusColor(project.status)}`}>
+              <span className={getStatusColor(project.status)}>
                 {project.status}
-              </Badge>
+              </span>
               <DropdownMenu>
-                <DropdownMenuTrigger className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white focus:outline-none">
+                <DropdownMenuTrigger className="text-outline hover:text-on-surface focus:outline-none squishy-interaction p-1 rounded-full hover:bg-surface-container-highest">
                   <MoreVertical className="h-5 w-5" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-white dark:bg-zinc-900 border-black/10 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300">
-                  <DropdownMenuItem onClick={() => setIsEditOpen(true)} className="hover:bg-zinc-100 dark:hover:bg-zinc-800 focus:bg-zinc-100 dark:focus:bg-zinc-800 cursor-pointer">
+                <DropdownMenuContent align="end" className="bg-surface-container-lowest border-outline-variant text-on-surface-variant rounded-xl shadow-md">
+                  <DropdownMenuItem onClick={() => setIsEditOpen(true)} className="hover:bg-surface-container-high focus:bg-surface-container-high cursor-pointer rounded-lg m-1">
                     <Edit2 className="h-4 w-4 mr-2" />
                     Edit
                   </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setIsDeleteDialogOpen(true); }} disabled={isDeleting} className="text-red-500 dark:text-red-400 focus:text-red-600 dark:focus:text-red-300 hover:bg-red-50 dark:hover:bg-zinc-800 focus:bg-red-50 dark:focus:bg-zinc-800 cursor-pointer">
+                  <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setIsDeleteDialogOpen(true); }} disabled={isDeleting} className="text-error focus:text-error hover:bg-error-container focus:bg-error-container cursor-pointer rounded-lg m-1">
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete
                   </DropdownMenuItem>
@@ -136,10 +136,10 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
           <CardContent className="relative z-10">
             <div className="flex items-end justify-between mt-2">
               <div>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-widest">
+                <p className="font-label-bold text-primary uppercase tracking-wider mb-1">
                   {project.project_type === 'NFT' ? 'Mint Price' : 'Est. Reward'}
                 </p>
-                <p className="text-2xl font-black text-zinc-900 dark:text-white tracking-tighter mt-1">
+                <p className="font-display-lg text-on-surface">
                   {project.project_type === 'NFT' 
                     ? (project.mint_price || 'TBA') 
                     : (project.estimated_reward || 'TBA')}
@@ -147,15 +147,15 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
               </div>
               {project.deadline && (
                 <div className="text-right">
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-widest">
+                  <p className="font-label-bold text-secondary uppercase tracking-wider mb-1">
                     {project.project_type === 'NFT' ? 'Mint Date' : 'Deadline'}
                   </p>
-                  <p className="text-sm font-bold text-zinc-900 dark:text-zinc-300 mt-1">{project.deadline}</p>
+                  <p className="font-headline-md text-on-surface-variant">{project.deadline}</p>
                 </div>
               )}
             </div>
-            <div className="mt-6 pt-4 border-t-2 border-zinc-100 dark:border-zinc-800">
-              <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-bold uppercase tracking-widest">Updated {formatDistanceToNow(new Date(project.updated_at), { addSuffix: true })}</p>
+            <div className="mt-6 pt-4 border-t border-outline-variant/30">
+              <p className="font-label-sm text-outline">Updated {formatDistanceToNow(new Date(project.updated_at), { addSuffix: true })}</p>
             </div>
         </CardContent>
       </Card>
