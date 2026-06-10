@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { ThemeToggle } from '@/components/layout/ThemeToggle'
 import { WalletConnect } from '@/components/wallet/WalletConnect'
 import { MobileNav } from '@/components/layout/MobileNav'
+import { LogoutButton } from '@/components/auth/LogoutButton'
 
 export default async function DashboardLayout({
   children,
@@ -74,19 +75,17 @@ export default async function DashboardLayout({
             <div className="p-2 bg-primary-container/20 rounded-xl text-primary md:hidden">
               <span className="material-symbols-outlined">bubble_chart</span>
             </div>
-            <h1 className="text-headline-lg-mobile font-extrabold text-primary tracking-tighter md:hidden">ERDROP</h1>
+            <div className="flex flex-col md:hidden">
+              <h1 className="text-headline-lg-mobile font-extrabold text-primary tracking-tighter leading-none">ERDROP</h1>
+              <span className="text-[9px] font-label-bold uppercase tracking-widest text-on-surface-variant">Track Every Drop</span>
+            </div>
             <h1 className="text-headline-md font-bold text-on-surface hidden md:block">Dashboard</h1>
           </div>
           <div className="flex items-center gap-3">
             <WalletConnect />
             <ThemeToggle />
             <span className="text-label-bold text-on-surface-variant hidden lg:inline-block">{user.email}</span>
-            <form action="/auth/signout" method="post">
-              <button className="flex items-center gap-1.5 justify-center px-3 py-1.5 md:px-4 md:py-2 rounded-xl border-2 border-outline-variant/30 bg-surface-container hover:bg-surface-container-highest text-on-surface shadow-sm squishy-interaction transition-all">
-                <span className="material-symbols-outlined text-[14px] md:text-[18px]">logout</span>
-                <span className="font-label-bold text-xs md:text-sm">Logout</span>
-              </button>
-            </form>
+            <LogoutButton />
           </div>
         </header>
         

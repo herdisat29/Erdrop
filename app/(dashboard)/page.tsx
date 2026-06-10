@@ -93,7 +93,7 @@ export default async function DashboardPage() {
         {/* Estimated Value */}
         <div className="bg-primary p-5 rounded-2xl sticky-note-shadow relative overflow-hidden squishy-interaction">
           <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 -mr-6 -mt-6 rounded-full"></div>
-          <p className="font-label-bold text-label-bold text-white/80 mb-1 uppercase tracking-wider">Est. Value</p>
+          <p className="font-label-bold text-label-bold text-white/80 mb-1 uppercase tracking-wider">Claimed Value</p>
           <div className="flex items-end justify-between">
             <span className="font-display-lg text-display-lg text-white">${estimatedValue.toLocaleString()}</span>
             <span className="material-symbols-outlined text-white/40 text-4xl" style={{fontVariationSettings: "'FILL' 1"}}>monetization_on</span>
