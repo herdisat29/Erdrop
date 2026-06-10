@@ -7,7 +7,7 @@ export function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 w-full z-40 flex items-center gap-1 overflow-x-auto px-2 pb-4 pt-2 bg-surface/90 backdrop-blur-md rounded-t-xl border-t-2 border-primary-container/20 scrollbar-hide">
+    <nav className="md:hidden fixed bottom-0 left-0 w-full z-40 flex items-center gap-2 overflow-x-auto px-4 pb-4 pt-2 bg-surface/90 backdrop-blur-md rounded-t-xl border-t-2 border-primary-container/20 scrollbar-hide">
       {[
         { href: "/", icon: "grid_view", label: "Dashboard" },
         { href: "/projects", icon: "folder", label: "Projects" },
@@ -23,7 +23,7 @@ export function MobileNav() {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex flex-col items-center justify-center rounded-2xl squishy-interaction min-w-[64px] px-2 py-2 transition-colors ${
+            className={`flex flex-col items-center justify-center rounded-2xl squishy-interaction min-w-[72px] px-3 py-2 transition-colors ${
               isActive
                 ? "bg-primary-container text-on-primary-container"
                 : "text-on-surface-variant hover:bg-surface-container-highest"
@@ -42,7 +42,7 @@ export function MobileNav() {
 
       <a
         href="/api/export"
-        className="flex flex-col items-center justify-center text-on-surface-variant px-2 py-2 min-w-[64px] hover:bg-surface-container-highest rounded-2xl transition-colors squishy-interaction"
+        className="flex flex-col items-center justify-center text-on-surface-variant px-3 py-2 min-w-[72px] hover:bg-surface-container-highest rounded-2xl transition-colors squishy-interaction"
       >
         <span className="material-symbols-outlined">download</span>
         <span className="font-label-sm text-[10px] mt-0.5">Export</span>
