@@ -142,9 +142,9 @@ export default async function DashboardPage() {
 
       {/* Recent Projects Table Area */}
       <section className="mt-8">
-        <div className="flex justify-between items-center mb-4">
-          <h4 className="font-headline-md text-headline-md text-on-surface">Recent Projects</h4>
-          <Link href="/projects" className="px-4 py-2 border border-outline-variant rounded-full font-label-bold hover:bg-surface-container-low transition-colors text-sm">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+          <h4 className="font-headline-md text-[20px] sm:text-headline-md text-on-surface whitespace-nowrap">Recent Projects</h4>
+          <Link href="/projects" className="px-4 py-2 border border-outline-variant rounded-full font-label-bold hover:bg-surface-container-low transition-colors text-sm w-full sm:w-auto text-center whitespace-nowrap shrink-0">
             View All Projects
           </Link>
         </div>
