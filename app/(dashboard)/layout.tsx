@@ -50,7 +50,7 @@ export default async function DashboardLayout({
             <WalletConnect />
             <ThemeToggle />
             <span className="text-label-bold text-on-surface-variant hidden lg:inline-block">
-              {user.email}
+              {user?.email}
             </span>
             <LogoutButton />
           </div>

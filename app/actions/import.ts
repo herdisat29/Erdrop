@@ -10,7 +10,7 @@ export async function predictColumnMapping(headers: string[]) {
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
     const prompt = `
       You are an expert data analyst. 
       The user uploaded a CSV file of their airdrop farming tracking spreadsheet.
@@ -42,10 +42,10 @@ export async function predictColumnMapping(headers: string[]) {
 
     const result = await model.generateContent(prompt)
     const responseText = result.response.text()
-    
+
     // Clean up potential markdown JSON wrappers
     const cleanedText = responseText.replace(/```json/gi, '').replace(/```/g, '').trim()
-    
+
     let mapping
     try {
       mapping = JSON.parse(cleanedText)
@@ -53,7 +53,7 @@ export async function predictColumnMapping(headers: string[]) {
       console.error('Failed to parse Gemini mapping response:', responseText)
       return { error: 'AI returned invalid format' }
     }
-    
+
     return { data: mapping }
   } catch (error: any) {
     console.error('Column Mapping AI Error:', error)
