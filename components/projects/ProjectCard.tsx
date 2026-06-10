@@ -139,7 +139,7 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
               {project.project_type === 'NFT' || project.status === 'Claimed' ? (
                 <div>
                   <p className="font-label-bold text-primary uppercase tracking-wider mb-1">
-                    {project.project_type === 'NFT' ? 'Mint Price' : 'Est. Reward'}
+                    {project.project_type === 'NFT' ? 'Mint Price' : 'Reward'}
                   </p>
                   <p className="font-display-lg text-on-surface">
                     {project.project_type === 'NFT' 

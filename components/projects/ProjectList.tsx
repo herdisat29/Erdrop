@@ -93,20 +93,18 @@ export function ProjectList({ projects }: ProjectListProps) {
             </SelectContent>
           </Select>
 
-          <div className="flex bg-surface-container border border-outline-variant p-1 rounded-xl">
-            <button
-              onClick={() => setViewMode('list')}
-              className={`p-1.5 transition-all rounded-lg ${viewMode === 'list' ? 'bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100'}`}
-            >
+          <button
+            onClick={() => setViewMode(prev => prev === 'list' ? 'board' : 'list')}
+            className="flex bg-surface-container border border-outline-variant p-1 rounded-xl cursor-pointer hover:bg-surface-container-highest transition-colors squishy-interaction"
+            title={`Switch to ${viewMode === 'list' ? 'Board' : 'List'} View`}
+          >
+            <div className={`p-1.5 transition-all rounded-lg ${viewMode === 'list' ? 'bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm' : 'text-zinc-500 dark:text-zinc-400'}`}>
               <ListIcon className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => setViewMode('board')}
-              className={`p-1.5 transition-all rounded-lg ${viewMode === 'board' ? 'bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100'}`}
-            >
+            </div>
+            <div className={`p-1.5 transition-all rounded-lg ${viewMode === 'board' ? 'bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm' : 'text-zinc-500 dark:text-zinc-400'}`}>
               <LayoutGrid className="h-4 w-4" />
-            </button>
-          </div>
+            </div>
+          </button>
 
           <CreateProjectDialog />
         </div>

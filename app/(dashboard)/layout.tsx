@@ -82,9 +82,9 @@ export default async function DashboardLayout({
             <ThemeToggle />
             <span className="text-label-bold text-on-surface-variant hidden lg:inline-block">{user.email}</span>
             <form action="/auth/signout" method="post">
-              <button className="flex items-center justify-center w-10 h-10 md:w-auto md:h-auto md:px-4 md:py-2 rounded-xl border-2 border-outline-variant/30 bg-surface-container hover:bg-surface-container-highest text-on-surface shadow-sm squishy-interaction transition-all">
-                <span className="hidden sm:inline-block text-label-bold">Sign Out</span>
-                <span className="material-symbols-outlined sm:hidden text-lg">logout</span>
+              <button className="flex items-center gap-1.5 justify-center px-3 py-1.5 md:px-4 md:py-2 rounded-xl border-2 border-outline-variant/30 bg-surface-container hover:bg-surface-container-highest text-on-surface shadow-sm squishy-interaction transition-all">
+                <span className="material-symbols-outlined text-[14px] md:text-[18px]">logout</span>
+                <span className="font-label-bold text-xs md:text-sm">Logout</span>
               </button>
             </form>
           </div>

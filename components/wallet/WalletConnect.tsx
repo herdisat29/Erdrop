@@ -31,10 +31,11 @@ export function WalletConnect() {
       <div className="flex items-center gap-2">
         <button 
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-secondary-container text-on-secondary-container hover:bg-secondary-container/90 font-label-bold rounded-xl squishy-interaction shadow-sm transition-all whitespace-nowrap"
+          className="flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 bg-secondary-container text-on-secondary-container hover:bg-secondary-container/90 font-label-bold text-xs md:text-sm rounded-xl squishy-interaction shadow-sm transition-all whitespace-nowrap"
         >
-          <span className="material-symbols-outlined text-sm">account_balance_wallet</span>
-          {address?.slice(0, 6)}...{address?.slice(-4)}
+          <span className="material-symbols-outlined text-[14px] md:text-base">account_balance_wallet</span>
+          <span className="hidden sm:inline">{address?.slice(0, 6)}...{address?.slice(-4)}</span>
+          <span className="sm:hidden">{address?.slice(0, 4)}..</span>
         </button>
 
         <Dialog open={showModal} onOpenChange={setShowModal}>
@@ -105,10 +106,10 @@ export function WalletConnect() {
   return (
     <button 
       onClick={handleConnect}
-      className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary hover:bg-primary/90 font-label-bold rounded-xl squishy-interaction shadow-sm transition-all whitespace-nowrap"
+      className="flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 bg-primary text-on-primary hover:bg-primary/90 font-label-bold text-xs md:text-sm rounded-xl squishy-interaction shadow-sm transition-all whitespace-nowrap"
     >
-      <span className="material-symbols-outlined text-sm">account_balance_wallet</span>
-      Connect Wallet
+      <span className="material-symbols-outlined text-[14px] md:text-base">account_balance_wallet</span>
+      <span>Connect<span className="hidden sm:inline"> Wallet</span></span>
     </button>
   )
 }

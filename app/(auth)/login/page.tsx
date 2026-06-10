@@ -90,7 +90,8 @@ export default function LoginPage() {
           <Button 
             onClick={handleLogin} 
             disabled={isLoading}
-            className="w-full bg-white text-zinc-950 hover:bg-zinc-200 h-12 font-bold squishy-interaction shadow-[2px_2px_0px_0px_rgba(139,92,246,0.5)] rounded-xl"
+            variant="outline"
+            className="w-full bg-white hover:bg-zinc-200 text-zinc-950 hover:text-zinc-950 border-transparent h-12 font-bold squishy-interaction shadow-[2px_2px_0px_0px_rgba(139,92,246,0.5)] rounded-xl"
           >
             <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
