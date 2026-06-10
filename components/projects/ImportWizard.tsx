@@ -7,8 +7,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { ProjectInsert, ProjectStatus } from '@/types'
-import { createClient } from '@/lib/supabase/client'
 import { predictColumnMapping } from '@/app/actions/import'
+import { bulkCreateProjects } from '@/app/actions/logs'
 import {
   Select,
   SelectContent,
@@ -42,7 +42,6 @@ export function ImportWizard() {
   const [parsedData, setParsedData] = useState<ParsedProject[]>([])
   const [isImporting, setIsImporting] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const supabase = createClient()
 
   const handleFileUpload = (file: File) => {
     Papa.parse(file, {
@@ -140,14 +139,12 @@ export function ImportWizard() {
   const handleImport = async () => {
     if (parsedData.length === 0) return
     setIsImporting(true)
-    
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('Unauthorized')
 
+    try {
+      // [FIX] Use server action instead of direct client-side Supabase insert
       const projectsToInsert: ProjectInsert[] = parsedData.map(p => ({
         name: p.Name,
-        project_type: 'Token', // Default ke Token untuk data impor
+        project_type: 'Token',
         chain: p.Chain || null,
         website: p.Website || null,
         twitter_url: null,
@@ -161,12 +158,9 @@ export function ImportWizard() {
         logo_url: null
       }))
 
-      // Batch insert is faster and requires less API calls
-      const { error } = await supabase
-        .from('projects')
-        .insert(projectsToInsert.map(p => ({ ...p, user_id: user.id })))
+      const result = await bulkCreateProjects(projectsToInsert)
 
-      if (error) throw error
+      if (result.error) throw new Error(result.error)
 
       toast.success(`Successfully imported ${parsedData.length} projects!`)
       setParsedData([])

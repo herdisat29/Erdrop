@@ -56,13 +56,19 @@ export function WalletConnect() {
                 <p className="text-sm text-on-surface-variant mb-5 font-body-md">
                   Scan this wallet address to automatically detect eligible airdrops across supported networks and protocols.
                 </p>
+                {/* [FIX] Clear demo disclaimer — scan is mock/demo only */}
+                <div className="mb-4 flex items-start gap-2 p-3 bg-tertiary-container/30 border border-tertiary/20 rounded-xl text-xs text-on-surface-variant">
+                  <span className="material-symbols-outlined text-tertiary text-base shrink-0 mt-0.5">info</span>
+                  <span><strong className="text-tertiary">Demo Feature:</strong> Wallet scanning is a UI mockup. Real on-chain eligibility detection is not yet implemented.</span>
+                </div>
+
                 <button
                   onClick={handleScan}
                   disabled={isScanning}
                   className="w-full font-label-bold py-3 bg-primary text-on-primary hover:bg-primary/90 rounded-xl squishy-interaction shadow-sm disabled:opacity-50 transition-all flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined">radar</span>
-                  {isScanning ? 'Scanning Blockchain...' : 'Start Scan (Mock)'}
+                  {isScanning ? 'Scanning Blockchain...' : 'Start Scan (Demo)'}
                 </button>
 
                 {/* Mock Result */}

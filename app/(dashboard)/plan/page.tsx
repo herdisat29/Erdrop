@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useTransition, useEffect } from 'react'
-import { generateFarmingPlan, getFarmingPlan } from '@/app/actions/plan'
-import { BrainCircuit, Loader2 } from 'lucide-react'
+import { generateFarmingPlan, getFarmingPlan, deleteFarmingPlan } from '@/app/actions/plan'
+import { BrainCircuit, Loader2, RefreshCw, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 interface PlanWeek {
   weekNumber: number
@@ -13,9 +14,11 @@ interface PlanWeek {
 
 export default function FarmingPlanPage() {
   const [isPending, startTransition] = useTransition()
+  const [isRegenerating, setIsRegenerating] = useState(false)
   const [plan, setPlan] = useState<PlanWeek[] | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [remaining, setRemaining] = useState<number>(5)
 
   useEffect(() => {
     async function loadPlan() {
@@ -23,6 +26,7 @@ export default function FarmingPlanPage() {
       if (result.plan) {
         setPlan(result.plan)
       }
+      setRemaining(result.remaining ?? 5)
       setIsLoading(false)
     }
     loadPlan()
@@ -34,11 +38,42 @@ export default function FarmingPlanPage() {
       const result = await generateFarmingPlan()
       if (result.error) {
         setError(result.error)
+        toast.error(result.error)
       } else if (result.plan) {
         setPlan(result.plan)
+        setRemaining(result.remaining ?? 0)
+        toast.success('Masterplan generated!')
       }
     })
   }
+
+  // [NEW] Delete existing plan then regenerate fresh
+  const handleRegenerate = async () => {
+    setIsRegenerating(true)
+    setError(null)
+    try {
+      const del = await deleteFarmingPlan()
+      if (del.error) {
+        toast.error(del.error)
+        return
+      }
+      setPlan(null)
+      // Now generate fresh
+      const result = await generateFarmingPlan()
+      if (result.error) {
+        setError(result.error)
+        toast.error(result.error)
+      } else if (result.plan) {
+        setPlan(result.plan)
+        setRemaining(result.remaining ?? 0)
+        toast.success('Plan regenerated!')
+      }
+    } finally {
+      setIsRegenerating(false)
+    }
+  }
+
+  const isWorking = isPending || isRegenerating
 
   return (
     <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500 max-w-4xl mx-auto">
@@ -64,10 +99,15 @@ export default function FarmingPlanPage() {
           <p className="text-on-surface font-headline-md mb-2">
             Ready to generate your optimal route?
           </p>
-          <p className="text-on-surface-variant font-label-sm mb-8 max-w-md mx-auto">
+          <p className="text-on-surface-variant font-label-sm mb-2 max-w-md mx-auto">
             Our AI will analyze your active projects, difficulty, and deadlines to construct a step-by-step 4-week execution plan.
           </p>
-          
+
+          {/* [NEW] Rate limit indicator */}
+          <p className="text-xs text-on-surface-variant/60 mb-8">
+            {remaining} generation{remaining !== 1 ? 's' : ''} remaining today
+          </p>
+
           {error && (
             <div className="mb-6 p-4 bg-error-container/50 border border-error/30 text-error rounded-2xl font-label-bold text-sm">
               {error}
@@ -76,7 +116,7 @@ export default function FarmingPlanPage() {
 
           <Button
             onClick={handleGenerate}
-            disabled={isPending}
+            disabled={isWorking || remaining === 0}
             className="font-label-bold uppercase tracking-widest bg-primary text-on-primary hover:bg-primary/90 rounded-full squishy-interaction gap-2 shadow-md px-8 py-3 text-base"
           >
             {isPending ? (
@@ -93,11 +133,10 @@ export default function FarmingPlanPage() {
         <div className="space-y-6">
           {plan.map((week, index) => (
             <div key={index} className="relative">
-              {/* Timeline Connector */}
               {index !== plan.length - 1 && (
                 <div className="absolute left-8 top-20 bottom-[-1.5rem] w-0.5 bg-outline-variant z-0 hidden md:block" />
               )}
-              
+
               <div className="relative z-10 bg-surface-container-lowest rounded-3xl border border-outline-variant sticky-note-shadow p-6 md:p-8 hover:scale-[1.01] transition-transform duration-200">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-14 w-14 shrink-0 rounded-2xl bg-primary-container flex items-center justify-center font-black text-xl text-on-primary-container">
@@ -127,20 +166,32 @@ export default function FarmingPlanPage() {
             </div>
           ))}
 
-          <div className="pt-4 text-center flex justify-center">
+          {/* [NEW] Regenerate section with rate limit info */}
+          <div className="pt-4 flex flex-col items-center gap-3">
+            <p className="text-xs text-on-surface-variant/60">
+              {remaining} generation{remaining !== 1 ? 's' : ''} remaining today
+            </p>
+            {error && (
+              <div className="p-4 bg-error-container/50 border border-error/30 text-error rounded-2xl font-label-bold text-sm text-center max-w-md">
+                {error}
+              </div>
+            )}
             <Button
-              onClick={handleGenerate}
-              disabled={isPending}
+              onClick={handleRegenerate}
+              disabled={isWorking || remaining === 0}
               variant="outline"
               className="font-label-bold uppercase tracking-widest bg-surface-container border border-outline-variant text-on-surface hover:bg-surface-container-high rounded-full squishy-interaction gap-2 px-6"
             >
-              {isPending ? (
+              {isRegenerating ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Regenerating...
                 </>
               ) : (
-                'Regenerate Plan'
+                <>
+                  <RefreshCw className="h-4 w-4" />
+                  Regenerate Plan
+                </>
               )}
             </Button>
           </div>

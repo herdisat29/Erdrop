@@ -35,10 +35,18 @@ export default async function DashboardPage() {
 
   const logs = (logsData as { id: string, project_id: string, status: Log['status']; estimated_value: number | null }[]) || []
   const pendingTasks = logs.filter((l) => l.status === 'Pending').length
-  const estimatedValue = logs.reduce(
-    (acc, log) => acc + (log.estimated_value || 0),
-    0
-  )
+  // Helper to parse string reward like "$1,000" or "500 tokens" to a number
+  const parseReward = (reward: string | null): number => {
+    if (!reward) return 0;
+    const cleanStr = reward.replace(/,/g, '');
+    const match = cleanStr.match(/[\d.]+/);
+    return match ? parseFloat(match[0]) : 0;
+  };
+
+  // Calculate claimed value from projects that are marked as 'Claimed'
+  const estimatedValue = projects
+    .filter((p) => p.status === 'Claimed')
+    .reduce((acc, p) => acc + parseReward(p.estimated_reward), 0)
 
   const activePercent = totalProjects > 0 ? (activeFarming / totalProjects) * 100 : 0;
   const pendingPercent = logs.length > 0 ? (pendingTasks / logs.length) * 100 : 0;

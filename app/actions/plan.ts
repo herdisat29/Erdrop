@@ -5,17 +5,37 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 
+const RATE_LIMIT_PER_24H = 5
+
 export async function generateFarmingPlan() {
   const supabase = await createClient()
 
-  // Verify auth
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
     return { error: 'Unauthorized' }
   }
 
-  // Rate Limiting Mock (In a real app, use Redis or Supabase table)
-  // We'll skip strict rate limiting here to ensure it works for demo
+  // [FIX] Real rate limiting: count plan generations in last 24h via updated_at
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+  const { data: recentPlans, error: countError } = await supabase
+    .from('farming_plans')
+    .select('id, generation_count, last_generated_at')
+    .eq('user_id', user.id)
+    .single()
+
+  // Track generation count in the farming_plans row itself
+  const currentCount = recentPlans?.generation_count ?? 0
+  const lastGenerated = recentPlans?.last_generated_at
+  const isWithin24h = lastGenerated && new Date(lastGenerated) > new Date(since)
+
+  // Count resets if last gen was >24h ago
+  const effectiveCount = isWithin24h ? currentCount : 0
+
+  if (effectiveCount >= RATE_LIMIT_PER_24H) {
+    const resetAt = new Date(new Date(lastGenerated!).getTime() + 24 * 60 * 60 * 1000)
+    const hoursLeft = Math.ceil((resetAt.getTime() - Date.now()) / (1000 * 60 * 60))
+    return { error: `Rate limit reached (${RATE_LIMIT_PER_24H}/day). Resets in ~${hoursLeft} hour(s).` }
+  }
 
   // Fetch active projects
   const { data: projects, error } = await supabase
@@ -33,8 +53,8 @@ export async function generateFarmingPlan() {
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" })
-    
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+
     const prompt = `
       You are an expert crypto airdrop farmer.
       Analyze the following list of active projects for a user and generate a 4-week "Farming Masterplan".
@@ -58,33 +78,37 @@ export async function generateFarmingPlan() {
 
     const result = await model.generateContent(prompt)
     const responseText = result.response.text()
-    
-    // Clean up potential markdown formatting from Gemini
+
     const cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim()
     const plan = JSON.parse(cleanJson)
 
-    // Save to database
-    // Check if plan exists
-    const { data: existingPlan } = await supabase
-      .from('farming_plans')
-      .select('id')
-      .eq('user_id', user.id)
-      .single()
+    const newCount = isWithin24h ? currentCount + 1 : 1
+    const now = new Date().toISOString()
 
-    if (existingPlan) {
+    if (recentPlans) {
       await supabase
         .from('farming_plans')
-        .update({ plan_data: plan, updated_at: new Date().toISOString() })
-        .eq('id', existingPlan.id)
+        .update({
+          plan_data: plan,
+          updated_at: now,
+          generation_count: newCount,
+          last_generated_at: now,
+        })
+        .eq('id', recentPlans.id)
     } else {
       await supabase
         .from('farming_plans')
-        .insert({ user_id: user.id, plan_data: plan })
+        .insert({
+          user_id: user.id,
+          plan_data: plan,
+          generation_count: 1,
+          last_generated_at: now,
+        })
     }
 
-    return { plan }
+    return { plan, remaining: RATE_LIMIT_PER_24H - newCount }
   } catch (err: any) {
-    console.error("AI Generation failed:", err)
+    console.error('AI Generation failed:', err)
     return { error: `AI generation failed: ${err.message}` }
   }
 }
@@ -93,17 +117,43 @@ export async function getFarmingPlan() {
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { plan: null }
+  if (!user) return { plan: null, remaining: RATE_LIMIT_PER_24H }
 
-  const { data, error } = await supabase
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+
+  const { data } = await supabase
     .from('farming_plans')
-    .select('plan_data')
+    .select('plan_data, generation_count, last_generated_at')
     .eq('user_id', user.id)
     .single()
 
-  if (error || !data) {
-    return { plan: null }
+  if (!data) return { plan: null, remaining: RATE_LIMIT_PER_24H }
+
+  const isWithin24h = data.last_generated_at && new Date(data.last_generated_at) > new Date(since)
+  const effectiveCount = isWithin24h ? (data.generation_count ?? 0) : 0
+  const remaining = Math.max(0, RATE_LIMIT_PER_24H - effectiveCount)
+
+  return { plan: data.plan_data, remaining }
+}
+
+/**
+ * [NEW] Delete current farming plan so user can regenerate fresh.
+ */
+export async function deleteFarmingPlan() {
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Unauthorized' }
+
+  const { error } = await supabase
+    .from('farming_plans')
+    .delete()
+    .eq('user_id', user.id)
+
+  if (error) {
+    console.error('Error deleting farming plan:', error)
+    return { error: error.message }
   }
 
-  return { plan: data.plan_data }
+  return { success: true }
 }
