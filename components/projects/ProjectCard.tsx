@@ -63,7 +63,7 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
       case 'In Progress': return 'bg-tertiary-container text-on-tertiary-container font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
       case 'Vesting': return 'bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-300 font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
       case 'Missed': return 'bg-error-container text-on-error-container font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
-      default: return 'bg-surface-container-high text-on-surface-variant font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
+      default: return 'bg-surface-container border border-outline-variant text-on-surface-variant font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
     }
   }
 
@@ -164,7 +164,7 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
                 </div>
               )}
             </div>
-            <div className="mt-6 pt-4 border-t border-outline-variant/30">
+            <div className="mt-4">
               <p className="font-label-sm text-outline">Updated {formatDistanceToNow(new Date(project.updated_at), { addSuffix: true })}</p>
             </div>
         </CardContent>
