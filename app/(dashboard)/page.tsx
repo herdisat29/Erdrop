@@ -175,19 +175,20 @@ export default async function DashboardPage() {
                   const totalTasks = projectLogs.length
 
                   return (
-                    <tr key={project.id} className="hover:bg-surface-bright transition-colors group">
+                    <tr key={project.id} className="hover:bg-surface-container-highest transition-colors group relative">
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
+                        <Link href={`/projects/${project.id}`} className="absolute inset-0 z-10" aria-label={`View ${project.name}`} />
+                        <div className="flex items-center gap-3 relative z-0 pointer-events-none">
                           <div className="w-8 h-8 rounded-lg bg-primary-container/30 flex items-center justify-center text-primary font-bold uppercase shrink-0">
                             {project.name.charAt(0)}
                           </div>
                           <span className="font-label-bold whitespace-nowrap">{project.name}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-body-md text-on-surface-variant whitespace-nowrap">
+                      <td className="px-6 py-4 text-body-md text-on-surface-variant whitespace-nowrap relative z-0 pointer-events-none">
                         {project.chain || 'Unknown'}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 relative z-0 pointer-events-none">
                         <span className={`whitespace-nowrap px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                           project.status === 'In Progress' || project.status === 'Eligible' 
                             ? 'bg-secondary-fixed text-on-secondary-container'
@@ -198,13 +199,13 @@ export default async function DashboardPage() {
                           {project.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 relative z-0 pointer-events-none">
                         <div className="text-[12px] font-bold text-on-surface-variant whitespace-nowrap">
                           {completedTasks} / {totalTasks}
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-right">
-                        <Link href={`/projects/${project.id}`} className="text-primary opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-surface-container-low rounded-full inline-block">
+                      <td className="px-6 py-4 text-right relative z-20">
+                        <Link href={`/projects/${project.id}`} className="text-primary opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-surface-container-lowest rounded-full inline-block">
                           <span className="material-symbols-outlined align-middle">chevron_right</span>
                         </Link>
                       </td>
