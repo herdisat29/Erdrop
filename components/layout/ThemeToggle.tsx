@@ -22,8 +22,8 @@ export function ThemeToggle() {
       className="relative flex h-9 w-9 items-center justify-center rounded-full border border-zinc-200 dark:border-white/10 bg-white/50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-white/10 transition-all text-zinc-600 dark:text-zinc-400"
       title="Toggle Theme"
     >
-      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all duration-500 ease-in-out dark:-rotate-90 dark:scale-0 text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
+      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all duration-500 ease-in-out dark:rotate-0 dark:scale-100 text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
       <span className="sr-only">Toggle theme</span>
     </button>
   )
