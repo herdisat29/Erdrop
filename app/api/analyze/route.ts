@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     }
 
     // Initialize Gemini model
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
 
     const prompt = `
       You are an expert crypto and airdrop analyst. Analyze the following airdrop project and provide an objective assessment.
