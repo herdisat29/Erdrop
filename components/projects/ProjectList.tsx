@@ -96,13 +96,13 @@ export function ProjectList({ projects }: ProjectListProps) {
           <div className="flex bg-surface-container border border-outline-variant p-1 rounded-xl">
             <button
               onClick={() => setViewMode('list')}
-              className={`p-1.5 transition-all rounded-lg ${viewMode === 'list' ? 'bg-on-surface text-inverse-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}
+              className={`p-1.5 transition-all rounded-lg ${viewMode === 'list' ? 'bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100'}`}
             >
               <ListIcon className="h-4 w-4" />
             </button>
             <button
               onClick={() => setViewMode('board')}
-              className={`p-1.5 transition-all rounded-lg ${viewMode === 'board' ? 'bg-on-surface text-inverse-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}
+              className={`p-1.5 transition-all rounded-lg ${viewMode === 'board' ? 'bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white' : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100'}`}
             >
               <LayoutGrid className="h-4 w-4" />
             </button>
