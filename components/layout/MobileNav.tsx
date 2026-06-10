@@ -9,10 +9,10 @@ export function MobileNav() {
   return (
     <nav className="md:hidden fixed bottom-0 left-0 w-full z-40 flex items-center gap-2 overflow-x-auto px-4 pb-4 pt-2 bg-surface/90 backdrop-blur-md rounded-t-xl border-t-2 border-primary-container/20 scrollbar-hide">
       {[
-        { href: "/", icon: "grid_view", label: "Home" },
+        { href: "/", icon: "grid_view", label: "Dashboard" },
         { href: "/projects", icon: "folder", label: "Projects" },
         { href: "/calendar", icon: "calendar_month", label: "Calendar" },
-        { href: "/plan", icon: "psychology", label: "Plan" },
+        { href: "/plan", icon: "psychology", label: "AI Plan" },
       ].map((item) => {
         const isActive =
           pathname === item.href ||
@@ -38,31 +38,6 @@ export function MobileNav() {
         );
       })}
       <Link
-        href="/import"
-        className={`flex flex-col items-center justify-center rounded-full squishy-interaction min-w-fit transition-colors ${
-          pathname === "/import"
-            ? "bg-primary-container text-on-primary-container px-6 py-1.5"
-            : "text-on-surface-variant px-4 py-2 hover:bg-surface-container-highest"
-        }`}
-      >
-        <span
-          className="material-symbols-outlined"
-          style={
-            pathname === "/import" ? { fontVariationSettings: "'FILL' 1" } : {}
-          }
-        >
-          upload_file
-        </span>
-        <span className="font-label-sm text-[10px]">Import</span>
-      </Link>
-      <a
-        href="/api/export"
-        className="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-highest rounded-full transition-colors squishy-interaction min-w-fit"
-      >
-        <span className="material-symbols-outlined">download</span>
-        <span className="font-label-sm text-[10px]">Export</span>
-      </a>{" "}
-      <Link
         href="/logs"
         className={`flex flex-col items-center justify-center rounded-full squishy-interaction min-w-fit transition-colors ${
           pathname === "/logs"
@@ -80,6 +55,35 @@ export function MobileNav() {
         </span>
         <span className="font-label-sm text-[10px]">Logs</span>
       </Link>
+
+      <div className="h-8 w-px bg-outline-variant/30 mx-1"></div>
+
+      <Link
+        href="/import"
+        className={`flex flex-col items-center justify-center rounded-full squishy-interaction min-w-fit transition-colors ${
+          pathname === "/import"
+            ? "bg-primary-container text-on-primary-container px-6 py-1.5"
+            : "text-on-surface-variant px-4 py-2 hover:bg-surface-container-highest"
+        }`}
+      >
+        <span
+          className="material-symbols-outlined"
+          style={
+            pathname === "/import" ? { fontVariationSettings: "'FILL' 1" } : {}
+          }
+        >
+          upload_file
+        </span>
+        <span className="font-label-sm text-[10px]">Import</span>
+      </Link>
+
+      <a
+        href="/api/export"
+        className="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-highest rounded-full transition-colors squishy-interaction min-w-fit"
+      >
+        <span className="material-symbols-outlined">download</span>
+        <span className="font-label-sm text-[10px]">Export</span>
+      </a>
     </nav>
   );
 }

@@ -16,7 +16,7 @@ export function DesktopSidebar() {
   ]
 
   const toolItems = [
-    { href: '/plan', icon: 'psychology', label: 'AI Masterplan' },
+    { href: '/plan', icon: 'psychology', label: 'AI Plan' },
     { href: '/import', icon: 'upload_file', label: 'Import CSV' },
   ]
 
