@@ -136,16 +136,20 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
           </CardHeader>
           <CardContent className="relative z-10">
             <div className="flex items-end justify-between mt-2">
-              <div>
-                <p className="font-label-bold text-primary uppercase tracking-wider mb-1">
-                  {project.project_type === 'NFT' ? 'Mint Price' : 'Est. Reward'}
-                </p>
-                <p className="font-display-lg text-on-surface">
-                  {project.project_type === 'NFT' 
-                    ? (project.mint_price || 'TBA') 
-                    : (project.estimated_reward || 'TBA')}
-                </p>
-              </div>
+              {project.project_type === 'NFT' || project.status === 'Claimed' ? (
+                <div>
+                  <p className="font-label-bold text-primary uppercase tracking-wider mb-1">
+                    {project.project_type === 'NFT' ? 'Mint Price' : 'Est. Reward'}
+                  </p>
+                  <p className="font-display-lg text-on-surface">
+                    {project.project_type === 'NFT' 
+                      ? (project.mint_price || 'TBA') 
+                      : (project.estimated_reward || 'TBA')}
+                  </p>
+                </div>
+              ) : (
+                <div />
+              )}
               {project.deadline && (
                 <div className="text-right">
                   <p className="font-label-bold text-secondary uppercase tracking-wider mb-1">

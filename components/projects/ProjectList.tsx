@@ -4,7 +4,7 @@ import { useState, useOptimistic, useTransition } from 'react'
 import { Project } from '@/types'
 import { ProjectCard } from './ProjectCard'
 import { CreateProjectDialog } from './CreateProjectDialog'
-import { LayoutGrid, List as ListIcon } from 'lucide-react'
+import { LayoutGrid, List as ListIcon, ChevronDown, ChevronRight } from 'lucide-react'
 import {
   Select,
   SelectContent,
@@ -22,6 +22,17 @@ export function ProjectList({ projects }: ProjectListProps) {
   const [chainFilter, setChainFilter] = useState<string>('All')
   const [typeFilter, setTypeFilter] = useState<string>('All')
   const [viewMode, setViewMode] = useState<'list' | 'board'>('board')
+  const [expandedStatuses, setExpandedStatuses] = useState<Record<string, boolean>>({
+    'Not Started': true,
+    'In Progress': true,
+    'Eligible': true,
+    'Vesting': true,
+    'Claimed': true,
+  })
+
+  const toggleStatus = (status: string) => {
+    setExpandedStatuses(prev => ({ ...prev, [status]: !prev[status] }))
+  }
 
   const [optimisticProjects, addOptimisticDelete] = useOptimistic(
     projects,
@@ -132,27 +143,36 @@ export function ProjectList({ projects }: ProjectListProps) {
           ))}
         </div>
       ) : (
-        <div className="flex gap-6 overflow-x-auto pb-4 snap-x animate-in fade-in zoom-in-95 duration-500 min-h-[60vh] scrollbar-hide">
+        <div className="flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-500">
           {['Not Started', 'In Progress', 'Eligible', 'Vesting', 'Claimed'].map((status) => {
             const columnProjects = filteredProjects.filter(p => p.status === status)
+            const isExpanded = expandedStatuses[status]
             return (
-              <div key={status} className="flex-shrink-0 w-80 snap-start flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-label-bold text-on-surface uppercase tracking-widest text-sm">{status}</h3>
+              <div key={status} className="flex flex-col gap-4">
+                <button 
+                  onClick={() => toggleStatus(status)}
+                  className="flex items-center justify-between bg-surface-container-lowest p-3 rounded-xl border border-outline-variant hover:bg-surface-container transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    {isExpanded ? <ChevronDown className="h-5 w-5 text-on-surface-variant" /> : <ChevronRight className="h-5 w-5 text-on-surface-variant" />}
+                    <h3 className="font-label-bold text-on-surface uppercase tracking-widest text-sm">{status}</h3>
+                  </div>
                   <span className="bg-surface-container border border-outline-variant text-on-surface-variant font-label-bold text-xs py-0.5 px-2 rounded-full">
                     {columnProjects.length}
                   </span>
-                </div>
-                <div className="flex flex-col gap-3">
-                  {columnProjects.map(project => (
-                    <ProjectCard key={project.id} project={project} onOptimisticDelete={() => addOptimisticDelete(project.id)} />
-                  ))}
-                  {columnProjects.length === 0 && (
-                    <div className="border border-dashed border-outline-variant rounded-2xl h-24 flex items-center justify-center text-xs font-label-bold uppercase tracking-widest text-on-surface-variant">
-                      Empty
-                    </div>
-                  )}
-                </div>
+                </button>
+                {isExpanded && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pl-2 border-l-2 border-outline-variant/30">
+                    {columnProjects.map(project => (
+                      <ProjectCard key={project.id} project={project} onOptimisticDelete={() => addOptimisticDelete(project.id)} />
+                    ))}
+                    {columnProjects.length === 0 && (
+                      <div className="border border-dashed border-outline-variant rounded-2xl h-24 flex items-center justify-center text-xs font-label-bold uppercase tracking-widest text-on-surface-variant col-span-full">
+                        Empty
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )
           })}
