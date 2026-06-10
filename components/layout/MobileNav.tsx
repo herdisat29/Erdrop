@@ -7,12 +7,14 @@ export function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 w-full z-40 flex items-center gap-2 overflow-x-auto px-4 pb-4 pt-2 bg-surface/90 backdrop-blur-md rounded-t-xl border-t-2 border-primary-container/20 scrollbar-hide">
+    <nav className="md:hidden fixed bottom-0 left-0 w-full z-40 flex items-center gap-1 overflow-x-auto px-2 pb-4 pt-2 bg-surface/90 backdrop-blur-md rounded-t-xl border-t-2 border-primary-container/20 scrollbar-hide">
       {[
         { href: "/", icon: "grid_view", label: "Dashboard" },
         { href: "/projects", icon: "folder", label: "Projects" },
         { href: "/calendar", icon: "calendar_month", label: "Calendar" },
         { href: "/plan", icon: "psychology", label: "AI Plan" },
+        { href: "/logs", icon: "assignment", label: "Logs" },
+        { href: "/import", icon: "upload_file", label: "Import" },
       ].map((item) => {
         const isActive =
           pathname === item.href ||
@@ -21,10 +23,10 @@ export function MobileNav() {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex flex-col items-center justify-center rounded-full squishy-interaction min-w-fit transition-colors ${
+            className={`flex flex-col items-center justify-center rounded-2xl squishy-interaction min-w-[64px] px-2 py-2 transition-colors ${
               isActive
-                ? "bg-primary-container text-on-primary-container px-6 py-1.5"
-                : "text-on-surface-variant px-4 py-2 hover:bg-surface-container-highest"
+                ? "bg-primary-container text-on-primary-container"
+                : "text-on-surface-variant hover:bg-surface-container-highest"
             }`}
           >
             <span
@@ -33,56 +35,17 @@ export function MobileNav() {
             >
               {item.icon}
             </span>
-            <span className="font-label-sm text-[10px]">{item.label}</span>
+            <span className="font-label-sm text-[10px] mt-0.5">{item.label}</span>
           </Link>
         );
       })}
-      <Link
-        href="/logs"
-        className={`flex flex-col items-center justify-center rounded-full squishy-interaction min-w-fit transition-colors ${
-          pathname === "/logs"
-            ? "bg-primary-container text-on-primary-container px-6 py-1.5"
-            : "text-on-surface-variant px-4 py-2 hover:bg-surface-container-highest"
-        }`}
-      >
-        <span
-          className="material-symbols-outlined"
-          style={
-            pathname === "/logs" ? { fontVariationSettings: "'FILL' 1" } : {}
-          }
-        >
-          assignment
-        </span>
-        <span className="font-label-sm text-[10px]">Logs</span>
-      </Link>
-
-      <div className="h-8 w-px bg-outline-variant/30 mx-1"></div>
-
-      <Link
-        href="/import"
-        className={`flex flex-col items-center justify-center rounded-full squishy-interaction min-w-fit transition-colors ${
-          pathname === "/import"
-            ? "bg-primary-container text-on-primary-container px-6 py-1.5"
-            : "text-on-surface-variant px-4 py-2 hover:bg-surface-container-highest"
-        }`}
-      >
-        <span
-          className="material-symbols-outlined"
-          style={
-            pathname === "/import" ? { fontVariationSettings: "'FILL' 1" } : {}
-          }
-        >
-          upload_file
-        </span>
-        <span className="font-label-sm text-[10px]">Import</span>
-      </Link>
 
       <a
         href="/api/export"
-        className="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-highest rounded-full transition-colors squishy-interaction min-w-fit"
+        className="flex flex-col items-center justify-center text-on-surface-variant px-2 py-2 min-w-[64px] hover:bg-surface-container-highest rounded-2xl transition-colors squishy-interaction"
       >
         <span className="material-symbols-outlined">download</span>
-        <span className="font-label-sm text-[10px]">Export</span>
+        <span className="font-label-sm text-[10px] mt-0.5">Export</span>
       </a>
     </nav>
   );
