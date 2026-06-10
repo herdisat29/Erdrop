@@ -148,7 +148,9 @@ export default async function DashboardPage() {
             View All Projects
           </Link>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl overflow-x-auto">
+        
+        {/* Desktop Table (Hidden on small screens) */}
+        <div className="hidden md:block bg-surface-container-lowest border border-outline-variant rounded-2xl overflow-x-auto">
           <table className="w-full text-left min-w-[600px]">
             <thead>
               <tr className="bg-surface-container-low border-b border-outline-variant">
@@ -176,17 +178,17 @@ export default async function DashboardPage() {
                     <tr key={project.id} className="hover:bg-surface-bright transition-colors group">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-primary-container/30 flex items-center justify-center text-primary font-bold uppercase">
+                          <div className="w-8 h-8 rounded-lg bg-primary-container/30 flex items-center justify-center text-primary font-bold uppercase shrink-0">
                             {project.name.charAt(0)}
                           </div>
-                          <span className="font-label-bold">{project.name}</span>
+                          <span className="font-label-bold whitespace-nowrap">{project.name}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-body-md text-on-surface-variant">
+                      <td className="px-6 py-4 text-body-md text-on-surface-variant whitespace-nowrap">
                         {project.chain || 'Unknown'}
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                        <span className={`whitespace-nowrap px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                           project.status === 'In Progress' || project.status === 'Eligible' 
                             ? 'bg-secondary-fixed text-on-secondary-container'
                             : project.status === 'Claimed'
@@ -197,13 +199,8 @@ export default async function DashboardPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex -space-x-2">
-                          <div className="w-6 h-6 rounded-full border-2 border-surface-container-lowest bg-primary-container flex items-center justify-center text-[10px] font-bold text-on-primary-container" title="Completed Tasks">
-                            {completedTasks}
-                          </div>
-                          <div className="w-6 h-6 rounded-full border-2 border-surface-container-lowest bg-tertiary-container flex items-center justify-center text-[10px] font-bold text-on-tertiary-container" title="Total Tasks">
-                            {totalTasks}
-                          </div>
+                        <div className="text-[12px] font-bold text-on-surface-variant whitespace-nowrap">
+                          {completedTasks} / {totalTasks}
                         </div>
                       </td>
                       <td className="px-6 py-4 text-right">
@@ -217,6 +214,56 @@ export default async function DashboardPage() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile List (Hidden on medium/large screens) */}
+        <div className="md:hidden flex flex-col gap-3">
+          {recentProjects.length === 0 ? (
+            <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 text-center text-on-surface-variant">
+              No projects yet. Start by adding one!
+            </div>
+          ) : (
+            recentProjects.map((project) => {
+              const projectLogs = logs.filter(l => l.project_id === project.id)
+              const completedTasks = projectLogs.filter(l => l.status === 'Completed').length
+              const totalTasks = projectLogs.length
+
+              return (
+                <Link key={project.id} href={`/projects/${project.id}`} className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-4 flex flex-col gap-3 hover:bg-surface-container-low transition-colors">
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-primary-container/30 flex items-center justify-center text-primary font-bold uppercase shrink-0 text-lg">
+                        {project.name.charAt(0)}
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-label-bold text-on-surface line-clamp-1">{project.name}</span>
+                        <span className="text-[12px] text-on-surface-variant">{project.chain || 'Unknown'}</span>
+                      </div>
+                    </div>
+                    <span className={`px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider whitespace-nowrap shrink-0 ${
+                      project.status === 'In Progress' || project.status === 'Eligible' 
+                        ? 'bg-secondary-fixed text-on-secondary-container'
+                        : project.status === 'Claimed'
+                        ? 'bg-primary-container text-on-primary-container'
+                        : 'bg-surface-container-highest text-on-surface-variant'
+                    }`}>
+                      {project.status}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between border-t border-outline-variant/30 pt-3 mt-1">
+                    <div className="flex items-center gap-1.5 text-[12px] text-on-surface-variant font-medium">
+                      <span className="material-symbols-outlined text-[16px]">task_alt</span>
+                      <span>Tasks: {completedTasks} / {totalTasks}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-[12px] text-primary font-bold">
+                      Open Project
+                      <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                    </div>
+                  </div>
+                </Link>
+              )
+            })
+          )}
         </div>
       </section>
     </div>
