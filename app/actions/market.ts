@@ -159,17 +159,22 @@ export async function getCryptoNews() {
       if (!res.ok) throw new Error('CryptoPanic API failed')
       return res.json()
     } else {
-      // Mock data for development if no token
+      // Fallback to CryptoCompare public API (No token required)
+      const res = await fetch('https://min-api.cryptocompare.com/data/v2/news/?lang=EN', {
+        next: { revalidate: 600 }
+      })
+      if (!res.ok) throw new Error('CryptoCompare API failed')
+      const ccData = await res.json()
+      
+      // Map CryptoCompare format to match CryptoPanic format
       return {
-        results: [
-          { id: 1, title: 'Bitcoin surges past new resistance levels', domain: 'coindesk.com', created_at: new Date().toISOString() },
-          { id: 2, title: 'Ethereum network upgrade scheduled for next month', domain: 'cointelegraph.com', created_at: new Date().toISOString() },
-          { id: 3, title: 'Major protocol announces massive airdrop', domain: 'theblock.co', created_at: new Date().toISOString() },
-          { id: 4, title: 'Regulatory bodies issue new crypto framework', domain: 'bloomberg.com', created_at: new Date().toISOString() },
-          { id: 5, title: 'DeFi TVL reaches all time high in Q3', domain: 'defillama.com', created_at: new Date().toISOString() },
-          { id: 6, title: 'Pro-only news: Market manipulation detected', domain: 'wsj.com', created_at: new Date().toISOString() },
-          { id: 7, title: 'Pro-only news: Alpha leak for upcoming token launch', domain: 'alpha.io', created_at: new Date().toISOString() },
-        ]
+        results: ccData.Data.map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          domain: item.source_info?.name || 'Crypto News',
+          url: item.url,
+          created_at: new Date(item.published_on * 1000).toISOString()
+        }))
       }
     }
   }, 15) // News cache is 15 mins
