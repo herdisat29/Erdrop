@@ -76,13 +76,13 @@ function BetaWelcomeContent({ onClose }: { onClose: () => void }) {
           <Feature included text="NFT trending collections" />
           <Feature included text="Portfolio value tracker" />
           <Feature included text="Export CSV/JSON" />
-          <Feature included text="AI analysis" subtle="3x total beta limit" />
-          <Feature included text="AI farming plan" subtle="3x total beta limit" />
+          <Feature included text="AI analysis" subtle="3x per day beta limit" />
+          <Feature included text="AI farming plan" subtle="3x per day beta limit" />
         </div>
       </div>
 
       <div className="bg-primary/5 border border-primary/20 rounded-2xl p-4 mb-6 text-sm text-on-surface-variant text-center">
-        AI features are limited to <strong className="text-on-surface">3 uses per user</strong> during beta to manage costs.
+        AI features are limited to <strong className="text-on-surface">3 uses per day</strong> during beta to manage costs.
         This will increase at launch.
       </div>
 

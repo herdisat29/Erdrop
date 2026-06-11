@@ -104,7 +104,7 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
           </p>
           <div className="bg-surface-container/50 px-4 py-2 rounded-xl border border-outline-variant/30 mb-6 flex items-center gap-2 text-xs font-medium text-on-surface-variant">
             <span className="material-symbols-outlined text-[16px] text-amber-500">info</span>
-            During Beta, you can use AI Analysis 3 times total.
+            During Beta, you can use AI Analysis 3 times per day. Resets at midnight.
           </div>
           <Button 
             onClick={() => handleAnalyze(false)} 

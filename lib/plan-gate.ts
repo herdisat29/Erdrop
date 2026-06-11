@@ -75,13 +75,16 @@ export async function checkFeatureAccess(
 
       const profile = await ensureProfile(userId)
       const limit = IS_BETA_PHASE ? BETA_AI_LIMIT : FREE_LIMITS.ai_analysis
+      const since = new Date(Date.now() - 24 * 60 * 60 * 1000)
+      const isWithinWindow = profile.ai_analysis_reset_at && new Date(profile.ai_analysis_reset_at) > since
+      const count = isWithinWindow ? profile.ai_analysis_count : 0
 
-      if (profile.ai_analysis_count >= limit) {
+      if (count >= limit) {
         return {
           allowed: false,
           reason: IS_BETA_PHASE
-            ? `Beta limit reached (${limit} AI analyses). Limit will increase when we launch.`
-            : `Free plan limit reached (${limit} total). Upgrade to Pro for unlimited!`,
+            ? `Beta limit reached (${limit}/day). Resets tomorrow.`
+            : `Free limit reached (${limit}/day). Upgrade to Pro for unlimited!`,
           plan,
           betaLimitReached: IS_BETA_PHASE,
         }
@@ -103,16 +106,15 @@ async function checkAiPlanLimit(
   isPro: boolean
 ): Promise<{ allowed: boolean; reason?: string; plan: UserPlan; remaining?: number; betaLimitReached?: boolean }> {
   const profile = await ensureProfile(userId)
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000)
+  const isWithinWindow = profile.ai_plan_reset_at && new Date(profile.ai_plan_reset_at) > since
+  const count = isWithinWindow ? profile.ai_plan_count : 0
 
   if (isPro) {
-    const since = new Date(Date.now() - 24 * 60 * 60 * 1000)
-    const isWithinWindow = profile.ai_plan_reset_at && new Date(profile.ai_plan_reset_at) > since
-    const count = isWithinWindow ? profile.ai_plan_count : 0
-
     if (count >= PRO_LIMITS.ai_plan) {
       return {
         allowed: false,
-        reason: `Pro plan limit reached (${PRO_LIMITS.ai_plan}/day). Resets in a few hours.`,
+        reason: `Pro plan limit reached (${PRO_LIMITS.ai_plan}/day). Resets tomorrow.`,
         plan,
         remaining: 0,
       }
@@ -121,18 +123,18 @@ async function checkAiPlanLimit(
   } else {
     const limit = IS_BETA_PHASE ? BETA_AI_LIMIT : FREE_LIMITS.ai_plan
 
-    if (profile.ai_plan_count >= limit) {
+    if (count >= limit) {
       return {
         allowed: false,
         reason: IS_BETA_PHASE
-          ? `Beta limit reached (${limit} farming plans). Limit will increase when we launch.`
-          : `Free plan allows ${limit} farming plans total. Upgrade to Pro for 5/day!`,
+          ? `Beta limit reached (${limit}/day). Resets tomorrow.`
+          : `Free limit reached (${limit}/day). Upgrade to Pro for 5/day!`,
         plan,
         remaining: 0,
         betaLimitReached: IS_BETA_PHASE,
       }
     }
-    return { allowed: true, plan, remaining: limit - profile.ai_plan_count }
+    return { allowed: true, plan, remaining: limit - count }
   }
 }
 
@@ -155,10 +157,15 @@ export async function incrementAiUsage(userId: string, type: 'analysis' | 'plan'
       })
       .eq('id', userId)
   } else {
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000)
+    const isWithinWindow = profile.ai_analysis_reset_at && new Date(profile.ai_analysis_reset_at) > since
+    const newCount = isWithinWindow ? profile.ai_analysis_count + 1 : 1
+
     await supabase
       .from('profiles')
       .update({
-        ai_analysis_count: profile.ai_analysis_count + 1,
+        ai_analysis_count: newCount,
+        ai_analysis_reset_at: isWithinWindow ? profile.ai_analysis_reset_at : now,
         updated_at: now,
       })
       .eq('id', userId)
