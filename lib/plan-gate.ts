@@ -2,50 +2,44 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { ensureProfile } from '@/lib/privy/server'
+import { IS_BETA_PHASE, BETA_AI_LIMIT } from '@/lib/config'
 import type { UserPlan } from '@/types'
 
 // ============================================
-// Free tier limits
+// Limits
 // ============================================
 const FREE_LIMITS = {
-  ai_analysis: 3,       // 3 total for beta
-  ai_plan: 3,           // 3 total for beta
-  export: false,         // blocked
+  ai_analysis: BETA_AI_LIMIT,
+  ai_plan: BETA_AI_LIMIT,
+  export: false,
 } as const
 
 const PRO_LIMITS = {
-  ai_analysis: Infinity, // unlimited re-analyze
-  ai_plan: 5,            // 5 per day
-  export: true,          // allowed
+  ai_analysis: Infinity,
+  ai_plan: 5,
+  export: true,
 } as const
 
 // ============================================
 // Core gate functions
 // ============================================
 
-/**
- * Check if user has Pro plan. Returns plan info.
- */
 export async function getPlanInfo(userId: string) {
   const profile = await ensureProfile(userId)
   const isPro = profile.plan === 'pro'
-  
-  return {
-    plan: profile.plan as UserPlan,
-    isPro,
-    profile,
-  }
+  return { plan: profile.plan as UserPlan, isPro, profile }
 }
 
-/**
- * Check if a premium feature is allowed for the user.
- * Returns { allowed, reason, plan }
- */
 export async function checkFeatureAccess(
   userId: string,
   feature: 'export' | 'ai_analysis' | 'ai_plan' | 'trending_realtime' | 'nft_trending' | 'crypto_news_unlimited'
-): Promise<{ allowed: boolean; reason?: string; plan: UserPlan }> {
+): Promise<{ allowed: boolean; reason?: string; plan: UserPlan; betaLimitReached?: boolean }> {
   const { plan, isPro } = await getPlanInfo(userId)
+
+  // During beta: all non-AI Pro features are unlocked for everyone
+  if (IS_BETA_PHASE && feature !== 'ai_analysis' && feature !== 'ai_plan') {
+    return { allowed: true, plan }
+  }
 
   switch (feature) {
     case 'export':
@@ -76,18 +70,24 @@ export async function checkFeatureAccess(
         plan,
       }
 
-    case 'ai_analysis':
+    case 'ai_analysis': {
       if (isPro) return { allowed: true, plan }
-      
+
       const profile = await ensureProfile(userId)
-      if (profile.ai_analysis_count >= FREE_LIMITS.ai_analysis) {
+      const limit = IS_BETA_PHASE ? BETA_AI_LIMIT : FREE_LIMITS.ai_analysis
+
+      if (profile.ai_analysis_count >= limit) {
         return {
           allowed: false,
-          reason: `Free plan limit reached (${FREE_LIMITS.ai_analysis} total). Upgrade to Beta Pro for unlimited!`,
-          plan
+          reason: IS_BETA_PHASE
+            ? `Beta limit reached (${limit} AI analyses). Limit will increase when we launch.`
+            : `Free plan limit reached (${limit} total). Upgrade to Pro for unlimited!`,
+          plan,
+          betaLimitReached: IS_BETA_PHASE,
         }
       }
       return { allowed: true, plan }
+    }
 
     case 'ai_plan':
       return await checkAiPlanLimit(userId, plan, isPro)
@@ -97,20 +97,14 @@ export async function checkFeatureAccess(
   }
 }
 
-/**
- * Check AI Farming Plan limit.
- * Free: 1 total ever. Pro: 5/day.
- */
 async function checkAiPlanLimit(
   userId: string,
   plan: UserPlan,
   isPro: boolean
-): Promise<{ allowed: boolean; reason?: string; plan: UserPlan; remaining?: number }> {
+): Promise<{ allowed: boolean; reason?: string; plan: UserPlan; remaining?: number; betaLimitReached?: boolean }> {
   const profile = await ensureProfile(userId)
-  const supabase = createClient()
 
   if (isPro) {
-    // Pro: 5 per 24h window
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000)
     const isWithinWindow = profile.ai_plan_reset_at && new Date(profile.ai_plan_reset_at) > since
     const count = isWithinWindow ? profile.ai_plan_count : 0
@@ -125,22 +119,23 @@ async function checkAiPlanLimit(
     }
     return { allowed: true, plan, remaining: PRO_LIMITS.ai_plan - count }
   } else {
-    // Free: 1 total ever
-    if (profile.ai_plan_count >= FREE_LIMITS.ai_plan) {
+    const limit = IS_BETA_PHASE ? BETA_AI_LIMIT : FREE_LIMITS.ai_plan
+
+    if (profile.ai_plan_count >= limit) {
       return {
         allowed: false,
-        reason: `Free plan allows ${FREE_LIMITS.ai_plan} farming plans total. Upgrade to Beta Pro for 5/day!`,
+        reason: IS_BETA_PHASE
+          ? `Beta limit reached (${limit} farming plans). Limit will increase when we launch.`
+          : `Free plan allows ${limit} farming plans total. Upgrade to Pro for 5/day!`,
         plan,
         remaining: 0,
+        betaLimitReached: IS_BETA_PHASE,
       }
     }
-    return { allowed: true, plan, remaining: FREE_LIMITS.ai_plan - profile.ai_plan_count }
+    return { allowed: true, plan, remaining: limit - profile.ai_plan_count }
   }
 }
 
-/**
- * Increment AI usage counter after successful generation.
- */
 export async function incrementAiUsage(userId: string, type: 'analysis' | 'plan') {
   const supabase = createClient()
   const profile = await ensureProfile(userId)

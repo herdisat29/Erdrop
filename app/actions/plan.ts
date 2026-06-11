@@ -16,7 +16,7 @@ export async function generateFarmingPlan() {
   // Plan-based rate limiting
   const access = await checkFeatureAccess(user.id, 'ai_plan')
   if (!access.allowed) {
-    return { error: access.reason, upgrade: true }
+    return { error: access.reason, upgrade: !access.betaLimitReached }
   }
 
   // Fetch existing farming plan for upsert

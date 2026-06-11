@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     // Check access limits (handles both free total limit and pro force re-analyze logic)
     const access = await checkFeatureAccess(user.id, 'ai_analysis')
     if (!access.allowed) {
-      return NextResponse.json({ error: access.reason || 'Upgrade to Beta Pro to analyze more projects', upgrade: true }, { status: 403 })
+      return NextResponse.json({ error: access.reason || 'Upgrade to Beta Pro to analyze more projects', upgrade: !access.betaLimitReached }, { status: 403 })
     }
 
     // Fetch project details for context

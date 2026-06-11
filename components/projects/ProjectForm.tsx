@@ -117,11 +117,11 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         
         {/* Type Toggle */}
-        <div className="grid grid-cols-2 gap-2 p-1 bg-zinc-900/50 rounded-md border border-zinc-800">
+        <div className="grid grid-cols-2 gap-2 p-1 bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 rounded-md border border-outline-variant dark:border-zinc-800">
           <Button
             type="button"
             variant="ghost"
-            className={`rounded-sm ${!isNFT ? 'bg-zinc-800 text-white shadow-sm' : 'text-zinc-400 hover:text-white'}`}
+            className={`rounded-sm ${!isNFT ? 'bg-surface-container-highest dark:bg-zinc-800 text-on-surface dark:text-white shadow-sm' : 'text-zinc-400 hover:text-on-surface dark:text-white'}`}
             onClick={() => form.setValue('project_type', 'Token')}
           >
             Token
@@ -129,7 +129,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
           <Button
             type="button"
             variant="ghost"
-            className={`rounded-sm ${isNFT ? 'bg-zinc-800 text-white shadow-sm' : 'text-zinc-400 hover:text-white'}`}
+            className={`rounded-sm ${isNFT ? 'bg-surface-container-highest dark:bg-zinc-800 text-on-surface dark:text-white shadow-sm' : 'text-zinc-400 hover:text-on-surface dark:text-white'}`}
             onClick={() => form.setValue('project_type', 'NFT')}
           >
             NFT
@@ -141,9 +141,9 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-zinc-300">Project Name</FormLabel>
+              <FormLabel className="text-on-surface-variant dark:text-zinc-300">Project Name</FormLabel>
               <FormControl>
-                <Input placeholder={isNFT ? "e.g. Pudgy Penguins" : "e.g. Arbitrum, LayerZero"} className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                <Input placeholder={isNFT ? "e.g. Pudgy Penguins" : "e.g. Arbitrum, LayerZero"} className="bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -157,9 +157,9 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
               name="chain"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-zinc-300">Chain</FormLabel>
+                  <FormLabel className="text-on-surface-variant dark:text-zinc-300">Chain</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Ethereum" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                    <Input placeholder="e.g. Ethereum" className="bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -171,14 +171,14 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-zinc-300">Status</FormLabel>
+                  <FormLabel className="text-on-surface-variant dark:text-zinc-300">Status</FormLabel>
                   <Select onValueChange={(val) => field.onChange(val || '')} value={field.value ?? null}>
                     <FormControl>
-                      <SelectTrigger className="bg-zinc-900/50 border-zinc-800 text-white">
+                      <SelectTrigger className="bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white">
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                    <SelectContent className="bg-surface-container dark:bg-zinc-900 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white">
                       <SelectItem value="Not Started">Not Started</SelectItem>
                       <SelectItem value="In Progress">In Progress</SelectItem>
                       <SelectItem value="Eligible">Eligible</SelectItem>
@@ -201,14 +201,14 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-zinc-300">Status</FormLabel>
+                  <FormLabel className="text-on-surface-variant dark:text-zinc-300">Status</FormLabel>
                   <Select onValueChange={(val) => field.onChange(val || '')} value={field.value ?? null}>
                     <FormControl>
-                      <SelectTrigger className="bg-zinc-900/50 border-zinc-800 text-white">
+                      <SelectTrigger className="bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white">
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                    <SelectContent className="bg-surface-container dark:bg-zinc-900 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white">
                       <SelectItem value="Not Started">Not Started</SelectItem>
                       <SelectItem value="In Progress">In Progress</SelectItem>
                       <SelectItem value="Eligible">Eligible</SelectItem>
@@ -226,9 +226,9 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
               name="chain"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-zinc-300">Chain</FormLabel>
+                  <FormLabel className="text-on-surface-variant dark:text-zinc-300">Chain</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Ethereum" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                    <Input placeholder="e.g. Ethereum" className="bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -243,9 +243,9 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
             name="website"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-zinc-300">{isNFT ? "Mint Website" : "Website"}</FormLabel>
+                <FormLabel className="text-on-surface-variant dark:text-zinc-300">{isNFT ? "Mint Website" : "Website"}</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://..." className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                  <Input placeholder="https://..." className="bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -257,9 +257,9 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
             name="twitter_url"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-zinc-300">Twitter (X) URL</FormLabel>
+                <FormLabel className="text-on-surface-variant dark:text-zinc-300">Twitter (X) URL</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://x.com/..." className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                  <Input placeholder="https://x.com/..." className="bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -274,14 +274,14 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
               name="difficulty"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-zinc-300">Difficulty</FormLabel>
+                  <FormLabel className="text-on-surface-variant dark:text-zinc-300">Difficulty</FormLabel>
                   <Select onValueChange={(val) => field.onChange(val || '')} value={field.value ?? null}>
                     <FormControl>
-                      <SelectTrigger className="bg-zinc-900/50 border-zinc-800 text-white">
+                      <SelectTrigger className="bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white">
                         <SelectValue placeholder="Select difficulty" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                    <SelectContent className="bg-surface-container dark:bg-zinc-900 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white">
                       <SelectItem value="Easy">Easy</SelectItem>
                       <SelectItem value="Medium">Medium</SelectItem>
                       <SelectItem value="Hard">Hard</SelectItem>
@@ -297,9 +297,9 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
               name="estimated_reward"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-zinc-300">Est. Reward</FormLabel>
+                  <FormLabel className="text-on-surface-variant dark:text-zinc-300">Est. Reward</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. $1000 or 500 Pts" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                    <Input placeholder="e.g. $1000 or 500 Pts" className="bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -315,9 +315,9 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
               name="mint_price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-zinc-300">Mint Price</FormLabel>
+                  <FormLabel className="text-on-surface-variant dark:text-zinc-300">Mint Price</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Free, 0.01 ETH" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                    <Input placeholder="e.g. Free, 0.01 ETH" className="bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -329,9 +329,9 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
               name="collection_size"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-zinc-300">Collection Size</FormLabel>
+                  <FormLabel className="text-on-surface-variant dark:text-zinc-300">Collection Size</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. 10000, TBA" className="bg-zinc-900/50 border-zinc-800 text-white" {...field} />
+                    <Input placeholder="e.g. 10000, TBA" className="bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -345,9 +345,9 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
           name="deadline"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-zinc-300">{isNFT ? "Mint Date" : "Deadline"}</FormLabel>
+              <FormLabel className="text-on-surface-variant dark:text-zinc-300">{isNFT ? "Mint Date" : "Deadline"}</FormLabel>
               <FormControl>
-                <Input type="date" className="bg-zinc-900/50 border-zinc-800 text-white w-full dark:[color-scheme:dark]" {...field} />
+                <Input type="date" className="bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white w-full dark:[color-scheme:dark]" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -359,11 +359,11 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
           name="notes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-zinc-300">Notes / Tasks</FormLabel>
+              <FormLabel className="text-on-surface-variant dark:text-zinc-300">Notes / Tasks</FormLabel>
               <FormControl>
                 <Textarea 
                   placeholder={isNFT ? "Waitlist details, discord requirements..." : "Bridge 0.1 ETH, swap 3 times..."}
-                  className="resize-none bg-zinc-900/50 border-zinc-800 text-white h-24" 
+                  className="resize-none bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white h-24" 
                   {...field} 
                 />
               </FormControl>
@@ -373,7 +373,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
         />
 
         <div className="pt-4 flex justify-end">
-          <Button type="submit" disabled={isLoading} className="w-full sm:w-auto bg-violet-600 hover:bg-violet-700 text-white">
+          <Button type="submit" disabled={isLoading} className="w-full sm:w-auto bg-violet-600 hover:bg-violet-700 text-on-surface dark:text-white">
             {isLoading ? 'Saving...' : (initialData ? 'Update Project' : 'Add Project')}
           </Button>
         </div>

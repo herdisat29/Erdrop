@@ -7,6 +7,7 @@ import { MobileNav } from "@/components/layout/MobileNav";
 import { DesktopSidebar } from "@/components/layout/DesktopSidebar";
 import { PricingModal } from "@/components/paywall/PricingModal";
 import { ErdropLogo } from "@/components/ui/icons";
+import { IS_BETA_PHASE } from "@/lib/config";
 
 export default async function DashboardLayout({
   children,
@@ -61,7 +62,7 @@ export default async function DashboardLayout({
       <MobileNav isPro={isPro} />
 
       {/* Pricing Modal */}
-      <PricingModal isPro={isPro} />
+      <PricingModal isPro={isPro} isBetaPhase={IS_BETA_PHASE} />
     </div>
   );
 }
