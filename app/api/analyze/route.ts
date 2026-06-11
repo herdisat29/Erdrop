@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getPrivyUser } from '@/lib/privy/server'
+import { incrementAiUsage, checkFeatureAccess } from '@/lib/plan-gate'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 
 export async function POST(req: Request) {
   try {
-    const { projectId } = await req.json()
+    const { projectId, force } = await req.json()
 
     if (!projectId) {
       return NextResponse.json({ error: 'Project ID is required' }, { status: 400 })
@@ -31,8 +32,22 @@ export async function POST(req: Request) {
       .eq('project_id', projectId)
       .single()
 
-    if (existingAnalysis) {
+    // If existing analysis and not forcing re-analysis, return it
+    if (existingAnalysis && !force) {
       return NextResponse.json(existingAnalysis)
+    }
+
+    // If forcing re-analysis, check if user is Pro
+    if (force) {
+      const access = await checkFeatureAccess(user.id, 'ai_analysis')
+      if (!access.allowed) {
+        return NextResponse.json({ error: access.reason || 'Upgrade to Pro to re-analyze projects', upgrade: true }, { status: 403 })
+      }
+      
+      // Delete existing analysis if any so we don't have duplicates
+      if (existingAnalysis) {
+        await supabase.from('ai_analyses').delete().eq('id', existingAnalysis.id)
+      }
     }
 
     // Fetch project details for context
@@ -111,6 +126,9 @@ export async function POST(req: Request) {
       console.error('Error saving analysis:', saveError)
       return NextResponse.json(insertData)
     }
+
+    // Track AI usage for Free vs Pro gating logic
+    await incrementAiUsage(user.id, 'analysis')
 
     return NextResponse.json(savedAnalysis)
 

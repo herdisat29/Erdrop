@@ -5,8 +5,9 @@ import { AiAnalysis, RecommendationType } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Sparkles, CheckCircle2, XCircle, Loader2, Target, BrainCircuit } from 'lucide-react'
+import { Sparkles, CheckCircle2, XCircle, Loader2, Target, BrainCircuit, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
+import { ProBadge } from '@/components/paywall/ProBadge'
 
 interface AIAnalysisProps {
   projectId: string
@@ -17,18 +18,22 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
   const [analysis, setAnalysis] = useState<AiAnalysis | null>(initialAnalysis)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
 
-  const handleAnalyze = async () => {
+  const handleAnalyze = async (force = false) => {
     setIsAnalyzing(true)
     try {
       const res = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ projectId })
+        body: JSON.stringify({ projectId, force })
       })
 
       const data = await res.json()
 
       if (!res.ok) {
+        if (data.upgrade) {
+          toast.error(data.error, { action: { label: 'Upgrade', onClick: () => window.location.href = '/pricing' } })
+          return
+        }
         throw new Error(data.error || 'Failed to analyze project')
       }
 
@@ -76,7 +81,7 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
             Get an objective assessment of this project's airdrop potential, red flags, and farming recommendations powered by Google Gemini.
           </p>
           <Button 
-            onClick={handleAnalyze} 
+            onClick={() => handleAnalyze(false)} 
             className="font-label-bold uppercase tracking-widest bg-primary text-on-primary hover:bg-primary/90 rounded-full squishy-interaction gap-2 shadow-md px-6"
           >
             <Sparkles className="h-4 w-4" />
@@ -108,6 +113,16 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
           <CardTitle className="font-headline-md text-on-surface flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
             AI Analysis
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="ml-4 h-8 rounded-full border-outline-variant/50 hover:bg-surface-container gap-1.5"
+              onClick={() => handleAnalyze(true)}
+            >
+              <RefreshCw className="h-3 w-3" />
+              <span className="text-xs font-label-bold">Re-analyze</span>
+              <ProBadge className="ml-1" />
+            </Button>
           </CardTitle>
           <Badge variant="outline" className={`px-3 py-1 text-xs font-label-bold uppercase tracking-wider rounded-full ${getRecommendationStyle(analysis.recommendation)}`}>
             {analysis.recommendation}

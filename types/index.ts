@@ -1,11 +1,21 @@
 export type ProjectStatus = 'Not Started' | 'In Progress' | 'Eligible' | 'Claimed' | 'Missed' | 'Vesting'
 export type ProjectDifficulty = 'Easy' | 'Medium' | 'Hard'
 
+export type UserPlan = 'free' | 'pro'
+
 export interface Profile {
   id: string
+  plan: UserPlan
+  plan_expires_at: string | null
+  subscription_id: string | null
+  ai_analysis_count: number
+  ai_plan_count: number
+  ai_analysis_reset_at: string | null
+  ai_plan_reset_at: string | null
   display_name: string | null
   avatar_url: string | null
   created_at: string
+  updated_at: string
 }
 
 export type ProjectType = 'Token' | 'NFT'

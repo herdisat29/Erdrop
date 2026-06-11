@@ -2,6 +2,9 @@ import { createClient } from '@/lib/supabase/server'
 import { getPrivyUser } from '@/lib/privy/server'
 import { Project, Log } from '@/types'
 import { PortfolioCharts } from '@/components/analytics/PortfolioCharts'
+import { TrendingTokens } from '@/components/market/TrendingTokens'
+import { TrendingNFTs } from '@/components/market/TrendingNFTs'
+import { CryptoNews } from '@/components/market/CryptoNews'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
@@ -149,8 +152,17 @@ export default async function DashboardPage() {
           <span className="material-symbols-outlined text-primary text-3xl">insights</span>
           <h4 className="font-headline-md text-headline-md text-on-surface">Analytics</h4>
         </div>
-        <div className="-mt-4">
-          <PortfolioCharts projects={projects} />
+        <div className="grid lg:grid-cols-[1fr_300px] gap-6 md:gap-8 mb-8">
+          <div className="w-full min-w-0 flex flex-col gap-6 md:gap-8">
+            <PortfolioCharts projects={projects} />
+            <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+              <TrendingTokens />
+              <TrendingNFTs />
+            </div>
+          </div>
+          <div className="flex flex-col gap-6 md:gap-8 w-full min-w-0 lg:max-w-xs">
+            <CryptoNews />
+          </div>
         </div>
       </div>
 

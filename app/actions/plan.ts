@@ -2,11 +2,10 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { getPrivyUser } from '@/lib/privy/server'
+import { checkFeatureAccess, incrementAiUsage } from '@/lib/plan-gate'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
-
-const RATE_LIMIT_PER_24H = 5
 
 export async function generateFarmingPlan() {
   const user = await getPrivyUser()
@@ -14,24 +13,18 @@ export async function generateFarmingPlan() {
 
   const supabase = createClient()
 
-  // Rate limiting
-  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+  // Plan-based rate limiting
+  const access = await checkFeatureAccess(user.id, 'ai_plan')
+  if (!access.allowed) {
+    return { error: access.reason, upgrade: true }
+  }
+
+  // Fetch existing farming plan for upsert
   const { data: recentPlans } = await supabase
     .from('farming_plans')
     .select('id, generation_count, last_generated_at')
     .eq('user_id', user.id)
     .single()
-
-  const currentCount = recentPlans?.generation_count ?? 0
-  const lastGenerated = recentPlans?.last_generated_at
-  const isWithin24h = lastGenerated && new Date(lastGenerated) > new Date(since)
-  const effectiveCount = isWithin24h ? currentCount : 0
-
-  if (effectiveCount >= RATE_LIMIT_PER_24H) {
-    const resetAt = new Date(new Date(lastGenerated!).getTime() + 24 * 60 * 60 * 1000)
-    const hoursLeft = Math.ceil((resetAt.getTime() - Date.now()) / (1000 * 60 * 60))
-    return { error: `Rate limit reached (${RATE_LIMIT_PER_24H}/day). Resets in ~${hoursLeft} hour(s).` }
-  }
 
   // Fetch active projects
   const { data: projects, error } = await supabase
@@ -73,7 +66,7 @@ export async function generateFarmingPlan() {
     const cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim()
     const plan = JSON.parse(cleanJson)
 
-    const newCount = isWithin24h ? currentCount + 1 : 1
+    const newCount = (recentPlans?.generation_count ?? 0) + 1
     const now = new Date().toISOString()
 
     if (recentPlans) {
@@ -97,7 +90,10 @@ export async function generateFarmingPlan() {
         })
     }
 
-    return { plan, remaining: RATE_LIMIT_PER_24H - newCount }
+    // Track usage in profiles table for plan gating
+    await incrementAiUsage(user.id, 'plan')
+
+    return { plan, remaining: (access as any).remaining ? (access as any).remaining - 1 : 0 }
   } catch (err: any) {
     console.error('AI Generation failed:', err)
     return { error: `AI generation failed: ${err.message}` }
@@ -106,10 +102,9 @@ export async function generateFarmingPlan() {
 
 export async function getFarmingPlan() {
   const user = await getPrivyUser()
-  if (!user) return { plan: null, remaining: RATE_LIMIT_PER_24H }
+  if (!user) return { plan: null, remaining: 0 }
 
   const supabase = createClient()
-  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
 
   const { data } = await supabase
     .from('farming_plans')
@@ -117,11 +112,11 @@ export async function getFarmingPlan() {
     .eq('user_id', user.id)
     .single()
 
-  if (!data) return { plan: null, remaining: RATE_LIMIT_PER_24H }
+  if (!data) return { plan: null, remaining: 1 }
 
-  const isWithin24h = data.last_generated_at && new Date(data.last_generated_at) > new Date(since)
-  const effectiveCount = isWithin24h ? (data.generation_count ?? 0) : 0
-  const remaining = Math.max(0, RATE_LIMIT_PER_24H - effectiveCount)
+  // Get remaining from plan gate
+  const access = await checkFeatureAccess(user.id, 'ai_plan')
+  const remaining = (access as any).remaining ?? 0
 
   return { plan: data.plan_data, remaining }
 }

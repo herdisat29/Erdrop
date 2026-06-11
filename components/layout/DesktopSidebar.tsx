@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { ProBadge } from '@/components/paywall/ProBadge'
 
 export function DesktopSidebar() {
   const pathname = usePathname()
@@ -101,12 +102,14 @@ export function DesktopSidebar() {
               <Link key={item.href} href={item.href} className={`px-4 py-3 rounded-full transition-colors flex items-center gap-3 squishy-interaction ${isActive ? 'bg-primary-container text-on-primary-container' : 'hover:bg-surface-container-highest'}`}>
                 <span className="material-symbols-outlined" style={isActive ? {fontVariationSettings: "'FILL' 1"} : {}}>{item.icon}</span>
                 {item.label}
+                {item.label === 'AI Plan' && <ProBadge className="ml-auto" />}
               </Link>
             )
           })}
           <a href="/api/export" className="px-4 py-3 rounded-full hover:bg-surface-container-highest transition-colors flex items-center gap-3 squishy-interaction">
             <span className="material-symbols-outlined">download</span>
             Export CSV
+            <ProBadge className="ml-auto" />
           </a>
         </nav>
       </div>

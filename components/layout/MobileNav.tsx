@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ProBadge } from '@/components/paywall/ProBadge'
 
 export function MobileNav() {
   const pathname = usePathname();
@@ -35,7 +36,10 @@ export function MobileNav() {
             >
               {item.icon}
             </span>
-            <span className="font-label-sm text-[10px] mt-0.5">{item.label}</span>
+            <span className="font-label-sm text-[10px] mt-0.5 flex items-center gap-1">
+              {item.label}
+              {item.label === 'AI Plan' && <ProBadge className="scale-75 origin-left" />}
+            </span>
           </Link>
         );
       })}
@@ -45,7 +49,10 @@ export function MobileNav() {
         className="flex flex-col items-center justify-center text-on-surface-variant px-3 py-2 min-w-[72px] hover:bg-surface-container-highest rounded-2xl transition-colors squishy-interaction"
       >
         <span className="material-symbols-outlined">download</span>
-        <span className="font-label-sm text-[10px] mt-0.5">Export</span>
+        <span className="font-label-sm text-[10px] mt-0.5 flex items-center gap-1">
+          Export
+          <ProBadge className="scale-75 origin-left" />
+        </span>
       </a>
     </nav>
   );
