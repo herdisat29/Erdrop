@@ -96,6 +96,7 @@ export async function getTrendingTokens() {
       name: c.item.name,
       symbol: c.item.symbol,
       thumb: c.item.thumb,
+      price: c.item.data?.price || 0,
       price_btc: c.item.price_btc,
       rank: c.item.market_cap_rank
     })),

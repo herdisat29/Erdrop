@@ -5,6 +5,17 @@ import { getTrendingTokens } from '@/app/actions/market'
 import { ProBadge } from '@/components/paywall/ProBadge'
 import { UpgradePrompt } from '@/components/paywall/UpgradePrompt'
 
+const formatPrice = (price: number) => {
+  if (!price) return '--'
+  if (price < 0.0001) {
+    return '$' + price.toLocaleString('en-US', { maximumFractionDigits: 8 })
+  }
+  if (price < 1) {
+    return '$' + price.toLocaleString('en-US', { maximumFractionDigits: 4, minimumFractionDigits: 2 })
+  }
+  return '$' + price.toLocaleString('en-US', { maximumFractionDigits: 2, minimumFractionDigits: 2 })
+}
+
 export function TrendingTokens() {
   const [data, setData] = useState<any>(null)
   const [isPro, setIsPro] = useState(true)
@@ -60,8 +71,8 @@ export function TrendingTokens() {
                 <p className="text-[10px] font-label-bold uppercase tracking-wider text-on-surface-variant/70">{coin.symbol}</p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-on-surface">
-                  {coin.price_btc ? (coin.price_btc * 65000).toFixed(4) : '--'}
+                <p className="text-sm text-on-surface font-mono">
+                  {formatPrice(coin.price)}
                 </p>
                 <p className="text-[10px] text-on-surface-variant/60">Rank #{coin.rank || '--'}</p>
               </div>
