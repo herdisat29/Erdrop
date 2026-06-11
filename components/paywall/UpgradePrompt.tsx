@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { PremiumLogo } from '@/components/ui/icons'
 
 interface UpgradePromptProps {
   feature: string
@@ -34,7 +35,7 @@ export function UpgradePrompt({ feature, description, inline }: UpgradePromptPro
       
       <div className="relative z-10">
         <div className="w-12 h-12 rounded-2xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-4">
-          <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>lock</span>
+          <PremiumLogo className="text-green-600 dark:text-green-400 w-6 h-6" />
         </div>
         
         <h3 className="text-lg font-bold text-on-surface mb-2">

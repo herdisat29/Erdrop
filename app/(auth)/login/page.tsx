@@ -3,6 +3,7 @@
 import { usePrivy } from '@privy-io/react-auth'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { ErdropLogo } from '@/components/ui/icons'
 
 export default function LoginPage() {
   const { login, ready, authenticated } = usePrivy()
@@ -81,12 +82,10 @@ export default function LoginPage() {
             
             {/* Header */}
             <div className="flex flex-col items-center text-center gap-6">
-              <div className="w-14 h-14 bg-primary flex items-center justify-center rounded-2xl shadow-sm">
-                <span className="material-symbols-outlined text-white text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-              </div>
+              <ErdropLogo className="w-20 h-20 text-primary" />
               <div className="flex flex-col gap-1 items-center">
                 <div className="flex flex-col items-center">
-                  <span className="text-[40px] font-extrabold text-primary tracking-tight leading-none">ERDROP</span>
+                  <span className="text-[44px] font-extrabold text-primary tracking-tighter leading-none" style={{ fontFamily: 'Plus Jakarta Sans, Inter, sans-serif' }}>Erdrop</span>
                   <span className="text-[10px] font-bold text-outline tracking-widest uppercase mt-1">Track Every Drop</span>
                 </div>
                 <div className="flex flex-col mt-3">

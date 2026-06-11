@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ProBadge } from '@/components/paywall/ProBadge'
+import { ErdropLogo } from '@/components/ui/icons'
 
 export function DesktopSidebar({ isPro = false }: { isPro?: boolean }) {
   const pathname = usePathname()
@@ -63,13 +64,11 @@ export function DesktopSidebar({ isPro = false }: { isPro?: boolean }) {
   return (
     <aside className="w-[260px] border-r-2 border-outline-variant/30 bg-surface-container-lowest p-6 hidden md:flex flex-col z-40 transition-all duration-300 relative h-screen sticky top-0 shrink-0">
       <div className="flex items-center justify-between h-12 mb-8">
-        <div className="flex items-center gap-3 font-headline-lg-mobile text-primary tracking-tighter cursor-pointer overflow-hidden">
-          <div className="p-2 bg-primary-container/20 rounded-xl text-primary shrink-0">
-            <span className="material-symbols-outlined">bubble_chart</span>
-          </div>
+        <div className="flex items-center gap-3 px-2">
+          <ErdropLogo className="w-8 h-8 text-primary shrink-0" />
           <div className="flex flex-col">
-            <span className="font-extrabold text-xl leading-none">ERDROP</span>
-            <span className="text-[9px] font-label-bold uppercase tracking-widest text-on-surface-variant whitespace-nowrap">Track Every Drop</span>
+            <span className="font-extrabold text-[22px] tracking-tighter leading-none text-primary" style={{ fontFamily: 'Plus Jakarta Sans, Inter, sans-serif' }}>Erdrop</span>
+            <span className="text-[9px] font-bold text-outline tracking-widest uppercase">Track Every Drop</span>
           </div>
         </div>
         <button 

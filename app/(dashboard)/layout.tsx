@@ -6,6 +6,7 @@ import { UserProfile } from "@/components/auth/UserProfile";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { DesktopSidebar } from "@/components/layout/DesktopSidebar";
 import { PricingModal } from "@/components/paywall/PricingModal";
+import { ErdropLogo } from "@/components/ui/icons";
 
 export default async function DashboardLayout({
   children,
@@ -31,14 +32,12 @@ export default async function DashboardLayout({
         {/* Top App Bar */}
         <header className="sticky top-0 left-0 w-full z-30 flex justify-between items-center px-4 md:px-6 h-16 bg-surface/80 backdrop-blur-md rounded-b-xl border-b-2 border-primary-container/30">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-primary-container/20 rounded-xl text-primary md:hidden">
-              <span className="material-symbols-outlined">bubble_chart</span>
-            </div>
+            <ErdropLogo className="w-8 h-8 text-primary md:hidden" />
             <div className="flex flex-col md:hidden">
-              <h1 className="text-headline-lg-mobile font-extrabold text-primary tracking-tighter leading-none">
-                ERDROP
+              <h1 className="text-[22px] font-extrabold text-primary tracking-tighter leading-none" style={{ fontFamily: 'Plus Jakarta Sans, Inter, sans-serif' }}>
+                Erdrop
               </h1>
-              <span className="text-[9px] font-label-bold uppercase tracking-widest text-on-surface-variant">
+              <span className="text-[9px] font-bold text-outline tracking-widest uppercase mt-0.5">
                 Track Every Drop
               </span>
             </div>
