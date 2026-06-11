@@ -33,7 +33,7 @@ export async function updateProject(id: string, data: ProjectUpdate) {
   const supabase = createClient()
   
   // If deadline is being updated, we reset email_notified so they can receive an alert again
-  const updateData = { ...data }
+  const updateData: ProjectUpdate & { email_notified?: boolean } = { ...data }
   if (updateData.deadline !== undefined) {
     updateData.email_notified = false
   }
