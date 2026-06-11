@@ -31,9 +31,12 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
   const [analysis, setAnalysis] = useState<AiAnalysis | null>(initialAnalysis)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
 
-  // Sync state if initialAnalysis changes from server navigation
+  // FIX 1: Only sync from server if we don't already have local analysis data or if server has valid data.
+  // Prevents race condition where router.refresh() returns before Supabase commits.
   useEffect(() => {
-    setAnalysis(initialAnalysis)
+    if (initialAnalysis) {
+      setAnalysis(initialAnalysis)
+    }
   }, [initialAnalysis])
 
   const handleAnalyze = async (force = false) => {
@@ -55,9 +58,11 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
         throw new Error(data.error || 'Failed to analyze project')
       }
 
+      // FIX 2: Set local state first, then do a background refresh with a delay
+      // so the server catches up without risking a null flash.
       setAnalysis(data)
       toast.success('AI Analysis complete!')
-      router.refresh()
+      setTimeout(() => router.refresh(), 1500)
     } catch (error: any) {
       toast.error(error.message || 'Something went wrong')
     } finally {
