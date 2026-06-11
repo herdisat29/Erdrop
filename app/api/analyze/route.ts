@@ -142,8 +142,11 @@ export async function POST(req: Request) {
     }
 
     if (saveError) {
-      console.error('Error saving analysis:', saveError)
-      return NextResponse.json(insertData)
+      console.error('Error saving analysis:', JSON.stringify(saveError, null, 2))
+      return NextResponse.json({ 
+        error: `Failed to save: ${saveError.message} (code: ${saveError.code})`,
+        details: saveError 
+      }, { status: 500 })
     }
 
     // Track AI usage for Free vs Pro gating logic
