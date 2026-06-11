@@ -12,6 +12,16 @@ export async function GET(req: Request) {
   // Pro gate: export is Pro-only
   const access = await checkFeatureAccess(user.id, 'export')
   if (!access.allowed) {
+    const referer = req.headers.get('referer')
+    if (referer) {
+      try {
+        const refUrl = new URL(referer)
+        refUrl.searchParams.set('upgrade', 'true')
+        return NextResponse.redirect(refUrl.toString())
+      } catch (e) {
+        // fallback
+      }
+    }
     const url = new URL('/?upgrade=true', req.url)
     return NextResponse.redirect(url)
   }

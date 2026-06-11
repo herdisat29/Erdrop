@@ -59,7 +59,7 @@ function PricingModalContent({ isPro }: { isPro: boolean }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 border-none bg-transparent shadow-none [&>button]:hidden">
+      <DialogContent className="sm:max-w-4xl md:max-w-4xl max-h-[90vh] overflow-y-auto p-0 border-none bg-transparent shadow-none [&>button]:hidden">
         <DialogTitle className="sr-only">Upgrade to Pro</DialogTitle>
         <DialogDescription className="sr-only">Pricing plans for Erdrop</DialogDescription>
         
