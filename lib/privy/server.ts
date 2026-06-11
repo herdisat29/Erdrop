@@ -87,4 +87,3 @@ export async function getUserPlan(userId: string): Promise<UserPlan> {
   return profile.plan
 }
 
-export { privy }
