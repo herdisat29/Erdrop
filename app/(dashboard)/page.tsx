@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getPrivyUser } from '@/lib/privy/server'
 import { Project, Log } from '@/types'
 import { PortfolioCharts } from '@/components/analytics/PortfolioCharts'
 import Link from 'next/link'
@@ -6,12 +7,16 @@ import Link from 'next/link'
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
-  const supabase = await createClient()
+  const user = await getPrivyUser()
+  if (!user) return null
+
+  const supabase = createClient()
 
   // Fetch projects
   const { data: projectsData, error: projectsError } = await supabase
     .from('projects')
     .select('*')
+    .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
   if (projectsError) {
@@ -28,6 +33,7 @@ export default async function DashboardPage() {
   const { data: logsData, error: logsError } = await supabase
     .from('logs')
     .select('id, project_id, status, estimated_value')
+    .eq('user_id', user.id)
 
   if (logsError) {
     throw new Error(`Failed to load logs: ${logsError.message}`)

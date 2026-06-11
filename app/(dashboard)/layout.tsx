@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { getPrivyUser } from "@/lib/privy/server";
 import { redirect } from "next/navigation";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { WalletConnect } from "@/components/wallet/WalletConnect";
@@ -12,10 +12,7 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getPrivyUser();
 
   if (!user) {
     redirect("/login");
@@ -49,9 +46,6 @@ export default async function DashboardLayout({
           <div className="flex items-center gap-3">
             <WalletConnect />
             <ThemeToggle />
-            <span className="text-label-bold text-on-surface-variant hidden lg:inline-block">
-              {user?.email}
-            </span>
             <LogoutButton />
           </div>
         </header>

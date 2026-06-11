@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getPrivyUser } from '@/lib/privy/server'
 import { Project, Log } from '@/types'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -24,7 +25,10 @@ const getStatusColor = (status: string) => {
 
 export default async function ProjectDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const supabase = await createClient()
+  const user = await getPrivyUser()
+  if (!user) return null
+
+  const supabase = createClient()
 
   const { data: project, error: projectError } = await supabase
     .from('projects')

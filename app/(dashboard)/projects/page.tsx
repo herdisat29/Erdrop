@@ -1,15 +1,20 @@
 import { createClient } from '@/lib/supabase/server'
+import { getPrivyUser } from '@/lib/privy/server'
 import { ProjectList } from '@/components/projects/ProjectList'
 import { Project } from '@/types'
 
 export const dynamic = 'force-dynamic'
 
 export default async function ProjectsPage() {
-  const supabase = await createClient()
+  const user = await getPrivyUser()
+  if (!user) return null
+
+  const supabase = createClient()
   
   const { data: projects, error } = await supabase
     .from('projects')
     .select('*')
+    .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
   if (error) {

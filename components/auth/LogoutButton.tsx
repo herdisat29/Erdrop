@@ -1,14 +1,14 @@
 'use client'
 
-import { createClient } from '@/lib/supabase/client'
+import { usePrivy } from '@privy-io/react-auth'
 import { useRouter } from 'next/navigation'
 
 export function LogoutButton() {
   const router = useRouter()
-  const supabase = createClient()
+  const { logout } = usePrivy()
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
+    await logout()
     router.push('/login')
     router.refresh()
   }

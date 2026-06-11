@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { WagmiProviderWrapper } from "@/components/wallet/WagmiProviderWrapper";
+import { PrivyProviderWrapper } from "@/lib/privy/provider";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -37,12 +38,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <WagmiProviderWrapper>
-            <TooltipProvider>
-              {children}
-            </TooltipProvider>
-            <Toaster position="bottom-right" />
-          </WagmiProviderWrapper>
+          <PrivyProviderWrapper>
+            <WagmiProviderWrapper>
+              <TooltipProvider>
+                {children}
+              </TooltipProvider>
+              <Toaster position="bottom-right" />
+            </WagmiProviderWrapper>
+          </PrivyProviderWrapper>
         </ThemeProvider>
       </body>
     </html>

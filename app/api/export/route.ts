@@ -1,29 +1,26 @@
 import { createClient } from '@/lib/supabase/server'
+import { getPrivyUser } from '@/lib/privy/server'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  const supabase = await createClient()
-
-  // Verify auth
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getPrivyUser()
   if (!user) {
     return new NextResponse('Unauthorized', { status: 401 })
   }
 
-  // Fetch all projects
+  const supabase = createClient()
   const { data: projects, error } = await supabase
     .from('projects')
     .select('*')
+    .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
   if (error) {
     return new NextResponse('Error fetching projects', { status: 500 })
   }
 
-  // Create CSV header
   const headers = ['Name', 'Type', 'Chain', 'Status', 'Difficulty', 'Est. Reward', 'Mint Price', 'Collection Size', 'Deadline', 'Twitter', 'Website', 'Notes', 'Created At']
   
-  // Create CSV rows
   const rows = (projects || []).map(p => {
     return [
       `"${(p.name || '').replace(/"/g, '""')}"`,

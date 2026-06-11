@@ -12,6 +12,8 @@
     "@base-ui/react": "^1.5.0",
     "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^5.4.0",
+    "@privy-io/react-auth": "^3.29.2",
+    "@privy-io/server-auth": "^1.32.5",
     "@radix-ui/react-label": "^2.1.9",
     "@radix-ui/react-slot": "^1.2.5",
     "@supabase/ssr": "^0.10.3",

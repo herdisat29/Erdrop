@@ -1,17 +1,15 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { getPrivyUser } from '@/lib/privy/server'
 import { revalidatePath } from 'next/cache'
 import { LogInsert, LogUpdate, ProjectInsert } from '@/types'
 
 export async function createLog(data: LogInsert) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getPrivyUser()
+  if (!user) return { error: 'Unauthorized' }
 
-  if (!user) {
-    return { error: 'Unauthorized' }
-  }
-
+  const supabase = createClient()
   const { error } = await supabase
     .from('logs')
     .insert({
@@ -31,14 +29,10 @@ export async function createLog(data: LogInsert) {
 }
 
 export async function updateLog(id: string, projectId: string, data: LogUpdate) {
-  const supabase = await createClient()
+  const user = await getPrivyUser()
+  if (!user) return { error: 'Unauthorized' }
 
-  // [FIX] Auth check added — was missing before
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    return { error: 'Unauthorized' }
-  }
-
+  const supabase = createClient()
   const { error } = await supabase
     .from('logs')
     .update(data)
@@ -56,14 +50,10 @@ export async function updateLog(id: string, projectId: string, data: LogUpdate) 
 }
 
 export async function deleteLog(id: string, projectId: string) {
-  const supabase = await createClient()
+  const user = await getPrivyUser()
+  if (!user) return { error: 'Unauthorized' }
 
-  // [FIX] Auth check added — was missing before
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    return { error: 'Unauthorized' }
-  }
-
+  const supabase = createClient()
   const { error } = await supabase
     .from('logs')
     .delete()
@@ -81,16 +71,11 @@ export async function deleteLog(id: string, projectId: string) {
 }
 
 /**
- * [NEW] Bulk import projects from CSV via server action.
- * Replaces direct client-side Supabase insert in ImportWizard.
+ * Bulk import projects from CSV via server action.
  */
 export async function bulkCreateProjects(projects: ProjectInsert[]) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
-    return { error: 'Unauthorized' }
-  }
+  const user = await getPrivyUser()
+  if (!user) return { error: 'Unauthorized' }
 
   if (!projects || projects.length === 0) {
     return { error: 'No projects to import' }
@@ -98,6 +83,7 @@ export async function bulkCreateProjects(projects: ProjectInsert[]) {
 
   const projectsWithUser = projects.map(p => ({ ...p, user_id: user.id }))
 
+  const supabase = createClient()
   const { error } = await supabase
     .from('projects')
     .insert(projectsWithUser)

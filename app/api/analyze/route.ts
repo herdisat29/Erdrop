@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { getPrivyUser } from '@/lib/privy/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
-// Initialize the Google Generative AI SDK
-// It requires GEMINI_API_KEY in process.env
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 
 export async function POST(req: Request) {
@@ -18,13 +17,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'GEMINI_API_KEY is not configured' }, { status: 500 })
     }
 
-    const supabase = await createClient()
-
-    // Verify auth
-    const { data: { user } } = await supabase.auth.getUser()
+    const user = await getPrivyUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    const supabase = createClient()
 
     // Check if analysis already exists
     const { data: existingAnalysis } = await supabase
@@ -48,7 +46,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 })
     }
 
-    // Initialize Gemini model
     const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
 
     const prompt = `
@@ -79,8 +76,6 @@ export async function POST(req: Request) {
 
     const result = await model.generateContent(prompt)
     const responseText = result.response.text()
-
-    // Clean up potential markdown JSON wrappers
     const cleanedText = responseText.replace(/```json/gi, '').replace(/```/g, '').trim()
 
     let analysisData
@@ -91,13 +86,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'AI returned invalid format' }, { status: 500 })
     }
 
-    // Validate recommendation enum
     const validRecommendations = ['SKIP', 'WATCH', 'FARM', 'PRIORITY FARM']
     if (!validRecommendations.includes(analysisData.recommendation)) {
       analysisData.recommendation = 'WATCH'
     }
 
-    // Insert to database
     const insertData = {
       project_id: projectId,
       potential_score: analysisData.potential_score,
@@ -116,7 +109,6 @@ export async function POST(req: Request) {
 
     if (saveError) {
       console.error('Error saving analysis:', saveError)
-      // Even if saving fails, return the analysis to the user so it's not a total failure
       return NextResponse.json(insertData)
     }
 

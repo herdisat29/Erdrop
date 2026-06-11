@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getPrivyUser } from '@/lib/privy/server'
 import { Log } from '@/types'
 import { LogTable } from '@/components/logs/LogTable'
 import { Badge } from '@/components/ui/badge'
@@ -6,12 +7,16 @@ import { Badge } from '@/components/ui/badge'
 export const dynamic = 'force-dynamic'
 
 export default async function GlobalLogsPage() {
-  const supabase = await createClient()
+  const user = await getPrivyUser()
+  if (!user) return null
+
+  const supabase = createClient()
 
   // Fetch all logs for the current user
   const { data: logsData, error: logsError } = await supabase
     .from('logs')
     .select('*, projects(name)')
+    .eq('user_id', user.id)
     .order('logged_at', { ascending: false })
 
   if (logsError) {

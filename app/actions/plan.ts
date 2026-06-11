@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { getPrivyUser } from '@/lib/privy/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
@@ -8,27 +9,22 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 const RATE_LIMIT_PER_24H = 5
 
 export async function generateFarmingPlan() {
-  const supabase = await createClient()
+  const user = await getPrivyUser()
+  if (!user) return { error: 'Unauthorized' }
 
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    return { error: 'Unauthorized' }
-  }
+  const supabase = createClient()
 
-  // [FIX] Real rate limiting: count plan generations in last 24h via updated_at
+  // Rate limiting
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
-  const { data: recentPlans, error: countError } = await supabase
+  const { data: recentPlans } = await supabase
     .from('farming_plans')
     .select('id, generation_count, last_generated_at')
     .eq('user_id', user.id)
     .single()
 
-  // Track generation count in the farming_plans row itself
   const currentCount = recentPlans?.generation_count ?? 0
   const lastGenerated = recentPlans?.last_generated_at
   const isWithin24h = lastGenerated && new Date(lastGenerated) > new Date(since)
-
-  // Count resets if last gen was >24h ago
   const effectiveCount = isWithin24h ? currentCount : 0
 
   if (effectiveCount >= RATE_LIMIT_PER_24H) {
@@ -41,16 +37,12 @@ export async function generateFarmingPlan() {
   const { data: projects, error } = await supabase
     .from('projects')
     .select('name, chain, status, difficulty, estimated_reward, deadline, notes')
+    .eq('user_id', user.id)
     .in('status', ['Not Started', 'In Progress', 'Eligible'])
     .order('deadline', { ascending: true })
 
-  if (error) {
-    return { error: `Failed to fetch projects: ${error.message}` }
-  }
-
-  if (!projects || projects.length === 0) {
-    return { error: 'No active projects found. Add some projects to generate a plan.' }
-  }
+  if (error) return { error: `Failed to fetch projects: ${error.message}` }
+  if (!projects || projects.length === 0) return { error: 'No active projects found. Add some projects to generate a plan.' }
 
   try {
     const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
@@ -78,7 +70,6 @@ export async function generateFarmingPlan() {
 
     const result = await model.generateContent(prompt)
     const responseText = result.response.text()
-
     const cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim()
     const plan = JSON.parse(cleanJson)
 
@@ -114,11 +105,10 @@ export async function generateFarmingPlan() {
 }
 
 export async function getFarmingPlan() {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getPrivyUser()
   if (!user) return { plan: null, remaining: RATE_LIMIT_PER_24H }
 
+  const supabase = createClient()
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
 
   const { data } = await supabase
@@ -136,15 +126,11 @@ export async function getFarmingPlan() {
   return { plan: data.plan_data, remaining }
 }
 
-/**
- * [NEW] Delete current farming plan so user can regenerate fresh.
- */
 export async function deleteFarmingPlan() {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getPrivyUser()
   if (!user) return { error: 'Unauthorized' }
 
+  const supabase = createClient()
   const { error } = await supabase
     .from('farming_plans')
     .delete()

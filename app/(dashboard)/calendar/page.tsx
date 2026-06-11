@@ -1,16 +1,21 @@
 import { createClient } from '@/lib/supabase/server'
+import { getPrivyUser } from '@/lib/privy/server'
 import { Project } from '@/types'
 import { format, parseISO, isBefore, startOfToday, isValid } from 'date-fns'
 
 export const dynamic = 'force-dynamic'
 
 export default async function CalendarPage() {
-  const supabase = await createClient()
+  const user = await getPrivyUser()
+  if (!user) return null
+
+  const supabase = createClient()
 
   // Fetch projects with deadlines
   const { data: projectsData, error } = await supabase
     .from('projects')
     .select('*')
+    .eq('user_id', user.id)
     .not('deadline', 'is', null)
     .order('deadline', { ascending: true })
 
