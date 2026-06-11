@@ -33,6 +33,11 @@ export async function updateLog(id: string, projectId: string, data: LogUpdate) 
   if (!user) return { error: 'Unauthorized' }
 
   const supabase = createClient()
+  
+  // Verify project ownership to prevent IDOR
+  const { data: project } = await supabase.from('projects').select('id').eq('id', projectId).eq('user_id', user.id).single()
+  if (!project) return { error: 'Unauthorized' }
+
   const { error } = await supabase
     .from('logs')
     .update(data)
@@ -54,6 +59,11 @@ export async function deleteLog(id: string, projectId: string) {
   if (!user) return { error: 'Unauthorized' }
 
   const supabase = createClient()
+  
+  // Verify project ownership to prevent IDOR
+  const { data: project } = await supabase.from('projects').select('id').eq('id', projectId).eq('user_id', user.id).single()
+  if (!project) return { error: 'Unauthorized' }
+
   const { error } = await supabase
     .from('logs')
     .delete()
