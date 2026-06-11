@@ -25,12 +25,14 @@ export async function POST(req: Request) {
 
     const supabase = createClient()
 
-    // Check if analysis already exists
+    // Check if analysis already exists. Use limit(1) to prevent errors if duplicates exist.
     const { data: existingAnalysis } = await supabase
       .from('ai_analyses')
       .select('*')
       .eq('project_id', projectId)
-      .single()
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
 
     // If existing analysis and not forcing re-analysis, return it
     if (existingAnalysis && !force) {
@@ -101,12 +103,12 @@ export async function POST(req: Request) {
 
     const insertData = {
       project_id: projectId,
-      potential_score: analysisData.potential_score,
-      summary: analysisData.summary,
-      red_flags: analysisData.red_flags || [],
-      green_flags: analysisData.green_flags || [],
+      potential_score: Number(analysisData.potential_score) || 50,
+      summary: String(analysisData.summary || ''),
+      red_flags: Array.isArray(analysisData.red_flags) ? analysisData.red_flags : [],
+      green_flags: Array.isArray(analysisData.green_flags) ? analysisData.green_flags : [],
       recommendation: analysisData.recommendation,
-      reasoning: analysisData.reasoning
+      reasoning: String(analysisData.reasoning || '')
     }
 
     let savedAnalysis

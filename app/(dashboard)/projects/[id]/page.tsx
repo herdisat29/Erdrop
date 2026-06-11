@@ -54,7 +54,9 @@ export default async function ProjectDetail({ params }: { params: Promise<{ id: 
     .from('ai_analyses')
     .select('*')
     .eq('project_id', id)
-    .single()
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
 
   const typedLogs = (logs as Log[]) || []
   
