@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { privy } from '@/lib/privy/server'
+import { Resend } from 'resend'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function GET(request: Request) {
   // Verify cron secret if needed
@@ -34,16 +38,62 @@ export async function GET(request: Request) {
   // Process Token Notifications
   if (tokenProjects && tokenProjects.length > 0) {
     for (const project of tokenProjects) {
-      // Opsi A: Console log
-      // Nanti replace dengan fetch email dari Privy API lalu kirim via Resend
-      console.log(`[CRON] Would send email to user ${project.user_id} — Token Project "${project.name}" deadline in < 24 hours (${project.deadline})`)
+      try {
+        const user = await privy.getUser(project.user_id)
+        const email = user.email ? user.email.address : user.google?.email || user.discord?.email
+        
+        if (email) {
+          console.log(`[CRON] Sending email to ${email} — Token Project "${project.name}" deadline in < 24 hours (${project.deadline})`)
+          
+          await resend.emails.send({
+            from: 'Erdrop <notifications@erdrop.app>',
+            to: email,
+            subject: `Upcoming Deadline: ${project.name}`,
+            html: `
+              <h2>Airdrop Deadline Approaching!</h2>
+              <p>Your tracked token project <strong>${project.name}</strong> is reaching its deadline within 24 hours (${project.deadline}).</p>
+              <p>Make sure you have completed all necessary tasks.</p>
+              <br/>
+              <p><a href="https://erdrop.app/projects">Open Erdrop Dashboard</a></p>
+            `
+          })
+        } else {
+          console.log(`[CRON] User ${project.user_id} has no email linked. Skipping.`)
+        }
+      } catch (error) {
+        console.error(`[CRON] Failed to send email to user ${project.user_id}:`, error)
+      }
     }
   }
 
   // Process NFT Notifications
   if (nftProjects && nftProjects.length > 0) {
     for (const project of nftProjects) {
-      console.log(`[CRON] Would send email to user ${project.user_id} — NFT Project "${project.name}" minting in < 3 hours (${project.deadline})`)
+      try {
+        const user = await privy.getUser(project.user_id)
+        const email = user.email ? user.email.address : user.google?.email || user.discord?.email
+        
+        if (email) {
+          console.log(`[CRON] Sending email to ${email} — NFT Project "${project.name}" minting in < 3 hours (${project.deadline})`)
+          
+          await resend.emails.send({
+            from: 'Erdrop <notifications@erdrop.app>',
+            to: email,
+            subject: `NFT Minting Soon: ${project.name}`,
+            html: `
+              <h2>NFT Minting Reminder!</h2>
+              <p>Your tracked NFT project <strong>${project.name}</strong> is minting in less than 3 hours (${project.deadline}).</p>
+              <p>Prepare your wallet and make sure you're ready to mint.</p>
+              <br/>
+              <p><a href="https://erdrop.app/projects">Open Erdrop Dashboard</a></p>
+            `
+          })
+        } else {
+          console.log(`[CRON] User ${project.user_id} has no email linked. Skipping.`)
+        }
+      } catch (error) {
+        console.error(`[CRON] Failed to send email to user ${project.user_id}:`, error)
+      }
     }
   }
 
