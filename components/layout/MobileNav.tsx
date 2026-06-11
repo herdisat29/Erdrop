@@ -24,21 +24,27 @@ export function MobileNav() {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex flex-col items-center justify-center rounded-2xl squishy-interaction min-w-[72px] px-3 py-2 transition-colors ${
+            className={`relative flex flex-col items-center justify-center rounded-2xl squishy-interaction min-w-[72px] px-3 py-2 transition-colors ${
               isActive
                 ? "bg-primary-container text-on-primary-container"
                 : "text-on-surface-variant hover:bg-surface-container-highest"
             }`}
           >
-            <span
-              className="material-symbols-outlined"
-              style={isActive ? { fontVariationSettings: "'FILL' 1" } : {}}
-            >
-              {item.icon}
-            </span>
-            <span className="font-label-sm text-[10px] mt-0.5 flex items-center gap-1">
+            <div className="relative">
+              <span
+                className="material-symbols-outlined"
+                style={isActive ? { fontVariationSettings: "'FILL' 1" } : {}}
+              >
+                {item.icon}
+              </span>
+              {item.label === 'AI Plan' && (
+                <div className="absolute -top-1.5 -right-6 scale-[0.6] origin-bottom-left pointer-events-none">
+                  <ProBadge />
+                </div>
+              )}
+            </div>
+            <span className="font-label-sm text-[10px] mt-0.5 text-center">
               {item.label}
-              {item.label === 'AI Plan' && <ProBadge className="scale-75 origin-left" />}
             </span>
           </Link>
         );
@@ -46,12 +52,16 @@ export function MobileNav() {
 
       <a
         href="/api/export"
-        className="flex flex-col items-center justify-center text-on-surface-variant px-3 py-2 min-w-[72px] hover:bg-surface-container-highest rounded-2xl transition-colors squishy-interaction"
+        className="relative flex flex-col items-center justify-center text-on-surface-variant px-3 py-2 min-w-[72px] hover:bg-surface-container-highest rounded-2xl transition-colors squishy-interaction"
       >
-        <span className="material-symbols-outlined">download</span>
-        <span className="font-label-sm text-[10px] mt-0.5 flex items-center gap-1">
+        <div className="relative">
+          <span className="material-symbols-outlined">download</span>
+          <div className="absolute -top-1.5 -right-6 scale-[0.6] origin-bottom-left pointer-events-none">
+            <ProBadge />
+          </div>
+        </div>
+        <span className="font-label-sm text-[10px] mt-0.5 text-center">
           Export
-          <ProBadge className="scale-75 origin-left" />
         </span>
       </a>
     </nav>
