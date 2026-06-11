@@ -5,6 +5,7 @@ import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { UserProfile } from "@/components/auth/UserProfile";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { DesktopSidebar } from "@/components/layout/DesktopSidebar";
+import { PricingModal } from "@/components/paywall/PricingModal";
 
 export default async function DashboardLayout({
   children,
@@ -59,6 +60,9 @@ export default async function DashboardLayout({
 
       {/* Mobile Bottom Navigation Bar */}
       <MobileNav isPro={isPro} />
+
+      {/* Pricing Modal */}
+      <PricingModal isPro={isPro} />
     </div>
   );
 }

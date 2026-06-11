@@ -42,7 +42,7 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
 
       if (!res.ok) {
         if (data.upgrade) {
-          toast.error(data.error, { action: { label: 'Upgrade', onClick: () => window.location.href = '/pricing' } })
+          toast.error(data.error, { action: { label: 'Upgrade', onClick: () => window.location.href = '?upgrade=true' } })
           return
         }
         throw new Error(data.error || 'Failed to analyze project')

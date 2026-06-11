@@ -18,7 +18,7 @@ export function UpgradePrompt({ feature, description, inline }: UpgradePromptPro
       <div className="flex items-center gap-2 px-3 py-2 bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-800/30 rounded-xl text-sm">
         <span className="material-symbols-outlined text-green-600 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>lock</span>
         <span className="text-on-surface-variant flex-1">{feature} is a <strong className="text-green-700 dark:text-green-400">Pro</strong> feature</span>
-        <Link href="/pricing" className="text-green-700 dark:text-green-400 font-bold text-xs hover:underline whitespace-nowrap">
+        <Link href="?upgrade=true" className="text-green-700 dark:text-green-400 font-bold text-xs hover:underline whitespace-nowrap">
           Upgrade →
         </Link>
       </div>
@@ -45,7 +45,7 @@ export function UpgradePrompt({ feature, description, inline }: UpgradePromptPro
         </p>
         
         <Link
-          href="/pricing"
+          href="?upgrade=true"
           className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all squishy-interaction text-sm"
         >
           <span className="material-symbols-outlined text-[18px]">rocket_launch</span>

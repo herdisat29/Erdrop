@@ -3,7 +3,7 @@ import { getPrivyUser } from '@/lib/privy/server'
 import { checkFeatureAccess } from '@/lib/plan-gate'
 import { NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(req: Request) {
   const user = await getPrivyUser()
   if (!user) {
     return new NextResponse('Unauthorized', { status: 401 })
@@ -12,10 +12,8 @@ export async function GET() {
   // Pro gate: export is Pro-only
   const access = await checkFeatureAccess(user.id, 'export')
   if (!access.allowed) {
-    return NextResponse.json(
-      { error: access.reason, upgrade: true },
-      { status: 403 }
-    )
+    const url = new URL('/?upgrade=true', req.url)
+    return NextResponse.redirect(url)
   }
 
   const supabase = createClient()
