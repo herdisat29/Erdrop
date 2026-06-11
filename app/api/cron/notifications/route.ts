@@ -48,7 +48,7 @@ export async function GET(request: Request) {
           console.log(`[CRON] Sending email to ${email} — Token Project "${project.name}" deadline in < 24 hours (${project.deadline})`)
           
           const res = await resend.emails.send({
-            from: 'Erdrop <notifications@erdrop.app>',
+            from: 'Erdrop <onboarding@resend.dev>',
             to: email,
             subject: `Upcoming Deadline: ${project.name}`,
             html: `
@@ -84,7 +84,7 @@ export async function GET(request: Request) {
           console.log(`[CRON] Sending email to ${email} — NFT Project "${project.name}" minting in < 3 hours (${project.deadline})`)
           
           const res = await resend.emails.send({
-            from: 'Erdrop <notifications@erdrop.app>',
+            from: 'Erdrop <onboarding@resend.dev>',
             to: email,
             subject: `NFT Minting Soon: ${project.name}`,
             html: `
