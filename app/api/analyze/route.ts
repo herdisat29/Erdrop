@@ -37,12 +37,10 @@ export async function POST(req: Request) {
       return NextResponse.json(existingAnalysis)
     }
 
-    // If forcing re-analysis, check if user is Pro
-    if (force) {
-      const access = await checkFeatureAccess(user.id, 'ai_analysis')
-      if (!access.allowed) {
-        return NextResponse.json({ error: access.reason || 'Upgrade to Pro to re-analyze projects', upgrade: true }, { status: 403 })
-      }
+    // Check access limits (handles both free total limit and pro force re-analyze logic)
+    const access = await checkFeatureAccess(user.id, 'ai_analysis')
+    if (!access.allowed) {
+      return NextResponse.json({ error: access.reason || 'Upgrade to Beta Pro to analyze more projects', upgrade: true }, { status: 403 })
     }
 
     // Fetch project details for context

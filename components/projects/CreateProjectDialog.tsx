@@ -37,9 +37,9 @@ export function CreateProjectDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger 
         render={
-          <Button className="font-label-bold uppercase tracking-widest bg-primary-container text-on-primary-container hover:bg-primary-container/80 rounded-full squishy-interaction gap-2 shadow-sm px-6">
+          <Button className="font-label-bold uppercase tracking-widest bg-primary-container text-on-primary-container hover:bg-primary-container/80 rounded-full squishy-interaction gap-2 shadow-sm px-4 md:px-6">
             <Plus className="h-4 w-4" />
-            Add Project
+            <span className="hidden md:inline">Add Project</span>
           </Button>
         } 
       />

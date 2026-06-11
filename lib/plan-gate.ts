@@ -8,8 +8,8 @@ import type { UserPlan } from '@/types'
 // Free tier limits
 // ============================================
 const FREE_LIMITS = {
-  ai_analysis: 1,       // 1 per project (handled separately)
-  ai_plan: 1,           // 1 total
+  ai_analysis: 3,       // 3 total for beta
+  ai_plan: 3,           // 3 total for beta
   export: false,         // blocked
 } as const
 
@@ -77,13 +77,17 @@ export async function checkFeatureAccess(
       }
 
     case 'ai_analysis':
-      // Free: 1x per project (implied by no force re-analyze)
-      // Pro: unlimited re-analyze (needs force access)
-      return { 
-        allowed: isPro, 
-        reason: isPro ? undefined : 'Upgrade to Pro for unlimited AI re-analysis',
-        plan 
+      if (isPro) return { allowed: true, plan }
+      
+      const profile = await ensureProfile(userId)
+      if (profile.ai_analysis_count >= FREE_LIMITS.ai_analysis) {
+        return {
+          allowed: false,
+          reason: `Free plan limit reached (${FREE_LIMITS.ai_analysis} total). Upgrade to Beta Pro for unlimited!`,
+          plan
+        }
       }
+      return { allowed: true, plan }
 
     case 'ai_plan':
       return await checkAiPlanLimit(userId, plan, isPro)
@@ -125,7 +129,7 @@ async function checkAiPlanLimit(
     if (profile.ai_plan_count >= FREE_LIMITS.ai_plan) {
       return {
         allowed: false,
-        reason: 'Free plan allows 1 farming plan total. Upgrade to Pro for 5/day!',
+        reason: `Free plan allows ${FREE_LIMITS.ai_plan} farming plans total. Upgrade to Beta Pro for 5/day!`,
         plan,
         remaining: 0,
       }

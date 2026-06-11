@@ -113,9 +113,9 @@ function PricingModalContent({ isPro }: { isPro: boolean }) {
                 <Feature included text="Dashboard & stats" />
                 <Feature included text="Trending tokens (delayed 15 min)" subtle="delayed" />
                 <Feature included text="Crypto news (5 headlines/day)" subtle="limited" />
-                <Feature included text="AI analysis 1x per project" subtle="limited" />
-                <Feature included text="AI farming plan 1x total" subtle="limited" />
-                <Feature notIncluded text="NFT trending" />
+                <Feature included text="AI analysis 3x total" subtle="limited" />
+                <Feature included text="AI farming plan 3x total" subtle="limited" />
+                <Feature notIncluded text="NFT trending (Coming Soon)" />
                 <Feature notIncluded text="Portfolio value live" />
                 <Feature notIncluded text="Export data (CSV/JSON)" />
               </div>
@@ -139,7 +139,7 @@ function PricingModalContent({ isPro }: { isPro: boolean }) {
               )}
               <div className="mb-6">
                 <span className="text-xs font-bold uppercase tracking-widest text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-900/30 px-3 py-1 rounded-full">
-                  Pro
+                  Beta Pro
                 </span>
               </div>
               <h2 className="text-4xl font-extrabold text-on-surface tracking-tight">
@@ -151,10 +151,10 @@ function PricingModalContent({ isPro }: { isPro: boolean }) {
                 <Feature included text="Semua fitur Starter" bold />
                 <Feature included text="Trending tokens (realtime)" pro />
                 <Feature included text="Crypto news (unlimited)" pro />
-                <Feature included text="NFT trending collections" pro />
+                <Feature included text="NFT trending (full access)" pro />
                 <Feature included text="Portfolio value tracker (live price)" pro />
                 <Feature included text="AI analysis unlimited re-analyze" pro />
-                <Feature included text="AI farming plan 5x/day" pro />
+                <Feature included text="AI farming plan 3x/day" pro />
                 <Feature included text="Export CSV/JSON" pro />
                 <Feature included text="Priority support" pro />
               </div>
