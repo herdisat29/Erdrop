@@ -36,11 +36,12 @@ export interface Project {
   deadline: string | null
   notes: string | null
   logo_url: string | null
+  email_notified: boolean
   created_at: string
   updated_at: string
 }
 
-export type ProjectInsert = Omit<Project, 'id' | 'user_id' | 'created_at' | 'updated_at'>
+export type ProjectInsert = Omit<Project, 'id' | 'user_id' | 'created_at' | 'updated_at' | 'email_notified'>
 export type ProjectUpdate = Partial<ProjectInsert>
 
 export type LogStatus = 'Pending' | 'Completed' | 'Claimed' | 'Failed'

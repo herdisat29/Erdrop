@@ -31,9 +31,16 @@ export async function updateProject(id: string, data: ProjectUpdate) {
   if (!user) return { error: 'Unauthorized' }
 
   const supabase = createClient()
+  
+  // If deadline is being updated, we reset email_notified so they can receive an alert again
+  const updateData = { ...data }
+  if (updateData.deadline !== undefined) {
+    updateData.email_notified = false
+  }
+
   const { error } = await supabase
     .from('projects')
-    .update(data)
+    .update(updateData)
     .eq('id', id)
     .eq('user_id', user.id)
 

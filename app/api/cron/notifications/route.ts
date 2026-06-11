@@ -24,6 +24,7 @@ export async function GET(request: Request) {
     .from('projects')
     .select('id, user_id, name, deadline')
     .eq('project_type', 'Token')
+    .eq('email_notified', false)
     .gte('deadline', now.toISOString())
     .lte('deadline', in24Hours.toISOString())
 
@@ -32,6 +33,7 @@ export async function GET(request: Request) {
     .from('projects')
     .select('id, user_id, name, deadline')
     .eq('project_type', 'NFT')
+    .eq('email_notified', false)
     .gte('deadline', now.toISOString())
     .lte('deadline', in3Hours.toISOString())
 
@@ -62,6 +64,9 @@ export async function GET(request: Request) {
           if (res.error) {
             console.error(`[CRON] Resend error for user ${project.user_id}:`, res.error)
             errors.push(`Token ${project.name}: ${res.error.message}`)
+          } else {
+            // Mark as notified so it doesn't send again next hour
+            await supabase.from('projects').update({ email_notified: true }).eq('id', project.id)
           }
         } else {
           console.log(`[CRON] User ${project.user_id} has no email linked. Skipping.`)
@@ -98,6 +103,9 @@ export async function GET(request: Request) {
           if (res.error) {
             console.error(`[CRON] Resend error for user ${project.user_id}:`, res.error)
             errors.push(`NFT ${project.name}: ${res.error.message}`)
+          } else {
+            // Mark as notified so it doesn't send again next hour
+            await supabase.from('projects').update({ email_notified: true }).eq('id', project.id)
           }
         } else {
           console.log(`[CRON] User ${project.user_id} has no email linked. Skipping.`)
