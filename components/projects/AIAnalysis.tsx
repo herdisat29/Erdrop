@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Sparkles, CheckCircle2, XCircle, Loader2, Target, BrainCircuit, RefreshCw } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { ProBadge } from '@/components/paywall/ProBadge'
 import {
@@ -26,6 +27,7 @@ interface AIAnalysisProps {
 }
 
 export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
+  const router = useRouter()
   const [analysis, setAnalysis] = useState<AiAnalysis | null>(initialAnalysis)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
 
@@ -50,6 +52,7 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
 
       setAnalysis(data)
       toast.success('AI Analysis complete!')
+      router.refresh()
     } catch (error: any) {
       toast.error(error.message || 'Something went wrong')
     } finally {
@@ -141,8 +144,8 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Regenerate Analysis?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Are you sure you want to regenerate this analysis? This will cost 1 AI generation credit from your quota.
+                  <AlertDialogDescription className="text-on-surface-variant">
+                    This will consume 1 of your AI Analysis limits. Proceed?
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
