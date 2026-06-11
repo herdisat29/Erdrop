@@ -100,7 +100,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
       status: values.status as ProjectStatus,
       difficulty: values.difficulty ? (values.difficulty as ProjectDifficulty) : null,
       estimated_reward: values.estimated_reward || null,
-      deadline: values.deadline || null,
+      deadline: values.deadline ? (values.deadline.length === 10 ? values.deadline + 'T00:00:00Z' : values.deadline.length === 16 ? values.deadline + ':00Z' : values.deadline) : null,
       notes: values.notes || null,
       logo_url: initialData?.logo_url || null, // Preserve if editing
     }
@@ -343,7 +343,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
           name="deadline"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-on-surface-variant dark:text-zinc-300">{isNFT ? "Mint Date" : "Deadline"}</FormLabel>
+              <FormLabel className="text-on-surface-variant dark:text-zinc-300">{isNFT ? "Mint Date (UTC)" : "Deadline (UTC)"}</FormLabel>
               <FormControl>
                 <Input type="datetime-local" className="bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white w-full dark:[color-scheme:dark]" {...field} />
               </FormControl>
