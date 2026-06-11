@@ -8,6 +8,17 @@ import { Badge } from '@/components/ui/badge'
 import { Sparkles, CheckCircle2, XCircle, Loader2, Target, BrainCircuit, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
 import { ProBadge } from '@/components/paywall/ProBadge'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 
 interface AIAnalysisProps {
   projectId: string
@@ -113,16 +124,33 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
           <CardTitle className="font-headline-md text-on-surface flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
             AI Analysis
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="ml-4 h-8 rounded-full border-outline-variant/50 hover:bg-surface-container gap-1.5"
-              onClick={() => handleAnalyze(true)}
-            >
-              <RefreshCw className="h-3 w-3" />
-              <span className="text-xs font-label-bold">Re-analyze</span>
-              <ProBadge className="ml-1" />
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="ml-4 h-8 rounded-full border-outline-variant/50 hover:bg-surface-container gap-1.5"
+                >
+                  <RefreshCw className="h-3 w-3" />
+                  <span className="text-xs font-label-bold">Re-analyze</span>
+                  <ProBadge className="ml-1" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Regenerate Analysis?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to regenerate this analysis? This will cost 1 AI generation credit from your quota.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => handleAnalyze(true)}>
+                    Yes, Regenerate
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </CardTitle>
           <Badge variant="outline" className={`px-3 py-1 text-xs font-label-bold uppercase tracking-wider rounded-full ${getRecommendationStyle(analysis.recommendation)}`}>
             {analysis.recommendation}
