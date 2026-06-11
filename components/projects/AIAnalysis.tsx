@@ -125,16 +125,18 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
             <Sparkles className="h-5 w-5 text-primary" />
             AI Analysis
             <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="ml-4 h-8 rounded-full border-outline-variant/50 hover:bg-surface-container gap-1.5"
-                >
-                  <RefreshCw className="h-3 w-3" />
-                  <span className="text-xs font-label-bold">Re-analyze</span>
-                  <ProBadge className="ml-1" />
-                </Button>
+              <AlertDialogTrigger 
+                render={
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="ml-4 h-8 rounded-full border-outline-variant/50 hover:bg-surface-container gap-1.5"
+                  />
+                }
+              >
+                <RefreshCw className="h-3 w-3" />
+                <span className="text-xs font-label-bold">Re-analyze</span>
+                <ProBadge className="ml-1" />
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>

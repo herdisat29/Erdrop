@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getPrivyUser } from "@/lib/privy/server";
+import { getPrivyUser, ensureProfile } from "@/lib/privy/server";
 import { redirect } from "next/navigation";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { UserProfile } from "@/components/auth/UserProfile";
@@ -17,10 +17,13 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
+  const profile = await ensureProfile(user.id);
+  const isPro = profile.plan === 'pro';
+
   return (
     <div className="flex min-h-screen bg-background text-on-surface font-sans overflow-hidden">
       {/* Desktop Sidebar (Collapsible, Client Component) */}
-      <DesktopSidebar isPro={user.plan === 'pro'} />
+      <DesktopSidebar isPro={isPro} />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col relative w-full h-screen overflow-y-auto pb-24 md:pb-0">
@@ -55,7 +58,7 @@ export default async function DashboardLayout({
       </div>
 
       {/* Mobile Bottom Navigation Bar */}
-      <MobileNav isPro={user.plan === 'pro'} />
+      <MobileNav isPro={isPro} />
     </div>
   );
 }
