@@ -5,6 +5,8 @@ import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: Request) {
   // Verify cron secret if needed
   const authHeader = request.headers.get('authorization');
@@ -66,7 +68,11 @@ export async function GET(request: Request) {
             errors.push(`Token ${project.name}: ${res.error.message}`)
           } else {
             // Mark as notified so it doesn't send again next hour
-            await supabase.from('projects').update({ email_notified: true }).eq('id', project.id)
+            const { error: updateError } = await supabase.from('projects').update({ email_notified: true }).eq('id', project.id)
+            if (updateError) {
+              console.error(`[CRON] Failed to update email_notified for ${project.id}:`, updateError)
+              errors.push(`Token ${project.name} DB Update: ${updateError.message}`)
+            }
           }
         } else {
           console.log(`[CRON] User ${project.user_id} has no email linked. Skipping.`)
@@ -105,7 +111,11 @@ export async function GET(request: Request) {
             errors.push(`NFT ${project.name}: ${res.error.message}`)
           } else {
             // Mark as notified so it doesn't send again next hour
-            await supabase.from('projects').update({ email_notified: true }).eq('id', project.id)
+            const { error: updateError } = await supabase.from('projects').update({ email_notified: true }).eq('id', project.id)
+            if (updateError) {
+              console.error(`[CRON] Failed to update email_notified for ${project.id}:`, updateError)
+              errors.push(`NFT ${project.name} DB Update: ${updateError.message}`)
+            }
           }
         } else {
           console.log(`[CRON] User ${project.user_id} has no email linked. Skipping.`)
