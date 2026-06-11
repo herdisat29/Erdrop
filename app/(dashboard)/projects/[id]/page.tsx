@@ -97,7 +97,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ id: 
             {project.deadline && (
               <span className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-primary text-base">event</span>
-                {project.deadline}
+                {project.deadline.length >= 16 ? project.deadline.substring(0, 16).replace('T', ' ') + ' UTC' : project.deadline}
               </span>
             )}
             {project.difficulty && (

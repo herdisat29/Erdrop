@@ -157,8 +157,11 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
                   </p>
                   <p className="font-headline-md text-on-surface-variant">
                     {(() => {
-                      const d = parseISO(project.deadline)
-                      return isValid(d) ? format(d, 'MMM dd, yyyy') : project.deadline
+                      if (!project.deadline) return 'TBA'
+                      if (project.deadline.length >= 16) {
+                        return project.deadline.substring(0, 16).replace('T', ' ') + ' UTC'
+                      }
+                      return project.deadline
                     })()}
                   </p>
                 </div>
