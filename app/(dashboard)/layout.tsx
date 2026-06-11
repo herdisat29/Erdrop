@@ -20,7 +20,7 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-screen bg-background text-on-surface font-sans overflow-hidden">
       {/* Desktop Sidebar (Collapsible, Client Component) */}
-      <DesktopSidebar />
+      <DesktopSidebar isPro={user.plan === 'pro'} />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col relative w-full h-screen overflow-y-auto pb-24 md:pb-0">
@@ -55,7 +55,7 @@ export default async function DashboardLayout({
       </div>
 
       {/* Mobile Bottom Navigation Bar */}
-      <MobileNav />
+      <MobileNav isPro={user.plan === 'pro'} />
     </div>
   );
 }

@@ -43,11 +43,6 @@ export async function POST(req: Request) {
       if (!access.allowed) {
         return NextResponse.json({ error: access.reason || 'Upgrade to Pro to re-analyze projects', upgrade: true }, { status: 403 })
       }
-      
-      // Delete existing analysis if any so we don't have duplicates
-      if (existingAnalysis) {
-        await supabase.from('ai_analyses').delete().eq('id', existingAnalysis.id)
-      }
     }
 
     // Fetch project details for context
@@ -116,11 +111,35 @@ export async function POST(req: Request) {
       reasoning: analysisData.reasoning
     }
 
-    const { data: savedAnalysis, error: saveError } = await supabase
-      .from('ai_analyses')
-      .insert(insertData)
-      .select()
-      .single()
+    let savedAnalysis
+    let saveError
+
+    if (existingAnalysis && force) {
+      // Upsert/Update the existing one so we don't lose history or duplicate if we somehow get here
+      const res = await supabase
+        .from('ai_analyses')
+        .update({
+          potential_score: analysisData.potential_score,
+          summary: analysisData.summary,
+          red_flags: analysisData.red_flags || [],
+          green_flags: analysisData.green_flags || [],
+          recommendation: analysisData.recommendation,
+          reasoning: analysisData.reasoning
+        })
+        .eq('id', existingAnalysis.id)
+        .select()
+        .single()
+      savedAnalysis = res.data
+      saveError = res.error
+    } else {
+      const res = await supabase
+        .from('ai_analyses')
+        .insert(insertData)
+        .select()
+        .single()
+      savedAnalysis = res.data
+      saveError = res.error
+    }
 
     if (saveError) {
       console.error('Error saving analysis:', saveError)

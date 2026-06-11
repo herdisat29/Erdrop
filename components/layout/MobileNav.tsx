@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ProBadge } from '@/components/paywall/ProBadge'
 
-export function MobileNav() {
+export function MobileNav({ isPro = false }: { isPro?: boolean }) {
   const pathname = usePathname();
 
   return (
@@ -37,7 +37,7 @@ export function MobileNav() {
               >
                 {item.icon}
               </span>
-              {item.label === 'AI Plan' && (
+              {item.label === 'AI Plan' && !isPro && (
                 <div className="absolute -top-1.5 -right-6 scale-[0.6] origin-bottom-left pointer-events-none">
                   <ProBadge />
                 </div>
@@ -56,9 +56,11 @@ export function MobileNav() {
       >
         <div className="relative">
           <span className="material-symbols-outlined">download</span>
-          <div className="absolute -top-1.5 -right-6 scale-[0.6] origin-bottom-left pointer-events-none">
-            <ProBadge />
-          </div>
+          {!isPro && (
+            <div className="absolute -top-1.5 -right-6 scale-[0.6] origin-bottom-left pointer-events-none">
+              <ProBadge />
+            </div>
+          )}
         </div>
         <span className="font-label-sm text-[10px] mt-0.5 text-center">
           Export
