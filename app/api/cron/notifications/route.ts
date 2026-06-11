@@ -35,6 +35,8 @@ export async function GET(request: Request) {
     .gte('deadline', now.toISOString())
     .lte('deadline', in3Hours.toISOString())
 
+  let errors: string[] = []
+
   // Process Token Notifications
   if (tokenProjects && tokenProjects.length > 0) {
     for (const project of tokenProjects) {
@@ -45,7 +47,7 @@ export async function GET(request: Request) {
         if (email) {
           console.log(`[CRON] Sending email to ${email} — Token Project "${project.name}" deadline in < 24 hours (${project.deadline})`)
           
-          await resend.emails.send({
+          const res = await resend.emails.send({
             from: 'Erdrop <notifications@erdrop.app>',
             to: email,
             subject: `Upcoming Deadline: ${project.name}`,
@@ -57,11 +59,16 @@ export async function GET(request: Request) {
               <p><a href="https://erdrop.app/projects">Open Erdrop Dashboard</a></p>
             `
           })
+          if (res.error) {
+            console.error(`[CRON] Resend error for user ${project.user_id}:`, res.error)
+            errors.push(`Token ${project.name}: ${res.error.message}`)
+          }
         } else {
           console.log(`[CRON] User ${project.user_id} has no email linked. Skipping.`)
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error(`[CRON] Failed to send email to user ${project.user_id}:`, error)
+        errors.push(`Token ${project.name}: ${error.message}`)
       }
     }
   }
@@ -76,7 +83,7 @@ export async function GET(request: Request) {
         if (email) {
           console.log(`[CRON] Sending email to ${email} — NFT Project "${project.name}" minting in < 3 hours (${project.deadline})`)
           
-          await resend.emails.send({
+          const res = await resend.emails.send({
             from: 'Erdrop <notifications@erdrop.app>',
             to: email,
             subject: `NFT Minting Soon: ${project.name}`,
@@ -88,11 +95,16 @@ export async function GET(request: Request) {
               <p><a href="https://erdrop.app/projects">Open Erdrop Dashboard</a></p>
             `
           })
+          if (res.error) {
+            console.error(`[CRON] Resend error for user ${project.user_id}:`, res.error)
+            errors.push(`NFT ${project.name}: ${res.error.message}`)
+          }
         } else {
           console.log(`[CRON] User ${project.user_id} has no email linked. Skipping.`)
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error(`[CRON] Failed to send email to user ${project.user_id}:`, error)
+        errors.push(`NFT ${project.name}: ${error.message}`)
       }
     }
   }
@@ -100,6 +112,7 @@ export async function GET(request: Request) {
   return NextResponse.json({ 
     success: true, 
     tokenAlerts: tokenProjects?.length || 0,
-    nftAlerts: nftProjects?.length || 0
+    nftAlerts: nftProjects?.length || 0,
+    errors: errors.length > 0 ? errors : undefined
   })
 }
