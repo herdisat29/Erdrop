@@ -39,9 +39,7 @@ const formSchema = z.object({
   status: z.enum(['Not Started', 'In Progress', 'Eligible', 'Claimed', 'Missed', 'Vesting']),
   difficulty: z.enum(['Easy', 'Medium', 'Hard']).optional().or(z.literal('')),
   estimated_reward: z.string().optional(),
-  deadline: z.string().refine((val) => !val || /^\d{4}-\d{2}-\d{2}$/.test(val), {
-    message: 'Invalid date format',
-  }).optional(),
+  deadline: z.string().optional(),
   notes: z.string().optional(),
 })
 
@@ -65,7 +63,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
       status: initialData?.status || 'Not Started',
       difficulty: initialData?.difficulty || undefined,
       estimated_reward: initialData?.estimated_reward || '',
-      deadline: initialData?.deadline || '',
+      deadline: initialData?.deadline ? (initialData.deadline.length === 10 ? initialData.deadline + 'T00:00' : initialData.deadline.substring(0, 16)) : '',
       notes: initialData?.notes || '',
     },
   })
@@ -84,7 +82,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
         status: initialData.status || 'Not Started',
         difficulty: initialData.difficulty || undefined,
         estimated_reward: initialData.estimated_reward || '',
-        deadline: initialData.deadline || '',
+        deadline: initialData.deadline ? (initialData.deadline.length === 10 ? initialData.deadline + 'T00:00' : initialData.deadline.substring(0, 16)) : '',
         notes: initialData.notes || '',
       })
     }
@@ -347,7 +345,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
             <FormItem>
               <FormLabel className="text-on-surface-variant dark:text-zinc-300">{isNFT ? "Mint Date" : "Deadline"}</FormLabel>
               <FormControl>
-                <Input type="date" className="bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white w-full dark:[color-scheme:dark]" {...field} />
+                <Input type="datetime-local" className="bg-surface-container dark:bg-surface-container dark:bg-zinc-900/50 border-outline-variant dark:border-zinc-800 text-on-surface dark:text-white w-full dark:[color-scheme:dark]" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
