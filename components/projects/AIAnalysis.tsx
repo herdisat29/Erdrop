@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AiAnalysis, RecommendationType } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -30,6 +30,11 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
   const router = useRouter()
   const [analysis, setAnalysis] = useState<AiAnalysis | null>(initialAnalysis)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+
+  // Sync state if initialAnalysis changes from server navigation
+  useEffect(() => {
+    setAnalysis(initialAnalysis)
+  }, [initialAnalysis])
 
   const handleAnalyze = async (force = false) => {
     setIsAnalyzing(true)
@@ -90,10 +95,17 @@ export function AIAnalysis({ projectId, initialAnalysis }: AIAnalysisProps) {
           <div className="h-16 w-16 bg-primary-container/20 rounded-full flex items-center justify-center mb-4">
             <BrainCircuit className="h-8 w-8 text-primary" />
           </div>
-          <h3 className="font-headline-md text-on-surface mb-2">Gemini AI Analysis</h3>
-          <p className="text-on-surface-variant font-label-sm max-w-md mb-6">
+          <div className="flex items-center gap-2 mb-2">
+            <h3 className="font-headline-md text-on-surface">Gemini AI Analysis</h3>
+            <Badge variant="outline" className="bg-surface-container-high text-on-surface-variant border-transparent rounded-full px-2 py-0.5 text-[10px] uppercase tracking-widest font-black">BETA</Badge>
+          </div>
+          <p className="text-on-surface-variant font-label-sm max-w-md mb-2">
             Get an objective assessment of this project's airdrop potential, red flags, and farming recommendations powered by Google Gemini.
           </p>
+          <div className="bg-surface-container/50 px-4 py-2 rounded-xl border border-outline-variant/30 mb-6 flex items-center gap-2 text-xs font-medium text-on-surface-variant">
+            <span className="material-symbols-outlined text-[16px] text-amber-500">info</span>
+            During Beta, you can use AI Analysis 3 times total.
+          </div>
           <Button 
             onClick={() => handleAnalyze(false)} 
             className="font-label-bold uppercase tracking-widest bg-primary text-on-primary hover:bg-primary/90 rounded-full squishy-interaction gap-2 shadow-md px-6"
