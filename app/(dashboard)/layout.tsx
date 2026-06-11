@@ -2,10 +2,9 @@ import Link from "next/link";
 import { getPrivyUser } from "@/lib/privy/server";
 import { redirect } from "next/navigation";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
-import { WalletConnect } from "@/components/wallet/WalletConnect";
+import { UserProfile } from "@/components/auth/UserProfile";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { DesktopSidebar } from "@/components/layout/DesktopSidebar";
-import { LogoutButton } from "@/components/auth/LogoutButton";
 
 export default async function DashboardLayout({
   children,
@@ -44,9 +43,8 @@ export default async function DashboardLayout({
             </h1>
           </div>
           <div className="flex items-center gap-3">
-            <WalletConnect />
             <ThemeToggle />
-            <LogoutButton />
+            <UserProfile />
           </div>
         </header>
 
