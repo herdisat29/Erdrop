@@ -5,6 +5,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -58,7 +59,9 @@ export function UserProfile() {
       </DropdownMenuTrigger>
       
       <DropdownMenuContent align="end" className="w-64 bg-surface-container-lowest border-outline-variant shadow-xl rounded-2xl p-2">
-        <DropdownMenuLabel className="font-headline-md text-on-surface">My Accounts</DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="font-headline-md text-on-surface">My Accounts</DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator className="bg-outline-variant/30" />
         
         {/* Linked Accounts */}
