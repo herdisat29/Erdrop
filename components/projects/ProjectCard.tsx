@@ -135,11 +135,11 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
                   <MoreVertical className="h-5 w-5" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="bg-surface-container-lowest border-outline-variant text-on-surface-variant rounded-xl shadow-md">
-                  <DropdownMenuItem onClick={() => setIsEditOpen(true)} className="hover:bg-surface-container-high focus:bg-surface-container-high cursor-pointer rounded-lg m-1">
+                  <DropdownMenuItem onSelect={() => setTimeout(() => setIsEditOpen(true), 100)} className="hover:bg-surface-container-high focus:bg-surface-container-high cursor-pointer rounded-lg m-1">
                     <Edit2 className="h-4 w-4 mr-2" />
                     Edit
                   </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setIsDeleteDialogOpen(true); }} disabled={isDeleting} className="text-error focus:text-error hover:bg-error-container focus:bg-error-container cursor-pointer rounded-lg m-1">
+                  <DropdownMenuItem onSelect={() => setTimeout(() => setIsDeleteDialogOpen(true), 100)} disabled={isDeleting} className="text-error focus:text-error hover:bg-error-container focus:bg-error-container cursor-pointer rounded-lg m-1">
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete
                   </DropdownMenuItem>
