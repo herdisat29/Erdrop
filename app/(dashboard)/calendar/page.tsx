@@ -42,12 +42,12 @@ export default async function CalendarPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Claimed': return 'bg-secondary-container text-on-secondary-container'
-      case 'Eligible': return 'bg-primary-container text-on-primary-container'
-      case 'In Progress': return 'bg-tertiary-container text-on-tertiary-container'
-      case 'Vesting': return 'bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-300'
-      case 'Missed': return 'bg-error-container text-on-error-container'
-      default: return 'bg-surface-container-high text-on-surface-variant'
+      case 'Claimed': return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/30'
+      case 'Eligible': return 'bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300 border border-blue-200 dark:border-blue-500/30'
+      case 'In Progress': return 'bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30'
+      case 'Vesting': return 'bg-violet-100 text-violet-800 dark:bg-violet-500/20 dark:text-violet-300 border border-violet-200 dark:border-violet-500/30'
+      case 'Missed': return 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300 border border-red-200 dark:border-red-500/30'
+      default: return 'bg-surface-container-high text-on-surface-variant border border-outline-variant'
     }
   }
 
