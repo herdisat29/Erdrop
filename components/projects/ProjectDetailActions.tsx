@@ -57,11 +57,11 @@ export function ProjectDetailActions({ project }: { project: Project }) {
           className="bg-surface-container-lowest border-outline-variant text-on-surface-variant rounded-xl shadow-md"
           onClick={(e) => e.stopPropagation()}
         >
-          <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setIsEditOpen(true) }} className="hover:bg-surface-container-high focus:bg-surface-container-high cursor-pointer rounded-lg m-1 font-label-bold">
+          <DropdownMenuItem onClick={(e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); setIsEditOpen(true) }} className="hover:bg-surface-container-high focus:bg-surface-container-high cursor-pointer rounded-lg m-1 font-label-bold">
             <Edit2 className="h-4 w-4 mr-2" />
             Edit Project
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setIsDeleteDialogOpen(true) }} disabled={isDeleting} className="text-error focus:text-error hover:bg-error-container focus:bg-error-container cursor-pointer rounded-lg m-1 font-label-bold">
+          <DropdownMenuItem onClick={(e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); setIsDeleteDialogOpen(true) }} disabled={isDeleting} className="text-error focus:text-error hover:bg-error-container focus:bg-error-container cursor-pointer rounded-lg m-1 font-label-bold">
             <Trash2 className="h-4 w-4 mr-2" />
             Delete Project
           </DropdownMenuItem>

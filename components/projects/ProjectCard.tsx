@@ -50,14 +50,16 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
     router.push(`/projects/${project.id}`)
   }
 
-  const handleEditSelect = (e: Event) => {
+  const handleEditSelect = (e: React.MouseEvent) => {
     e.preventDefault()
+    e.stopPropagation()
     menuActionFired.current = true
     setIsEditOpen(true)
   }
 
-  const handleDeleteSelect = (e: Event) => {
+  const handleDeleteSelect = (e: React.MouseEvent) => {
     e.preventDefault()
+    e.stopPropagation()
     menuActionFired.current = true
     setIsDeleteDialogOpen(true)
   }
@@ -164,14 +166,14 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
                 onClick={(e) => e.stopPropagation()}
               >
                 <DropdownMenuItem
-                  onSelect={handleEditSelect}
+                  onClick={handleEditSelect}
                   className="hover:bg-surface-container-high focus:bg-surface-container-high cursor-pointer rounded-lg m-1"
                 >
                   <Edit2 className="h-4 w-4 mr-2" />
                   Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onSelect={handleDeleteSelect}
+                  onClick={handleDeleteSelect}
                   disabled={isDeleting}
                   className="text-error focus:text-error hover:bg-error-container focus:bg-error-container cursor-pointer rounded-lg m-1"
                 >
