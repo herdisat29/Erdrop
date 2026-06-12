@@ -17,7 +17,7 @@ The ultimate tracking and analytics dashboard for crypto airdrop farming. Stop u
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 (App Router)
+- **Framework**: Next.js 16.2 (App Router)
 - **Styling**: Tailwind CSS + shadcn/ui + Material Design 3 Guidelines
 - **Auth**: Privy Server Auth
 - **Database**: Supabase (PostgreSQL)
