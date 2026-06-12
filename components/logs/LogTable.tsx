@@ -209,7 +209,7 @@ export function LogTable({ logs, projectId }: LogTableProps) {
                     {log.status}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-on-surface-variant font-label-sm">
+                <TableCell className="text-on-surface-variant font-label-sm" suppressHydrationWarning>
                   {formatDistanceToNow(new Date(log.logged_at), { addSuffix: true })}
                 </TableCell>
                 <TableCell className="text-right">

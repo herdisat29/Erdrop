@@ -117,7 +117,7 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
                   const isExpired = deadlineDate < new Date() && project.status !== 'Claimed' && project.status !== 'Missed'
                   if (isExpired) {
                     return (
-                      <Badge variant="outline" className="bg-error-container text-on-error-container border-error-container font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest">
+                      <Badge variant="outline" className="bg-error-container text-on-error-container border-error-container font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest" suppressHydrationWarning>
                         Expired
                       </Badge>
                     )
@@ -185,7 +185,7 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
               )}
             </div>
             <div className="mt-4">
-              <p className="font-label-sm text-outline">Updated {formatDistanceToNow(new Date(project.updated_at), { addSuffix: true })}</p>
+              <p className="font-label-sm text-outline" suppressHydrationWarning>Updated {formatDistanceToNow(new Date(project.updated_at), { addSuffix: true })}</p>
             </div>
         </CardContent>
       </Card>
