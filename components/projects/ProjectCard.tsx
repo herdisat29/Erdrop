@@ -63,7 +63,7 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
       case 'In Progress': return 'bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30 font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
       case 'Vesting': return 'bg-sky-100 text-sky-800 dark:bg-sky-500/20 dark:text-sky-300 border border-sky-200 dark:border-sky-500/30 font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
       case 'Missed': return 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300 border border-red-200 dark:border-red-500/30 font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
-      default: return 'bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
+      default: return 'bg-surface-container-high text-on-surface-variant border border-outline-variant font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest'
     }
   }
 
