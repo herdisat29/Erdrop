@@ -97,28 +97,32 @@ export async function GET(request: Request) {
         
         if (email) {
           console.log(`[CRON] Sending email to ${email} — NFT Project "${project.name}" minting in < 3 hours (${project.deadline})`)
-          
-          const res = await resend.emails.send({
-            from: 'Erdrop <onboarding@resend.dev>',
-            to: email,
-            subject: `NFT Minting Soon: ${project.name}`,
-            html: `
-              <h2>NFT Minting Reminder!</h2>
-              <p>Your tracked NFT project <strong>${project.name}</strong> is minting in less than 3 hours (${project.deadline}).</p>
-              <p>Prepare your wallet and make sure you're ready to mint.</p>
-              <br/>
-              <p><a href="https://erdrop.app/projects">Open Erdrop Dashboard</a></p>
-            `
-          })
-          if (res.error) {
-            console.error(`[CRON] Resend error for user ${project.user_id}:`, res.error)
-            errors.push(`NFT ${project.name}: ${res.error.message}`)
+          if (!resend) {
+            console.warn('[CRON] RESEND_API_KEY missing, skipping email.')
+            errors.push(`NFT ${project.name}: RESEND_API_KEY missing`)
           } else {
-            // Mark as notified so it doesn't send again next hour
-            const { error: updateError } = await supabase.from('projects').update({ email_notified: true }).eq('id', project.id)
-            if (updateError) {
-              console.error(`[CRON] Failed to update email_notified for ${project.id}:`, updateError)
-              errors.push(`NFT ${project.name} DB Update: ${updateError.message}`)
+            const res = await resend.emails.send({
+              from: 'Erdrop <onboarding@resend.dev>',
+              to: email,
+              subject: `NFT Minting Soon: ${project.name}`,
+              html: `
+                <h2>NFT Minting Reminder!</h2>
+                <p>Your tracked NFT project <strong>${project.name}</strong> is minting in less than 3 hours (${project.deadline}).</p>
+                <p>Prepare your wallet and make sure you're ready to mint.</p>
+                <br/>
+                <p><a href="https://erdrop.app/projects">Open Erdrop Dashboard</a></p>
+              `
+            })
+            if (res.error) {
+              console.error(`[CRON] Resend error for user ${project.user_id}:`, res.error)
+              errors.push(`NFT ${project.name}: ${res.error.message}`)
+            } else {
+              // Mark as notified so it doesn't send again next hour
+              const { error: updateError } = await supabase.from('projects').update({ email_notified: true }).eq('id', project.id)
+              if (updateError) {
+                console.error(`[CRON] Failed to update email_notified for ${project.id}:`, updateError)
+                errors.push(`NFT ${project.name} DB Update: ${updateError.message}`)
+              }
             }
           }
         } else {
