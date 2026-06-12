@@ -40,6 +40,7 @@ const formSchema = z.object({
   difficulty: z.enum(['Easy', 'Medium', 'Hard']).optional().or(z.literal('')),
   estimated_reward: z.string().optional(),
   deadline: z.string().optional(),
+  event_type: z.string().optional(),
   notes: z.string().optional(),
 })
 
@@ -64,6 +65,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
       difficulty: initialData?.difficulty || undefined,
       estimated_reward: initialData?.estimated_reward || '',
       deadline: initialData?.deadline ? (initialData.deadline.length === 10 ? initialData.deadline + 'T00:00' : initialData.deadline.substring(0, 16)) : '',
+      event_type: initialData?.event_type || '',
       notes: initialData?.notes || '',
     },
   })
@@ -83,6 +85,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
         difficulty: initialData.difficulty || undefined,
         estimated_reward: initialData.estimated_reward || '',
         deadline: initialData.deadline ? (initialData.deadline.length === 10 ? initialData.deadline + 'T00:00' : initialData.deadline.substring(0, 16)) : '',
+        event_type: initialData.event_type || '',
         notes: initialData.notes || '',
       })
     }
@@ -101,6 +104,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
       difficulty: values.difficulty ? (values.difficulty as ProjectDifficulty) : null,
       estimated_reward: values.estimated_reward || null,
       deadline: values.deadline ? (values.deadline.length === 10 ? values.deadline + 'T00:00:00Z' : values.deadline.length === 16 ? values.deadline + ':00Z' : values.deadline) : null,
+      event_type: values.event_type || null,
       notes: values.notes || null,
       logo_url: initialData?.logo_url || null, // Preserve if editing
     }
@@ -338,19 +342,56 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
           </div>
         )}
 
-        <FormField
-          control={form.control}
-          name="deadline"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-on-surface-variant">{isNFT ? "Mint Date (UTC)" : "Deadline (UTC)"}</FormLabel>
-              <FormControl>
-                <Input type="datetime-local" className="bg-surface-container border-outline-variant text-on-surface w-full" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="deadline"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-on-surface-variant">Date/Time (UTC)</FormLabel>
+                <FormControl>
+                  <Input type="datetime-local" className="bg-surface-container border-outline-variant text-on-surface w-full" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="event_type"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-on-surface-variant">Event Type</FormLabel>
+                <Select onValueChange={(val) => field.onChange(val || '')} value={field.value ?? ''}>
+                  <FormControl>
+                    <SelectTrigger className="bg-surface-container border-outline-variant text-on-surface">
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="bg-surface-container border-outline-variant text-on-surface">
+                    {isNFT ? (
+                      <>
+                        <SelectItem value="Mint Date">Mint Date</SelectItem>
+                        <SelectItem value="Whitelist Deadline">Whitelist Deadline</SelectItem>
+                        <SelectItem value="Reveal Date">Reveal Date</SelectItem>
+                        <SelectItem value="Task Deadline">Task Deadline</SelectItem>
+                      </>
+                    ) : (
+                      <>
+                        <SelectItem value="Task Deadline">Task Deadline</SelectItem>
+                        <SelectItem value="TGE Date">TGE Date</SelectItem>
+                        <SelectItem value="Claim Deadline">Claim Deadline</SelectItem>
+                        <SelectItem value="Snapshot Date">Snapshot Date</SelectItem>
+                      </>
+                    )}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}

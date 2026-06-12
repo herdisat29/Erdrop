@@ -28,7 +28,11 @@ function formatUTCDate(dateStr: string) {
   }
 }
 
-const getTokenHtml = (project: any) => `
+const getTokenHtml = (project: any) => {
+  const eventName = project.event_type || 'Token Airdrop';
+  const badgeText = project.event_type ? `⏰ ${project.event_type.toUpperCase()} ALERT` : '⏰ 24-HOUR DEADLINE ALERT';
+
+  return `
 <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #4b4b4d; padding: 40px 20px; color: #ffffff;">
   <div style="max-width: 500px; margin: 0 auto; text-align: center;">
     
@@ -37,11 +41,11 @@ const getTokenHtml = (project: any) => `
     </div>
 
     <div style="display: inline-block; border: 1px solid #c2855f; color: #e2a884; padding: 6px 16px; border-radius: 999px; font-size: 12px; font-weight: bold; letter-spacing: 1px; margin-bottom: 24px;">
-      ⏰ 24-HOUR DEADLINE ALERT
+      ${badgeText}
     </div>
 
     <div style="background-color: #545461; border-radius: 20px; padding: 32px; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
-      <div style="font-size: 12px; font-weight: bold; color: #a1a1aa; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">Token Airdrop</div>
+      <div style="font-size: 12px; font-weight: bold; color: #a1a1aa; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">${eventName}</div>
       <h1 style="font-size: 28px; font-weight: 800; margin: 0 0 24px 0; color: #ffffff;">${project.name}</h1>
 
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
@@ -60,7 +64,7 @@ const getTokenHtml = (project: any) => `
       </table>
 
       <div style="border: 1px solid #71717a; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
-        <div style="font-size: 11px; font-weight: bold; color: #e2a884; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">Deadline</div>
+        <div style="font-size: 11px; font-weight: bold; color: #e2a884; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">Date / Time</div>
         <div style="font-size: 16px; font-weight: bold; color: #ffffff;">${formatUTCDate(project.deadline)}</div>
       </div>
 
@@ -75,9 +79,13 @@ const getTokenHtml = (project: any) => `
     </div>
   </div>
 </div>
-`;
+`};
 
-const getNftHtml = (project: any) => `
+const getNftHtml = (project: any) => {
+  const eventName = project.event_type || 'NFT Mint';
+  const badgeText = project.event_type ? `⏰ ${project.event_type.toUpperCase()} ALERT` : '⏰ 3-HOUR MINT ALERT';
+
+  return `
 <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #4b4b4d; padding: 40px 20px; color: #ffffff;">
   <div style="max-width: 500px; margin: 0 auto; text-align: center;">
     
@@ -86,11 +94,11 @@ const getNftHtml = (project: any) => `
     </div>
 
     <div style="display: inline-block; border: 1px solid #60a5fa; color: #93c5fd; padding: 6px 16px; border-radius: 999px; font-size: 12px; font-weight: bold; letter-spacing: 1px; margin-bottom: 24px;">
-      ⏰ 3-HOUR MINT ALERT
+      ${badgeText}
     </div>
 
     <div style="background-color: #545461; border-radius: 20px; padding: 32px; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
-      <div style="font-size: 12px; font-weight: bold; color: #a1a1aa; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">NFT Mint</div>
+      <div style="font-size: 12px; font-weight: bold; color: #a1a1aa; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">${eventName}</div>
       <h1 style="font-size: 28px; font-weight: 800; margin: 0 0 24px 0; color: #ffffff;">${project.name}</h1>
 
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
@@ -109,7 +117,7 @@ const getNftHtml = (project: any) => `
       </table>
 
       <div style="border: 1px solid #71717a; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
-        <div style="font-size: 11px; font-weight: bold; color: #93c5fd; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">Mint Date</div>
+        <div style="font-size: 11px; font-weight: bold; color: #93c5fd; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">Date / Time</div>
         <div style="font-size: 16px; font-weight: bold; color: #ffffff;">${formatUTCDate(project.deadline)}</div>
       </div>
 
@@ -124,7 +132,7 @@ const getNftHtml = (project: any) => `
     </div>
   </div>
 </div>
-`;
+`};
 
 export async function GET(request: Request) {
   // Verify cron secret if needed
@@ -143,7 +151,7 @@ export async function GET(request: Request) {
   // Token projects (H-24 hours) - added more fields for email
   const { data: tokenProjects } = await supabase
     .from('projects')
-    .select('id, user_id, name, deadline, chain, estimated_reward, status')
+    .select('id, user_id, name, deadline, chain, estimated_reward, status, event_type')
     .eq('project_type', 'Token')
     .eq('email_notified', false)
     .gte('deadline', now.toISOString())
@@ -152,7 +160,7 @@ export async function GET(request: Request) {
   // NFT projects (H-3 hours) - added more fields for email
   const { data: nftProjects } = await supabase
     .from('projects')
-    .select('id, user_id, name, deadline, chain, mint_price, collection_size, status')
+    .select('id, user_id, name, deadline, chain, mint_price, collection_size, status, event_type')
     .eq('project_type', 'NFT')
     .eq('email_notified', false)
     .gte('deadline', now.toISOString())
@@ -173,10 +181,11 @@ export async function GET(request: Request) {
             console.warn('[CRON] RESEND_API_KEY missing, skipping email.')
             errors.push(`Token ${project.name}: RESEND_API_KEY missing`)
           } else {
+            const subjectLabel = project.event_type ? project.event_type : '24h Deadline';
             const res = await resend.emails.send({
               from: 'Erdrop <noreply@erdrop.biz.id>',
               to: email,
-              subject: `⏰ 24h Deadline: ${project.name}`,
+              subject: `⏰ ${subjectLabel}: ${project.name}`,
               html: getTokenHtml(project)
             })
             if (res.error) {
@@ -214,10 +223,11 @@ export async function GET(request: Request) {
             console.warn('[CRON] RESEND_API_KEY missing, skipping email.')
             errors.push(`NFT ${project.name}: RESEND_API_KEY missing`)
           } else {
+            const subjectLabel = project.event_type ? project.event_type : 'Minting Soon';
             const res = await resend.emails.send({
               from: 'Erdrop <noreply@erdrop.biz.id>',
               to: email,
-              subject: `⏰ Minting Soon: ${project.name}`,
+              subject: `⏰ ${subjectLabel}: ${project.name}`,
               html: getNftHtml(project)
             })
             if (res.error) {

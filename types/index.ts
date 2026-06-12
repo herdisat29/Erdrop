@@ -34,6 +34,7 @@ export interface Project {
   difficulty: ProjectDifficulty | null
   estimated_reward: string | null
   deadline: string | null
+  event_type: string | null
   notes: string | null
   logo_url: string | null
   email_notified: boolean
