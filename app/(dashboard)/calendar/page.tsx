@@ -79,8 +79,9 @@ export default async function CalendarPage() {
               </h2>
               
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  return <ProjectCard key={project.id} project={project} />
-                })}
+                {monthProjects.map((project) => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
               </div>
             </div>
           ))}
