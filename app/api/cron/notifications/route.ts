@@ -29,25 +29,23 @@ function formatUTCDate(dateStr: string) {
 }
 
 const getTokenHtml = (project: any) => {
-  const eventName = project.event_type || 'Token Airdrop';
-  const badgeText = project.event_type ? `⏰ ${project.event_type.toUpperCase()} ALERT` : '⏰ 24-HOUR DEADLINE ALERT';
+  const eventName = project.event_type || 'Token Event';
+  const badgeText = project.event_type ? `${project.event_type.toUpperCase()} ALERT` : '24-HOUR DEADLINE ALERT';
 
   const infoRows = [
-    project.chain ? `
-      <tr>
-        <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Network</td>
-        <td style="padding:12px 0;color:#f8fafc;font-size:14px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.chain}</td>
-      </tr>` : '',
+    `<tr>
+      <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Network</td>
+      <td style="padding:12px 0;color:#f8fafc;font-size:14px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.chain || '-'}</td>
+    </tr>`,
     project.estimated_reward ? `
       <tr>
         <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Est. Reward</td>
         <td style="padding:12px 0;color:#a855f7;font-size:14px;font-weight:700;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.estimated_reward}</td>
       </tr>` : '',
-    project.status ? `
-      <tr>
-        <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Status</td>
-        <td style="padding:12px 0;color:#f8fafc;font-size:14px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.status}</td>
-      </tr>` : '',
+    `<tr>
+      <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Status</td>
+      <td style="padding:12px 0;color:#f8fafc;font-size:14px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.status || '-'}</td>
+    </tr>`
   ].filter(Boolean).join('');
 
   return `<!DOCTYPE html>
@@ -61,7 +59,7 @@ const getTokenHtml = (project: any) => {
         <!-- Header -->
         <tr><td style="padding-bottom:32px;text-align:center;">
           <div style="display:inline-block;background:linear-gradient(135deg, #a855f7 0%, #6366f1 100%);border-radius:100px;padding:12px 28px;box-shadow:0 10px 25px -5px rgba(168,85,247,0.4);">
-            <span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;">💧 Erdrop</span>
+            <span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;">Erdrop</span>
           </div>
         </td></tr>
 
@@ -93,7 +91,7 @@ const getTokenHtml = (project: any) => {
               <td align="center">
                 <a href="${project.website || 'https://www.erdrop.biz.id/projects'}"
                    style="display:inline-block;background:linear-gradient(135deg, #a855f7 0%, #6366f1 100%);color:#ffffff;font-size:16px;font-weight:700;text-decoration:none;padding:16px 40px;border-radius:100px;letter-spacing:0.5px;box-shadow:0 10px 20px -5px rgba(168,85,247,0.4);">
-                  ${project.website ? '🚀 &nbsp;Go to Project' : '📊 &nbsp;Open Dashboard'}
+                  ${project.website ? 'View Project Details' : 'Go to Erdrop Dashboard'}
                 </a>
               </td>
             </tr>
@@ -102,8 +100,8 @@ const getTokenHtml = (project: any) => {
 
         <!-- Footer -->
         <tr><td style="padding:32px 0 0;text-align:center;">
-          <p style="margin:0 0 12px;color:#71717a;font-size:13px;">You're receiving this because you're tracking this project on Erdrop.</p>
-          <a href="https://www.erdrop.biz.id/projects" style="color:#a1a1aa;font-size:13px;text-decoration:underline;font-weight:600;">Open Erdrop Dashboard</a>
+          <p style="margin:0 0 12px;color:#71717a;font-size:13px;">You are receiving this alert because you are tracking this project on Erdrop.</p>
+          <a href="https://www.erdrop.biz.id/projects" style="color:#a1a1aa;font-size:13px;text-decoration:underline;font-weight:600;">Manage Notifications</a>
         </td></tr>
 
       </table>
@@ -114,25 +112,26 @@ const getTokenHtml = (project: any) => {
 };
 
 const getNftHtml = (project: any) => {
-  const eventName = project.event_type || 'NFT Mint';
-  const badgeText = project.event_type ? `⏰ ${project.event_type.toUpperCase()} ALERT` : '⏰ 3-HOUR MINT ALERT';
+  const eventName = project.event_type || 'NFT Event';
+  const badgeText = project.event_type ? `${project.event_type.toUpperCase()} ALERT` : '3-HOUR MINT ALERT';
 
   const infoRows = [
-    project.chain ? `
-      <tr>
-        <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Network</td>
-        <td style="padding:12px 0;color:#f8fafc;font-size:14px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.chain}</td>
-      </tr>` : '',
-    project.mint_price ? `
-      <tr>
-        <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Mint Price</td>
-        <td style="padding:12px 0;color:#10b981;font-size:14px;font-weight:700;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.mint_price}</td>
-      </tr>` : '',
-    project.collection_size ? `
-      <tr>
-        <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Supply</td>
-        <td style="padding:12px 0;color:#f8fafc;font-size:14px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.collection_size}</td>
-      </tr>` : '',
+    `<tr>
+      <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Network</td>
+      <td style="padding:12px 0;color:#f8fafc;font-size:14px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.chain || '-'}</td>
+    </tr>`,
+    `<tr>
+      <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Mint Price</td>
+      <td style="padding:12px 0;color:#10b981;font-size:14px;font-weight:700;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.mint_price || '-'}</td>
+    </tr>`,
+    `<tr>
+      <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Supply</td>
+      <td style="padding:12px 0;color:#f8fafc;font-size:14px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.collection_size || '-'}</td>
+    </tr>`,
+    `<tr>
+      <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Status</td>
+      <td style="padding:12px 0;color:#f8fafc;font-size:14px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.status || '-'}</td>
+    </tr>`
   ].filter(Boolean).join('');
 
   return `<!DOCTYPE html>
@@ -146,7 +145,7 @@ const getNftHtml = (project: any) => {
         <!-- Header -->
         <tr><td style="padding-bottom:32px;text-align:center;">
           <div style="display:inline-block;background:linear-gradient(135deg, #a855f7 0%, #6366f1 100%);border-radius:100px;padding:12px 28px;box-shadow:0 10px 25px -5px rgba(168,85,247,0.4);">
-            <span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;">💧 Erdrop</span>
+            <span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;">Erdrop</span>
           </div>
         </td></tr>
 
@@ -178,7 +177,7 @@ const getNftHtml = (project: any) => {
               <td align="center">
                 <a href="${project.website || 'https://www.erdrop.biz.id/projects'}"
                    style="display:inline-block;background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:#ffffff;font-size:16px;font-weight:700;text-decoration:none;padding:16px 40px;border-radius:100px;letter-spacing:0.5px;box-shadow:0 10px 20px -5px rgba(16,185,129,0.4);">
-                  ${project.website ? '🎨 &nbsp;Go to Mint Page' : '📊 &nbsp;Open Dashboard'}
+                  ${project.website ? 'Visit Mint Page' : 'Go to Erdrop Dashboard'}
                 </a>
               </td>
             </tr>
@@ -187,8 +186,8 @@ const getNftHtml = (project: any) => {
 
         <!-- Footer -->
         <tr><td style="padding:32px 0 0;text-align:center;">
-          <p style="margin:0 0 12px;color:#71717a;font-size:13px;">You're receiving this because you're tracking this project on Erdrop.</p>
-          <a href="https://www.erdrop.biz.id/projects" style="color:#a1a1aa;font-size:13px;text-decoration:underline;font-weight:600;">Open Erdrop Dashboard</a>
+          <p style="margin:0 0 12px;color:#71717a;font-size:13px;">You are receiving this alert because you are tracking this project on Erdrop.</p>
+          <a href="https://www.erdrop.biz.id/projects" style="color:#a1a1aa;font-size:13px;text-decoration:underline;font-weight:600;">Manage Notifications</a>
         </td></tr>
 
       </table>
@@ -212,7 +211,7 @@ export async function GET(request: Request) {
   const in24Hours = new Date(now.getTime() + 24 * 60 * 60 * 1000)
   const in3Hours = new Date(now.getTime() + 3 * 60 * 60 * 1000)
 
-  // Token projects (H-24 hours) - added more fields for email
+  // Token projects (H-24 hours)
   const { data: tokenProjects } = await supabase
     .from('projects')
     .select('id, user_id, name, deadline, chain, estimated_reward, status, event_type, website')
@@ -221,7 +220,7 @@ export async function GET(request: Request) {
     .gte('deadline', now.toISOString())
     .lte('deadline', in24Hours.toISOString())
 
-  // NFT projects (H-3 hours) - added more fields for email
+  // NFT projects (H-3 hours)
   const { data: nftProjects } = await supabase
     .from('projects')
     .select('id, user_id, name, deadline, chain, mint_price, collection_size, status, event_type, website')
@@ -249,7 +248,7 @@ export async function GET(request: Request) {
             const res = await resend.emails.send({
               from: 'Erdrop <noreply@erdrop.biz.id>',
               to: email,
-              subject: `⏰ ${subjectLabel}: ${project.name}`,
+              subject: `[Erdrop] ${subjectLabel}: ${project.name}`,
               html: getTokenHtml(project)
             })
             if (res.error) {
@@ -291,7 +290,7 @@ export async function GET(request: Request) {
             const res = await resend.emails.send({
               from: 'Erdrop <noreply@erdrop.biz.id>',
               to: email,
-              subject: `⏰ ${subjectLabel}: ${project.name}`,
+              subject: `[Erdrop] ${subjectLabel}: ${project.name}`,
               html: getNftHtml(project)
             })
             if (res.error) {
