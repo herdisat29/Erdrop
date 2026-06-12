@@ -6,6 +6,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { WagmiProviderWrapper } from "@/components/wallet/WagmiProviderWrapper";
 import { PrivyProviderWrapper } from "@/lib/privy/provider";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -13,8 +15,35 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Erdrop",
-  description: "Track Every Drop.",
+  title: {
+    default: "Erdrop | The Ultimate Airdrop Farming Tracker",
+    template: "%s | Erdrop"
+  },
+  description: "Track your crypto airdrop farming progress, manage wallets, generate AI masterplans, and never miss a claim again.",
+  openGraph: {
+    title: "Erdrop | The Ultimate Airdrop Farming Tracker",
+    description: "Track your crypto airdrop farming progress, manage wallets, generate AI masterplans, and never miss a claim again.",
+    url: "https://erdrop.app",
+    siteName: "Erdrop",
+    images: [
+      {
+        url: "https://erdrop.app/og-image.png", // Assuming an og-image will be deployed
+        width: 1200,
+        height: 630,
+        alt: "Erdrop Dashboard Preview",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Erdrop | The Ultimate Airdrop Farming Tracker",
+    description: "Track every drop, generate AI masterplans, and never miss a claim.",
+    images: ["https://erdrop.app/og-image.png"],
+    creator: "@erdrop_app",
+  },
+  metadataBase: new URL("https://erdrop.app"),
 };
 
 export default function RootLayout({
@@ -47,7 +76,10 @@ export default function RootLayout({
             </WagmiProviderWrapper>
           </PrivyProviderWrapper>
         </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
 }
+

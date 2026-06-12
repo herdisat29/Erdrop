@@ -16,19 +16,19 @@ export default function RootError({
   }, [error])
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-center p-6 space-y-6 bg-zinc-50 dark:bg-zinc-950">
-      <div className="h-24 w-24 rounded-3xl bg-red-500/10 flex items-center justify-center ring-1 ring-red-500/20">
-        <ShieldAlert className="h-12 w-12 text-red-500" />
+    <div className="min-h-screen flex flex-col items-center justify-center text-center p-6 space-y-6 bg-surface-container-lowest text-on-surface">
+      <div className="h-24 w-24 rounded-3xl bg-error-container flex items-center justify-center">
+        <ShieldAlert className="h-12 w-12 text-on-error-container" />
       </div>
       <div className="space-y-2">
-        <h2 className="text-3xl font-bold text-zinc-900 dark:text-white">Fatal Application Error</h2>
-        <p className="text-zinc-500 dark:text-zinc-400 max-w-md mx-auto">
+        <h2 className="font-headline-lg text-headline-lg text-on-surface">Fatal Application Error</h2>
+        <p className="text-body-lg text-on-surface-variant max-w-md mx-auto">
           We encountered a critical error. Please try reloading the application.
         </p>
       </div>
       <Button 
         onClick={() => window.location.reload()}
-        className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200"
+        className="bg-primary text-on-primary hover:bg-primary/90 font-label-bold rounded-full px-6 py-2 h-auto"
       >
         Reload Application
       </Button>
