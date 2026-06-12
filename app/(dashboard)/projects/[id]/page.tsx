@@ -73,54 +73,55 @@ export default async function ProjectDetail({ params }: { params: Promise<{ id: 
         Back to Projects
       </Link>
 
-      <div className="flex flex-col md:flex-row justify-between items-start gap-6 bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant sticky-note-shadow relative">
-        <div className="absolute top-6 right-6">
-          <ProjectDetailActions project={project} />
-        </div>
-        <div className="space-y-3 pr-12">
-          <div className="flex items-center gap-3">
+      <div className="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant sticky-note-shadow">
+        {/* Top row: Title + Actions */}
+        <div className="flex items-start justify-between gap-4 mb-3">
+          <div className="flex items-center gap-3 flex-wrap min-w-0">
             <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">{project.name}</h1>
             <Badge variant="outline" className={getStatusColor(project.status)}>
               {project.status}
             </Badge>
           </div>
-          
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-on-surface-variant font-label-bold">
-            {project.chain && (
-              <span className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-primary text-base">language</span>
-                {project.chain}
-              </span>
-            )}
-            {project.website && (
-              <a href={project.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-primary transition-colors">
-                <span className="material-symbols-outlined text-primary text-base">link</span>
-                Website <ExternalLink className="h-3 w-3" />
-              </a>
-            )}
-            {project.deadline && (
-              <span className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-primary text-base">event</span>
-                {project.deadline.length >= 16 ? project.deadline.substring(0, 16).replace('T', ' ') + ' UTC' : project.deadline}
-              </span>
-            )}
-            {project.difficulty && (
-              <span className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-primary text-base">signal_cellular_alt</span>
-                {project.difficulty}
-              </span>
-            )}
+          <div className="shrink-0">
+            <ProjectDetailActions project={project} />
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 text-left md:text-right w-full md:w-auto">
+        {/* Metadata row */}
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-on-surface-variant font-label-bold mb-6">
+          {project.chain && (
+            <span className="flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-primary text-base">language</span>
+              {project.chain}
+            </span>
+          )}
+          {project.website && (
+            <a href={project.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-primary transition-colors">
+              <span className="material-symbols-outlined text-primary text-base">link</span>
+              Website <ExternalLink className="h-3 w-3" />
+            </a>
+          )}
+          {project.deadline && (
+            <span className="flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-primary text-base">event</span>
+              {project.deadline.length >= 16 ? project.deadline.substring(0, 16).replace('T', ' ') + ' UTC' : project.deadline}
+            </span>
+          )}
+          {project.difficulty && (
+            <span className="flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-primary text-base">signal_cellular_alt</span>
+              {project.difficulty}
+            </span>
+          )}
+        </div>
+
+        {/* Stats + Action row */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="bg-surface-container px-5 py-3 rounded-2xl border border-outline-variant">
             <p className="font-label-bold text-primary uppercase tracking-wider mb-1 text-[10px]">Total Logs Value</p>
             <p className="font-display-lg text-display-lg text-on-surface tracking-tighter">${totalValue.toLocaleString()}</p>
           </div>
-          <div className="self-start md:self-end">
-            <CreateLogDialog projectId={project.id} />
-          </div>
+          <CreateLogDialog projectId={project.id} />
         </div>
       </div>
 

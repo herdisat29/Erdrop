@@ -147,22 +147,20 @@ export default async function DashboardPage() {
       </div>
 
       {/* Analytics Section */}
-      <div className="bg-surface-container-lowest border border-outline-variant rounded-3xl p-8 mb-8">
+      <div className="bg-surface-container-lowest border border-outline-variant rounded-3xl p-6 md:p-8 mb-8">
         <div className="flex items-center gap-3 mb-8">
           <span className="material-symbols-outlined text-primary text-3xl">insights</span>
           <h4 className="font-headline-md text-headline-md text-on-surface">Analytics</h4>
         </div>
-        <div className="grid lg:grid-cols-[1fr_300px] gap-6 md:gap-8 mb-8">
-          <div className="w-full min-w-0 flex flex-col gap-6 md:gap-8">
-            <PortfolioCharts projects={projects} />
-            <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-              <TrendingTokens />
-              <TrendingNFTs />
-            </div>
-          </div>
-          <div className="flex flex-col gap-6 md:gap-8 w-full min-w-0 lg:max-w-xs">
-            <CryptoNews />
-          </div>
+
+        {/* Charts Row */}
+        <PortfolioCharts projects={projects} />
+
+        {/* Market Data Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <TrendingTokens />
+          <TrendingNFTs />
+          <CryptoNews />
         </div>
       </div>
 
