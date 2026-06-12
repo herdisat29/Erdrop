@@ -32,107 +32,171 @@ const getTokenHtml = (project: any) => {
   const eventName = project.event_type || 'Token Airdrop';
   const badgeText = project.event_type ? `⏰ ${project.event_type.toUpperCase()} ALERT` : '⏰ 24-HOUR DEADLINE ALERT';
 
-  return `
-<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #4b4b4d; padding: 40px 20px; color: #ffffff;">
-  <div style="max-width: 500px; margin: 0 auto; text-align: center;">
-    
-    <div style="background-color: #a855f7; display: inline-block; padding: 10px 24px; border-radius: 999px; font-weight: bold; font-size: 20px; margin-bottom: 24px; color: white;">
-      💧 Erdrop
-    </div>
+  const infoRows = [
+    project.chain ? `
+      <tr>
+        <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Network</td>
+        <td style="padding:12px 0;color:#f8fafc;font-size:14px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.chain}</td>
+      </tr>` : '',
+    project.estimated_reward ? `
+      <tr>
+        <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Est. Reward</td>
+        <td style="padding:12px 0;color:#a855f7;font-size:14px;font-weight:700;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.estimated_reward}</td>
+      </tr>` : '',
+    project.status ? `
+      <tr>
+        <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Status</td>
+        <td style="padding:12px 0;color:#f8fafc;font-size:14px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.status}</td>
+      </tr>` : '',
+  ].filter(Boolean).join('');
 
-    <div style="display: inline-block; border: 1px solid #c2855f; color: #e2a884; padding: 6px 16px; border-radius: 999px; font-size: 12px; font-weight: bold; letter-spacing: 1px; margin-bottom: 24px;">
-      ${badgeText}
-    </div>
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${eventName}</title></head>
+<body style="margin:0;padding:0;background-color:#09090b;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#09090b;padding:40px 16px;">
+    <tr><td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
 
-    <div style="background-color: #545461; border-radius: 20px; padding: 32px; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
-      <div style="font-size: 12px; font-weight: bold; color: #a1a1aa; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">${eventName}</div>
-      <h1 style="font-size: 28px; font-weight: 800; margin: 0 0 24px 0; color: #ffffff;">${project.name}</h1>
+        <!-- Header -->
+        <tr><td style="padding-bottom:32px;text-align:center;">
+          <div style="display:inline-block;background:linear-gradient(135deg, #a855f7 0%, #6366f1 100%);border-radius:100px;padding:12px 28px;box-shadow:0 10px 25px -5px rgba(168,85,247,0.4);">
+            <span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;">💧 Erdrop</span>
+          </div>
+        </td></tr>
 
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
-        <tr style="border-bottom: 1px solid #71717a;">
-          <td style="padding: 12px 0; color: #a1a1aa; font-size: 14px;">Network</td>
-          <td style="padding: 12px 0; text-align: right; font-weight: bold; color: #ffffff; font-size: 14px;">${project.chain || '-'}</td>
-        </tr>
-        <tr style="border-bottom: 1px solid #71717a;">
-          <td style="padding: 12px 0; color: #a1a1aa; font-size: 14px;">Est. Reward</td>
-          <td style="padding: 12px 0; text-align: right; font-weight: bold; color: #c084fc; font-size: 14px;">${project.estimated_reward || '-'}</td>
-        </tr>
-        <tr>
-          <td style="padding: 12px 0; color: #a1a1aa; font-size: 14px;">Status</td>
-          <td style="padding: 12px 0; text-align: right; font-weight: bold; color: #ffffff; font-size: 14px;">${project.status || '-'}</td>
-        </tr>
+        <!-- Alert badge -->
+        <tr><td style="text-align:center;padding-bottom:24px;">
+          <span style="display:inline-block;background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.3);color:#fb923c;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:8px 20px;border-radius:999px;">
+            ${badgeText}
+          </span>
+        </td></tr>
+
+        <!-- Main card -->
+        <tr><td style="background-color:#18181b;border:1px solid #27272a;border-radius:24px;padding:40px;box-shadow:0 20px 40px -10px rgba(0,0,0,0.5);">
+
+          <p style="margin:0 0 12px;color:#a1a1aa;font-size:13px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;">${eventName}</p>
+          <h1 style="margin:0 0 32px;color:#ffffff;font-size:32px;font-weight:800;line-height:1.2;letter-spacing:-0.5px;">${project.name}</h1>
+
+          <!-- Info table -->
+          ${infoRows ? `<table width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #27272a;margin-bottom:32px;">${infoRows}</table>` : ''}
+
+          <!-- Deadline highlight -->
+          <div style="background:linear-gradient(145deg, rgba(249,115,22,0.1), rgba(249,115,22,0.02));border:1px solid rgba(249,115,22,0.2);border-radius:16px;padding:24px;margin-bottom:36px;">
+            <p style="margin:0 0 8px;color:#fb923c;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;">Date / Time</p>
+            <p style="margin:0;color:#ffffff;font-size:18px;font-weight:700;letter-spacing:0.5px;">${formatUTCDate(project.deadline)}</p>
+          </div>
+
+          <!-- CTA button -->
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td align="center">
+                <a href="${project.website || 'https://www.erdrop.biz.id/projects'}"
+                   style="display:inline-block;background:linear-gradient(135deg, #a855f7 0%, #6366f1 100%);color:#ffffff;font-size:16px;font-weight:700;text-decoration:none;padding:16px 40px;border-radius:100px;letter-spacing:0.5px;box-shadow:0 10px 20px -5px rgba(168,85,247,0.4);">
+                  ${project.website ? '🚀 &nbsp;Go to Project' : '📊 &nbsp;Open Dashboard'}
+                </a>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+
+        <!-- Footer -->
+        <tr><td style="padding:32px 0 0;text-align:center;">
+          <p style="margin:0 0 12px;color:#71717a;font-size:13px;">You're receiving this because you're tracking this project on Erdrop.</p>
+          <a href="https://www.erdrop.biz.id/projects" style="color:#a1a1aa;font-size:13px;text-decoration:underline;font-weight:600;">Open Erdrop Dashboard</a>
+        </td></tr>
+
       </table>
-
-      <div style="border: 1px solid #71717a; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
-        <div style="font-size: 11px; font-weight: bold; color: #e2a884; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">Date / Time</div>
-        <div style="font-size: 16px; font-weight: bold; color: #ffffff;">${formatUTCDate(project.deadline)}</div>
-      </div>
-
-      <a href="https://www.erdrop.biz.id/projects" style="display: block; background-color: #a855f7; color: #ffffff; text-align: center; padding: 16px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 16px;">
-        🚀 Go to Project
-      </a>
-    </div>
-
-    <div style="margin-top: 32px; font-size: 12px; color: #a1a1aa;">
-      <p>You're receiving this because you're tracking this project on Erdrop.</p>
-      <a href="https://www.erdrop.biz.id/projects" style="color: #a1a1aa; text-decoration: underline;">Open Erdrop Dashboard</a>
-    </div>
-  </div>
-</div>
-`};
+    </td></tr>
+  </table>
+</body>
+</html>`
+};
 
 const getNftHtml = (project: any) => {
   const eventName = project.event_type || 'NFT Mint';
   const badgeText = project.event_type ? `⏰ ${project.event_type.toUpperCase()} ALERT` : '⏰ 3-HOUR MINT ALERT';
 
-  return `
-<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #4b4b4d; padding: 40px 20px; color: #ffffff;">
-  <div style="max-width: 500px; margin: 0 auto; text-align: center;">
-    
-    <div style="background-color: #a855f7; display: inline-block; padding: 10px 24px; border-radius: 999px; font-weight: bold; font-size: 20px; margin-bottom: 24px; color: white;">
-      💧 Erdrop
-    </div>
+  const infoRows = [
+    project.chain ? `
+      <tr>
+        <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Network</td>
+        <td style="padding:12px 0;color:#f8fafc;font-size:14px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.chain}</td>
+      </tr>` : '',
+    project.mint_price ? `
+      <tr>
+        <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Mint Price</td>
+        <td style="padding:12px 0;color:#10b981;font-size:14px;font-weight:700;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.mint_price}</td>
+      </tr>` : '',
+    project.collection_size ? `
+      <tr>
+        <td style="padding:12px 0;color:#94a3b8;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Supply</td>
+        <td style="padding:12px 0;color:#f8fafc;font-size:14px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:right;">${project.collection_size}</td>
+      </tr>` : '',
+  ].filter(Boolean).join('');
 
-    <div style="display: inline-block; border: 1px solid #60a5fa; color: #93c5fd; padding: 6px 16px; border-radius: 999px; font-size: 12px; font-weight: bold; letter-spacing: 1px; margin-bottom: 24px;">
-      ${badgeText}
-    </div>
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${eventName}</title></head>
+<body style="margin:0;padding:0;background-color:#09090b;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#09090b;padding:40px 16px;">
+    <tr><td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
 
-    <div style="background-color: #545461; border-radius: 20px; padding: 32px; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
-      <div style="font-size: 12px; font-weight: bold; color: #a1a1aa; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">${eventName}</div>
-      <h1 style="font-size: 28px; font-weight: 800; margin: 0 0 24px 0; color: #ffffff;">${project.name}</h1>
+        <!-- Header -->
+        <tr><td style="padding-bottom:32px;text-align:center;">
+          <div style="display:inline-block;background:linear-gradient(135deg, #a855f7 0%, #6366f1 100%);border-radius:100px;padding:12px 28px;box-shadow:0 10px 25px -5px rgba(168,85,247,0.4);">
+            <span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;">💧 Erdrop</span>
+          </div>
+        </td></tr>
 
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
-        <tr style="border-bottom: 1px solid #71717a;">
-          <td style="padding: 12px 0; color: #a1a1aa; font-size: 14px;">Network</td>
-          <td style="padding: 12px 0; text-align: right; font-weight: bold; color: #ffffff; font-size: 14px;">${project.chain || '-'}</td>
-        </tr>
-        <tr style="border-bottom: 1px solid #71717a;">
-          <td style="padding: 12px 0; color: #a1a1aa; font-size: 14px;">Mint Price</td>
-          <td style="padding: 12px 0; text-align: right; font-weight: bold; color: #c084fc; font-size: 14px;">${project.mint_price || '-'}</td>
-        </tr>
-        <tr>
-          <td style="padding: 12px 0; color: #a1a1aa; font-size: 14px;">Supply</td>
-          <td style="padding: 12px 0; text-align: right; font-weight: bold; color: #c084fc; font-size: 14px;">${project.collection_size || '-'}</td>
-        </tr>
+        <!-- Alert badge -->
+        <tr><td style="text-align:center;padding-bottom:24px;">
+          <span style="display:inline-block;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:#34d399;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:8px 20px;border-radius:999px;">
+            ${badgeText}
+          </span>
+        </td></tr>
+
+        <!-- Main card -->
+        <tr><td style="background-color:#18181b;border:1px solid #27272a;border-radius:24px;padding:40px;box-shadow:0 20px 40px -10px rgba(0,0,0,0.5);">
+
+          <p style="margin:0 0 12px;color:#a1a1aa;font-size:13px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;">${eventName}</p>
+          <h1 style="margin:0 0 32px;color:#ffffff;font-size:32px;font-weight:800;line-height:1.2;letter-spacing:-0.5px;">${project.name}</h1>
+
+          <!-- Info table -->
+          ${infoRows ? `<table width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #27272a;margin-bottom:32px;">${infoRows}</table>` : ''}
+
+          <!-- Deadline highlight -->
+          <div style="background:linear-gradient(145deg, rgba(16,185,129,0.1), rgba(16,185,129,0.02));border:1px solid rgba(16,185,129,0.2);border-radius:16px;padding:24px;margin-bottom:36px;">
+            <p style="margin:0 0 8px;color:#34d399;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;">Date / Time</p>
+            <p style="margin:0;color:#ffffff;font-size:18px;font-weight:700;letter-spacing:0.5px;">${formatUTCDate(project.deadline)}</p>
+          </div>
+
+          <!-- CTA button -->
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td align="center">
+                <a href="${project.website || 'https://www.erdrop.biz.id/projects'}"
+                   style="display:inline-block;background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:#ffffff;font-size:16px;font-weight:700;text-decoration:none;padding:16px 40px;border-radius:100px;letter-spacing:0.5px;box-shadow:0 10px 20px -5px rgba(16,185,129,0.4);">
+                  ${project.website ? '🎨 &nbsp;Go to Mint Page' : '📊 &nbsp;Open Dashboard'}
+                </a>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+
+        <!-- Footer -->
+        <tr><td style="padding:32px 0 0;text-align:center;">
+          <p style="margin:0 0 12px;color:#71717a;font-size:13px;">You're receiving this because you're tracking this project on Erdrop.</p>
+          <a href="https://www.erdrop.biz.id/projects" style="color:#a1a1aa;font-size:13px;text-decoration:underline;font-weight:600;">Open Erdrop Dashboard</a>
+        </td></tr>
+
       </table>
-
-      <div style="border: 1px solid #71717a; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
-        <div style="font-size: 11px; font-weight: bold; color: #93c5fd; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">Date / Time</div>
-        <div style="font-size: 16px; font-weight: bold; color: #ffffff;">${formatUTCDate(project.deadline)}</div>
-      </div>
-
-      <a href="https://www.erdrop.biz.id/projects" style="display: block; background-color: #a855f7; color: #ffffff; text-align: center; padding: 16px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 16px;">
-        🖼️ Go to Project
-      </a>
-    </div>
-
-    <div style="margin-top: 32px; font-size: 12px; color: #a1a1aa;">
-      <p>You're receiving this because you're tracking this project on Erdrop.</p>
-      <a href="https://www.erdrop.biz.id/projects" style="color: #a1a1aa; text-decoration: underline;">Open Erdrop Dashboard</a>
-    </div>
-  </div>
-</div>
-`};
+    </td></tr>
+  </table>
+</body>
+</html>`
+};
 
 export async function GET(request: Request) {
   // Verify cron secret if needed
@@ -151,7 +215,7 @@ export async function GET(request: Request) {
   // Token projects (H-24 hours) - added more fields for email
   const { data: tokenProjects } = await supabase
     .from('projects')
-    .select('id, user_id, name, deadline, chain, estimated_reward, status, event_type')
+    .select('id, user_id, name, deadline, chain, estimated_reward, status, event_type, website')
     .eq('project_type', 'Token')
     .eq('email_notified', false)
     .gte('deadline', now.toISOString())
@@ -160,7 +224,7 @@ export async function GET(request: Request) {
   // NFT projects (H-3 hours) - added more fields for email
   const { data: nftProjects } = await supabase
     .from('projects')
-    .select('id, user_id, name, deadline, chain, mint_price, collection_size, status, event_type')
+    .select('id, user_id, name, deadline, chain, mint_price, collection_size, status, event_type, website')
     .eq('project_type', 'NFT')
     .eq('email_notified', false)
     .gte('deadline', now.toISOString())
@@ -193,12 +257,12 @@ export async function GET(request: Request) {
               errors.push(`Token ${project.name}: ${res.error.message}`)
             } else {
               console.log(`[CRON] Successfully sent token deadline email for project ${project.id}`)
+              const { error: updateError } = await supabase.from('projects').update({ email_notified: true }).eq('id', project.id)
+              if (updateError) {
+                console.error(`[CRON] Failed to update email_notified for ${project.id}:`, updateError)
+                errors.push(`Token ${project.name} DB Update: ${updateError.message}`)
+              }
             }
-          }
-          const { error: updateError } = await supabase.from('projects').update({ email_notified: true }).eq('id', project.id)
-          if (updateError) {
-            console.error(`[CRON] Failed to update email_notified for ${project.id}:`, updateError)
-            errors.push(`Token ${project.name} DB Update: ${updateError.message}`)
           }
         } else {
           console.log(`[CRON] User ${project.user_id} has no email linked. Skipping.`)
