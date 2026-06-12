@@ -129,7 +129,7 @@ const getNftHtml = (project: any) => `
 export async function GET(request: Request) {
   // Verify cron secret if needed
   const authHeader = request.headers.get('authorization');
-  if (process.env.CRON_SECRET && authHeader !== \`Bearer \${process.env.CRON_SECRET}\`) {
+  if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return new Response('Unauthorized', { status: 401 });
   }
 
@@ -168,35 +168,35 @@ export async function GET(request: Request) {
         const email = user.email ? user.email.address : user.google?.email || user.discord?.email
         
         if (email) {
-          console.log(\`[CRON] Sending email to \${email} — Token Project "\${project.name}" deadline in < 24 hours (\${project.deadline})\`)
+          console.log(`[CRON] Sending email to ${email} — Token Project "${project.name}" deadline in < 24 hours (${project.deadline})`)
           if (!resend) {
             console.warn('[CRON] RESEND_API_KEY missing, skipping email.')
-            errors.push(\`Token \${project.name}: RESEND_API_KEY missing\`)
+            errors.push(`Token ${project.name}: RESEND_API_KEY missing`)
           } else {
             const res = await resend.emails.send({
               from: 'Erdrop <noreply@erdrop.biz.id>',
               to: email,
-              subject: \`⏰ 24h Deadline: \${project.name}\`,
+              subject: `⏰ 24h Deadline: ${project.name}`,
               html: getTokenHtml(project)
             })
             if (res.error) {
-              console.error(\`[CRON] Resend error for user \${project.user_id}:\`, res.error)
-              errors.push(\`Token \${project.name}: \${res.error.message}\`)
+              console.error(`[CRON] Resend error for user ${project.user_id}:`, res.error)
+              errors.push(`Token ${project.name}: ${res.error.message}`)
             } else {
-              console.log(\`[CRON] Successfully sent token deadline email for project \${project.id}\`)
+              console.log(`[CRON] Successfully sent token deadline email for project ${project.id}`)
             }
           }
           const { error: updateError } = await supabase.from('projects').update({ email_notified: true }).eq('id', project.id)
           if (updateError) {
-            console.error(\`[CRON] Failed to update email_notified for \${project.id}:\`, updateError)
-            errors.push(\`Token \${project.name} DB Update: \${updateError.message}\`)
+            console.error(`[CRON] Failed to update email_notified for ${project.id}:`, updateError)
+            errors.push(`Token ${project.name} DB Update: ${updateError.message}`)
           }
         } else {
-          console.log(\`[CRON] User \${project.user_id} has no email linked. Skipping.\`)
+          console.log(`[CRON] User ${project.user_id} has no email linked. Skipping.`)
         }
       } catch (error: any) {
-        console.error(\`[CRON] Failed to send email to user \${project.user_id}:\`, error)
-        errors.push(\`Token \${project.name}: \${error.message}\`)
+        console.error(`[CRON] Failed to send email to user ${project.user_id}:`, error)
+        errors.push(`Token ${project.name}: ${error.message}`)
       }
     }
   }
@@ -209,35 +209,35 @@ export async function GET(request: Request) {
         const email = user.email ? user.email.address : user.google?.email || user.discord?.email
         
         if (email) {
-          console.log(\`[CRON] Sending email to \${email} — NFT Project "\${project.name}" minting in < 3 hours (\${project.deadline})\`)
+          console.log(`[CRON] Sending email to ${email} — NFT Project "${project.name}" minting in < 3 hours (${project.deadline})`)
           if (!resend) {
             console.warn('[CRON] RESEND_API_KEY missing, skipping email.')
-            errors.push(\`NFT \${project.name}: RESEND_API_KEY missing\`)
+            errors.push(`NFT ${project.name}: RESEND_API_KEY missing`)
           } else {
             const res = await resend.emails.send({
               from: 'Erdrop <noreply@erdrop.biz.id>',
               to: email,
-              subject: \`⏰ Minting Soon: \${project.name}\`,
+              subject: `⏰ Minting Soon: ${project.name}`,
               html: getNftHtml(project)
             })
             if (res.error) {
-              console.error(\`[CRON] Resend error for user \${project.user_id}:\`, res.error)
-              errors.push(\`NFT \${project.name}: \${res.error.message}\`)
+              console.error(`[CRON] Resend error for user ${project.user_id}:`, res.error)
+              errors.push(`NFT ${project.name}: ${res.error.message}`)
             } else {
               // Mark as notified so it doesn't send again next hour
               const { error: updateError } = await supabase.from('projects').update({ email_notified: true }).eq('id', project.id)
               if (updateError) {
-                console.error(\`[CRON] Failed to update email_notified for \${project.id}:\`, updateError)
-                errors.push(\`NFT \${project.name} DB Update: \${updateError.message}\`)
+                console.error(`[CRON] Failed to update email_notified for ${project.id}:`, updateError)
+                errors.push(`NFT ${project.name} DB Update: ${updateError.message}`)
               }
             }
           }
         } else {
-          console.log(\`[CRON] User \${project.user_id} has no email linked. Skipping.\`)
+          console.log(`[CRON] User ${project.user_id} has no email linked. Skipping.`)
         }
       } catch (error: any) {
-        console.error(\`[CRON] Failed to send email to user \${project.user_id}:\`, error)
-        errors.push(\`NFT \${project.name}: \${error.message}\`)
+        console.error(`[CRON] Failed to send email to user ${project.user_id}:`, error)
+        errors.push(`NFT ${project.name}: ${error.message}`)
       }
     }
   }
