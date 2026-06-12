@@ -1,0 +1,68 @@
+import Link from "next/link";
+import { getPrivyUser, ensureProfile } from "@/lib/privy/server";
+import { redirect } from "next/navigation";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { UserProfile } from "@/components/auth/UserProfile";
+import { MobileNav } from "@/components/layout/MobileNav";
+import { DesktopSidebar } from "@/components/layout/DesktopSidebar";
+import { PricingModal } from "@/components/paywall/PricingModal";
+import { ErdropLogo } from "@/components/ui/icons";
+import { IS_BETA_PHASE } from "@/lib/config";
+
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const user = await getPrivyUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const profile = await ensureProfile(user.id);
+  const isPro = profile.plan === 'pro';
+
+  return (
+    <div className="flex min-h-screen bg-background text-on-surface font-sans overflow-hidden">
+      {/* Desktop Sidebar (Collapsible, Client Component) */}
+      <DesktopSidebar isPro={isPro} />
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col relative w-full h-screen overflow-y-auto pb-24 md:pb-0">
+        {/* Top App Bar */}
+        <header className="sticky top-0 left-0 w-full z-30 flex justify-between items-center px-4 md:px-6 h-16 bg-surface/80 backdrop-blur-md rounded-b-xl border-b-2 border-primary-container/30">
+          <div className="flex items-center gap-2">
+            <ErdropLogo className="w-8 h-8 text-primary md:hidden" />
+            <div className="flex flex-col md:hidden">
+              <h1 className="text-[22px] font-extrabold text-primary tracking-tighter leading-none" style={{ fontFamily: 'Plus Jakarta Sans, Inter, sans-serif' }}>
+                Erdrop
+              </h1>
+              <span className="text-[9px] font-bold text-outline tracking-widest uppercase mt-0.5">
+                Track Every Drop
+              </span>
+            </div>
+            <h1 className="text-headline-md font-bold text-on-surface hidden md:block">
+              Dashboard
+            </h1>
+          </div>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <UserProfile />
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="flex-1 p-4 md:p-6 w-full max-w-[1200px] mx-auto">
+          {children}
+        </main>
+      </div>
+
+      {/* Mobile Bottom Navigation Bar */}
+      <MobileNav isPro={isPro} />
+
+      {/* Pricing Modal */}
+      <PricingModal isPro={isPro} isBetaPhase={IS_BETA_PHASE} />
+    </div>
+  );
+}
