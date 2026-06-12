@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { privy } from '@/lib/privy/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 export const dynamic = 'force-dynamic'
 
@@ -50,29 +50,33 @@ export async function GET(request: Request) {
         
         if (email) {
           console.log(`[CRON] Sending email to ${email} — Token Project "${project.name}" deadline in < 24 hours (${project.deadline})`)
-          
-          const res = await resend.emails.send({
-            from: 'Erdrop <onboarding@resend.dev>',
-            to: email,
-            subject: `Upcoming Deadline: ${project.name}`,
-            html: `
-              <h2>Airdrop Deadline Approaching!</h2>
-              <p>Your tracked token project <strong>${project.name}</strong> is reaching its deadline within 24 hours (${project.deadline}).</p>
-              <p>Make sure you have completed all necessary tasks.</p>
-              <br/>
-              <p><a href="https://erdrop.app/projects">Open Erdrop Dashboard</a></p>
-            `
-          })
-          if (res.error) {
-            console.error(`[CRON] Resend error for user ${project.user_id}:`, res.error)
-            errors.push(`Token ${project.name}: ${res.error.message}`)
+          if (!resend) {
+            console.warn('[CRON] RESEND_API_KEY missing, skipping email.')
+            errors.push(`Token ${project.name}: RESEND_API_KEY missing`)
           } else {
-            // Mark as notified so it doesn't send again next hour
-            const { error: updateError } = await supabase.from('projects').update({ email_notified: true }).eq('id', project.id)
-            if (updateError) {
-              console.error(`[CRON] Failed to update email_notified for ${project.id}:`, updateError)
-              errors.push(`Token ${project.name} DB Update: ${updateError.message}`)
+            const res = await resend.emails.send({
+              from: 'Erdrop <onboarding@resend.dev>',
+              to: email,
+              subject: `Upcoming Deadline: ${project.name}`,
+              html: `
+                <h2>Airdrop Deadline Approaching!</h2>
+                <p>Your tracked token project <strong>${project.name}</strong> is reaching its deadline within 24 hours (${project.deadline}).</p>
+                <p>Make sure you have completed all necessary tasks.</p>
+                <br/>
+                <p><a href="https://erdrop.app/projects">Open Erdrop Dashboard</a></p>
+              `
+            })
+            if (res.error) {
+              console.error(`[CRON] Resend error for user ${project.user_id}:`, res.error)
+              errors.push(`Token ${project.name}: ${res.error.message}`)
+            } else {
+              console.log(`[CRON] Successfully sent token deadline email for project ${project.id}`)
             }
+          }
+          const { error: updateError } = await supabase.from('projects').update({ email_notified: true }).eq('id', project.id)
+          if (updateError) {
+            console.error(`[CRON] Failed to update email_notified for ${project.id}:`, updateError)
+            errors.push(`Token ${project.name} DB Update: ${updateError.message}`)
           }
         } else {
           console.log(`[CRON] User ${project.user_id} has no email linked. Skipping.`)
