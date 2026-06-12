@@ -141,7 +141,6 @@ export function ImportWizard() {
     setIsImporting(true)
 
     try {
-      // [FIX] Use server action instead of direct client-side Supabase insert
       const projectsToInsert: ProjectInsert[] = parsedData.map(p => ({
         name: p.Name,
         project_type: 'Token',
@@ -154,6 +153,7 @@ export function ImportWizard() {
         difficulty: null,
         estimated_reward: p.EstimatedReward || null,
         deadline: null,
+        event_type: null,
         notes: 'Imported from CSV',
         logo_url: null
       }))
