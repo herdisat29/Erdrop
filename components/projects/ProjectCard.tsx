@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { MoreVertical, Edit2, Trash2, ExternalLink } from 'lucide-react'
 import { Project } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -70,10 +71,10 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
   return (
     <>
       <Card 
-        className="group relative bg-surface-container-lowest border border-outline-variant sticky-note-shadow squishy-interaction transition-all duration-200 cursor-pointer h-full rounded-2xl overflow-hidden"
-        onClick={() => router.push(`/projects/${project.id}`)}
+        className="group relative bg-surface-container-lowest border border-outline-variant sticky-note-shadow hover:scale-[1.02] transition-all duration-200 h-full rounded-2xl overflow-hidden"
       >
-          <CardHeader className="pb-3 flex flex-row items-start justify-between relative z-10">
+        <Link href={`/projects/${project.id}`} className="absolute inset-0 z-0 focus:outline-none" aria-label={`View ${project.name} details`} />
+          <CardHeader className="pb-3 flex flex-row items-start justify-between relative z-10 pointer-events-none">
             <div className="space-y-1">
               <CardTitle className="font-headline-md text-on-surface flex items-center gap-2">
                 {project.name}
@@ -111,9 +112,21 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
                 {project.difficulty && project.project_type !== 'NFT' && <span>{project.difficulty}</span>}
                 {project.chain && project.collection_size && project.project_type === 'NFT' && <span>•</span>}
                 {project.collection_size && project.project_type === 'NFT' && <span>{project.collection_size} Supply</span>}
+                {project.deadline && (() => {
+                  const deadlineDate = new Date(project.deadline)
+                  const isExpired = deadlineDate < new Date() && project.status !== 'Claimed' && project.status !== 'Missed'
+                  if (isExpired) {
+                    return (
+                      <Badge variant="outline" className="bg-error-container text-on-error-container border-error-container font-label-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-widest">
+                        Expired
+                      </Badge>
+                    )
+                  }
+                  return null
+                })()}
               </div>
             </div>
-            <div className="flex items-center gap-2 relative z-10" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-2 relative z-10 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
               <span className={getStatusColor(project.status)}>
                 {project.status}
               </span>
@@ -134,7 +147,7 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
               </DropdownMenu>
             </div>
           </CardHeader>
-          <CardContent className="relative z-10">
+          <CardContent className="relative z-10 pointer-events-none">
             <div className="flex items-end justify-between mt-2">
               {project.project_type === 'NFT' || project.status === 'Claimed' ? (
                 <div>

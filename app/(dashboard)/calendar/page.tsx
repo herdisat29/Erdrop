@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getPrivyUser } from '@/lib/privy/server'
 import { Project } from '@/types'
 import { format, parseISO, isBefore, startOfToday, isValid } from 'date-fns'
+import { ProjectCard } from '@/components/projects/ProjectCard'
 
 export const dynamic = 'force-dynamic'
 
@@ -78,44 +79,7 @@ export default async function CalendarPage() {
               </h2>
               
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {monthProjects.map((project) => {
-                  const parsedDate = project.deadline ? parseISO(project.deadline) : null
-                  const isExpired = parsedDate && isValid(parsedDate) ? isBefore(parsedDate, today) : false
-                  const formattedDate = parsedDate && isValid(parsedDate) ? format(parsedDate, 'MMM dd, yyyy') : project.deadline
-                  
-                  return (
-                    <div 
-                      key={project.id}
-                      className={`relative p-5 bg-surface-container-lowest rounded-2xl border border-outline-variant sticky-note-shadow hover:scale-[1.02] transition-all duration-200 squishy-interaction overflow-hidden group`}
-                    >
-                      {isExpired && (
-                        <div className="absolute top-3 right-3">
-                          <span className="bg-error text-on-error font-label-bold text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full">
-                            Expired
-                          </span>
-                        </div>
-                      )}
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="material-symbols-outlined text-primary text-lg">event</span>
-                        <p className="text-sm font-label-bold text-primary uppercase tracking-widest">
-                          {formattedDate}
-                        </p>
-                      </div>
-                      <h3 className="font-headline-md text-on-surface mb-3">
-                        {project.name}
-                      </h3>
-                      <div className="flex gap-2 flex-wrap">
-                        <span className={`font-label-bold text-[10px] py-1 px-3 uppercase tracking-wider rounded-full ${getStatusColor(project.status)}`}>
-                          {project.status}
-                        </span>
-                        {project.estimated_reward && (
-                          <span className="font-label-bold text-[10px] py-1 px-3 uppercase tracking-wider rounded-full bg-primary-container/50 text-primary">
-                            {project.estimated_reward}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  )
+                  return <ProjectCard key={project.id} project={project} />
                 })}
               </div>
             </div>
