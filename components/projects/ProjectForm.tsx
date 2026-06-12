@@ -141,7 +141,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
             <FormItem>
               <FormLabel className="text-on-surface-variant">Project Name</FormLabel>
               <FormControl>
-                <Input placeholder={isNFT ? "e.g. Pudgy Penguins" : "e.g. Arbitrum, LayerZero"} className="bg-surface-container border-outline-variant text-on-surface" {...field} />
+                <Input placeholder={isNFT ? "Pudgy Penguins, Azuki, Bored Ape..." : "Arbitrum, zkSync, LayerZero..."} className="bg-surface-container border-outline-variant text-on-surface" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -157,7 +157,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
                 <FormItem>
                   <FormLabel className="text-on-surface-variant">Chain</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Ethereum" className="bg-surface-container border-outline-variant text-on-surface" {...field} />
+                    <Input placeholder="Ethereum, Solana, Base..." className="bg-surface-container border-outline-variant text-on-surface" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -226,7 +226,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
                 <FormItem>
                   <FormLabel className="text-on-surface-variant">Chain</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Ethereum" className="bg-surface-container border-outline-variant text-on-surface" {...field} />
+                    <Input placeholder="Ethereum, Solana, Base..." className="bg-surface-container border-outline-variant text-on-surface" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -243,7 +243,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
               <FormItem>
                 <FormLabel className="text-on-surface-variant">{isNFT ? "Mint Website" : "Website"}</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://..." className="bg-surface-container border-outline-variant text-on-surface" {...field} />
+                  <Input placeholder="https://your-project-link.com" className="bg-surface-container border-outline-variant text-on-surface" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -257,7 +257,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
               <FormItem>
                 <FormLabel className="text-on-surface-variant">Twitter (X) URL</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://x.com/..." className="bg-surface-container border-outline-variant text-on-surface" {...field} />
+                  <Input placeholder="https://x.com/project_name" className="bg-surface-container border-outline-variant text-on-surface" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -297,7 +297,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
                 <FormItem>
                   <FormLabel className="text-on-surface-variant">Est. Reward</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. $1000 or 500 Pts" className="bg-surface-container border-outline-variant text-on-surface" {...field} />
+                    <Input placeholder="$1,000, 50,000 Pts, etc." className="bg-surface-container border-outline-variant text-on-surface" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -315,7 +315,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
                 <FormItem>
                   <FormLabel className="text-on-surface-variant">Mint Price</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Free, 0.01 ETH" className="bg-surface-container border-outline-variant text-on-surface" {...field} />
+                    <Input placeholder="Free Mint, 0.05 ETH, TBA..." className="bg-surface-container border-outline-variant text-on-surface" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -329,7 +329,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
                 <FormItem>
                   <FormLabel className="text-on-surface-variant">Collection Size</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. 10000, TBA" className="bg-surface-container border-outline-variant text-on-surface" {...field} />
+                    <Input placeholder="10,000, 5,555, TBA..." className="bg-surface-container border-outline-variant text-on-surface" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -360,7 +360,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
               <FormLabel className="text-on-surface-variant">Notes / Tasks</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder={isNFT ? "Waitlist details, discord requirements..." : "Bridge 0.1 ETH, swap 3 times..."}
+                  placeholder={isNFT ? "WL requirements, discord tasks, roles needed..." : "Bridge 0.1 ETH, provide liquidity, daily swap..."}
                   className="resize-none bg-surface-container border-outline-variant text-on-surface h-24" 
                   {...field} 
                 />

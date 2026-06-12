@@ -137,7 +137,8 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
               {project.chain && project.collection_size && project.project_type === 'NFT' && <span>•</span>}
               {project.collection_size && project.project_type === 'NFT' && <span>{project.collection_size} Supply</span>}
               {project.deadline && (() => {
-                const deadlineDate = new Date(project.deadline)
+                const deadlineStr = project.deadline.endsWith('Z') ? project.deadline : project.deadline + 'Z'
+                const deadlineDate = new Date(deadlineStr)
                 const isExpired = deadlineDate < new Date() && project.status !== 'Claimed' && project.status !== 'Missed'
                 if (isExpired) {
                   return (

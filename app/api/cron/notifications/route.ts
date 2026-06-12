@@ -55,7 +55,7 @@ export async function GET(request: Request) {
             errors.push(`Token ${project.name}: RESEND_API_KEY missing`)
           } else {
             const res = await resend.emails.send({
-              from: 'Erdrop <onboarding@resend.dev>',
+              from: 'Erdrop <noreply@erdrop.biz.id>',
               to: email,
               subject: `Upcoming Deadline: ${project.name}`,
               html: `
@@ -63,7 +63,7 @@ export async function GET(request: Request) {
                 <p>Your tracked token project <strong>${project.name}</strong> is reaching its deadline within 24 hours (${project.deadline}).</p>
                 <p>Make sure you have completed all necessary tasks.</p>
                 <br/>
-                <p><a href="https://erdrop.app/projects">Open Erdrop Dashboard</a></p>
+                <p><a href="https://www.erdrop.biz.id/projects">Open Erdrop Dashboard</a></p>
               `
             })
             if (res.error) {
@@ -102,7 +102,7 @@ export async function GET(request: Request) {
             errors.push(`NFT ${project.name}: RESEND_API_KEY missing`)
           } else {
             const res = await resend.emails.send({
-              from: 'Erdrop <onboarding@resend.dev>',
+              from: 'Erdrop <noreply@erdrop.biz.id>',
               to: email,
               subject: `NFT Minting Soon: ${project.name}`,
               html: `
@@ -110,7 +110,7 @@ export async function GET(request: Request) {
                 <p>Your tracked NFT project <strong>${project.name}</strong> is minting in less than 3 hours (${project.deadline}).</p>
                 <p>Prepare your wallet and make sure you're ready to mint.</p>
                 <br/>
-                <p><a href="https://erdrop.app/projects">Open Erdrop Dashboard</a></p>
+                <p><a href="https://www.erdrop.biz.id/projects">Open Erdrop Dashboard</a></p>
               `
             })
             if (res.error) {
