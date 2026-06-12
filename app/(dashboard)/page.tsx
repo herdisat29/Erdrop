@@ -138,8 +138,8 @@ export default async function DashboardPage() {
               <span className="text-primary-fixed font-bold text-[11px] tracking-widest uppercase">CLAIMED VALUE</span>
               <div className="text-[48px] font-extrabold text-white mt-2 leading-none">${estimatedValue.toLocaleString()}</div>
             </div>
-            <Link href="/logs" className="mt-4 text-label-bold bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-full text-sm transition-colors self-start inline-block">
-              View History
+            <Link href="/projects" className="mt-4 text-label-bold bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-full text-sm transition-colors self-start inline-block">
+              View Claimed Projects
             </Link>
           </div>
           <div className="absolute bottom-0 left-0 w-full h-1 bg-primary-fixed"></div>
