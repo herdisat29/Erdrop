@@ -71,10 +71,10 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
   return (
     <>
       <Card 
-        className="group relative bg-surface-container-lowest border border-outline-variant sticky-note-shadow hover:scale-[1.02] transition-all duration-200 h-full rounded-2xl overflow-hidden"
+        className="group relative bg-surface-container-lowest border border-outline-variant sticky-note-shadow squishy-interaction transition-all duration-200 cursor-pointer h-full rounded-2xl overflow-hidden"
+        onClick={() => router.push(`/projects/${project.id}`)}
       >
-        <Link href={`/projects/${project.id}`} className="absolute inset-0 z-0 focus:outline-none" aria-label={`View ${project.name} details`} />
-          <CardHeader className="pb-3 flex flex-row items-start justify-between relative z-10 pointer-events-none">
+          <CardHeader className="pb-3 flex flex-row items-start justify-between relative z-10">
             <div className="space-y-1">
               <CardTitle className="font-headline-md text-on-surface flex items-center gap-2">
                 {project.name}
@@ -126,7 +126,7 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
                 })()}
               </div>
             </div>
-            <div className="flex items-center gap-2 relative z-10 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-2 relative z-10" onClick={(e) => e.stopPropagation()}>
               <span className={getStatusColor(project.status)}>
                 {project.status}
               </span>
@@ -134,7 +134,11 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
                 <DropdownMenuTrigger className="text-outline hover:text-on-surface focus:outline-none squishy-interaction p-1 rounded-full hover:bg-surface-container-highest">
                   <MoreVertical className="h-5 w-5" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-surface-container-lowest border-outline-variant text-on-surface-variant rounded-xl shadow-md">
+                <DropdownMenuContent 
+                  align="end" 
+                  className="bg-surface-container-lowest border-outline-variant text-on-surface-variant rounded-xl shadow-md"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <DropdownMenuItem onSelect={() => setTimeout(() => setIsEditOpen(true), 100)} className="hover:bg-surface-container-high focus:bg-surface-container-high cursor-pointer rounded-lg m-1">
                     <Edit2 className="h-4 w-4 mr-2" />
                     Edit
@@ -147,7 +151,7 @@ export function ProjectCard({ project, onOptimisticDelete }: ProjectCardProps) {
               </DropdownMenu>
             </div>
           </CardHeader>
-          <CardContent className="relative z-10 pointer-events-none">
+          <CardContent className="relative z-10">
             <div className="flex items-end justify-between mt-2">
               {project.project_type === 'NFT' || project.status === 'Claimed' ? (
                 <div>

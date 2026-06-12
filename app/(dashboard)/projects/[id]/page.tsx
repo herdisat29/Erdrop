@@ -7,6 +7,7 @@ import { ChevronLeft, ExternalLink } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { LogTable } from '@/components/logs/LogTable'
 import { CreateLogDialog } from '@/components/logs/CreateLogDialog'
+import { ProjectDetailActions } from '@/components/projects/ProjectDetailActions'
 import { AIAnalysis } from '@/components/projects/AIAnalysis'
 import { AiAnalysis } from '@/types'
 
@@ -72,8 +73,11 @@ export default async function ProjectDetail({ params }: { params: Promise<{ id: 
         Back to Projects
       </Link>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant sticky-note-shadow">
-        <div className="space-y-3">
+      <div className="flex flex-col md:flex-row justify-between items-start gap-6 bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant sticky-note-shadow relative">
+        <div className="absolute top-6 right-6">
+          <ProjectDetailActions project={project} />
+        </div>
+        <div className="space-y-3 pr-12">
           <div className="flex items-center gap-3">
             <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">{project.name}</h1>
             <Badge variant="outline" className={getStatusColor(project.status)}>
