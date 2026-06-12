@@ -45,11 +45,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: access.reason || 'Upgrade to Beta Pro to analyze more projects', upgrade: !access.betaLimitReached }, { status: 403 })
     }
 
-    // Fetch project details for context
+    // Fetch project details for context and verify ownership to prevent IDOR
     const { data: project, error: projectError } = await supabase
       .from('projects')
       .select('*')
       .eq('id', projectId)
+      .eq('user_id', user.id)
       .single()
 
     if (projectError || !project) {
