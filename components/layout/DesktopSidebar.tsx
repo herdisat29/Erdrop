@@ -10,10 +10,11 @@ export function DesktopSidebar({ isPro = false }: { isPro?: boolean }) {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(true)
 
-  const navItems = [
+    const navItems = [
     { href: '/', icon: 'grid_view', label: 'Dashboard' },
     { href: '/projects', icon: 'folder', label: 'Projects' },
     { href: '/calendar', icon: 'calendar_month', label: 'Calendar' },
+    { href: '/report', icon: 'analytics', label: 'Portfolio' },
     { href: '/logs', icon: 'assignment', label: 'Activity Logs' },
   ]
 
