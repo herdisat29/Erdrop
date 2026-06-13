@@ -98,7 +98,8 @@ export async function getTrendingTokens() {
       thumb: c.item.thumb,
       price: c.item.data?.price || 0,
       price_btc: c.item.price_btc,
-      rank: c.item.market_cap_rank
+      rank: c.item.market_cap_rank,
+      price_change_24h: c.item.data?.price_change_percentage_24h?.usd || 0
     })),
     isPro
   }

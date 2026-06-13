@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { getTrendingTokens } from '@/app/actions/market'
 import { ProBadge } from '@/components/paywall/ProBadge'
 import { UpgradePrompt } from '@/components/paywall/UpgradePrompt'
+import { TrendingUp, TrendingDown } from 'lucide-react'
 
 const formatPrice = (price: number) => {
   if (!price) return '--'
@@ -74,7 +75,10 @@ export function TrendingTokens() {
                 <p className="text-sm text-on-surface font-mono">
                   {formatPrice(coin.price)}
                 </p>
-                <p className="text-[10px] text-on-surface-variant/60">Rank #{coin.rank || '--'}</p>
+                <div className={`flex items-center justify-end gap-1 text-[10px] font-bold ${coin.price_change_24h >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+                  {coin.price_change_24h >= 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                  {Math.abs(coin.price_change_24h).toFixed(2)}%
+                </div>
               </div>
             </div>
           ))}
