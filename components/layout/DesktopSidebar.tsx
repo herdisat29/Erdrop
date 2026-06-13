@@ -10,16 +10,17 @@ export function DesktopSidebar({ isPro = false }: { isPro?: boolean }) {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(true)
 
-    const navItems = [
+  const navItems = [
     { href: '/', icon: 'grid_view', label: 'Dashboard' },
     { href: '/projects', icon: 'folder', label: 'Projects' },
     { href: '/calendar', icon: 'calendar_month', label: 'Calendar' },
-    { href: '/report', icon: 'analytics', label: 'Portfolio' },
     { href: '/logs', icon: 'assignment', label: 'Activity Logs' },
+    { href: '/report', icon: 'analytics', label: 'Portfolio' },
   ]
 
   const toolItems = [
     { href: '/plan', icon: 'psychology', label: 'AI Plan' },
+    { href: '/wallets', icon: 'account_balance_wallet', label: 'Wallets' },
     { href: '/import', icon: 'upload_file', label: 'Import CSV' },
   ]
 
