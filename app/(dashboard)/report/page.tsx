@@ -18,10 +18,12 @@ export default async function ReportPage() {
     supabase
       .from('projects')
       .select('*')
+      .eq('user_id', user.id)
       .order('updated_at', { ascending: false }),
     supabase
       .from('logs')
       .select('*')
+      .eq('user_id', user.id)
       .order('logged_at', { ascending: false }),
   ])
 
