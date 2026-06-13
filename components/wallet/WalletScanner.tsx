@@ -194,7 +194,7 @@ export function WalletScanner() {
                   {chain.hasActivity
                     ? <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
                     : chain.error
-                      ? <XCircle className="h-3.5 w-3.5 shrink-0 text-red-400" title={chain.error} />
+                      ? <div title={chain.error} className="shrink-0 flex items-center"><XCircle className="h-3.5 w-3.5 text-red-400" /></div>
                       : <div className="h-3.5 w-3.5 rounded-full border-2 border-current opacity-30 shrink-0" />
                   }
                 </div>
