@@ -14,7 +14,7 @@ Erdrop is the ultimate airdrop farming and portfolio management platform. Design
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: Next.js 16 (App Router)
 - **Styling**: Tailwind CSS + Material Design 3 Tokens
 - **Database & Auth**: Supabase (PostgreSQL) + Privy
 - **AI**: Google Gemini Pro API
