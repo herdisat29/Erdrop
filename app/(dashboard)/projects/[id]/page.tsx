@@ -51,13 +51,13 @@ export default async function ProjectDetail({ params }: { params: Promise<{ id: 
     console.error('Error fetching logs:', logsError)
   }
 
-  const { data: initialAnalysis } = await supabase
+  // [NEW] Fetch up to 10 analyses for timeline history
+  const { data: analyses } = await supabase
     .from('ai_analyses')
     .select('*')
     .eq('project_id', id)
     .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle()
+    .limit(10)
 
   const typedLogs = (logs as Log[]) || []
   
@@ -126,7 +126,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ id: 
       </div>
 
       <div className="pt-2 pb-4">
-        <AIAnalysis projectId={project.id} initialAnalysis={initialAnalysis as AiAnalysis | null} />
+        <AIAnalysis projectId={project.id} analyses={(analyses as any[]) || []} />
       </div>
 
       <div className="pt-4">
