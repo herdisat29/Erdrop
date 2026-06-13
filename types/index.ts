@@ -69,10 +69,16 @@ export interface AiAnalysis {
   id: string
   project_id: string
   potential_score: number
+  // Legacy format (old rows) — kept for backward compat
   summary: string
   red_flags: string[]
   green_flags: string[]
-  recommendation: RecommendationType
   reasoning: string
+  // New format (added in memory migration)
+  bull_case: string | null
+  bear_case: string | null
+  key_risks: string[] | null
+  funding_status: string | null
+  recommendation: RecommendationType
   created_at: string
 }
