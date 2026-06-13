@@ -104,6 +104,7 @@ export function DesktopSidebar({ isPro = false }: { isPro?: boolean }) {
                 <span className="material-symbols-outlined" style={isActive ? {fontVariationSettings: "'FILL' 1"} : {}}>{item.icon}</span>
                 {item.label}
                 {item.label === 'AI Plan' && !isPro && <ProBadge className="ml-auto" />}
+                {item.label === 'Wallets' && <ProBadge className="ml-auto" />}
               </Link>
             )
           })}

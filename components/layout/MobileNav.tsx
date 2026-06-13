@@ -44,6 +44,11 @@ export function MobileNav({ isPro = false }: { isPro?: boolean }) {
                   <ProBadge />
                 </div>
               )}
+              {item.label === 'Wallets' && (
+                <span className="absolute -top-2 -right-4 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[7px] font-black px-1 rounded uppercase border border-green-200 dark:border-green-800">
+                  Beta
+                </span>
+              )}
             </div>
             <span className="font-label-sm text-[10px] mt-0.5 text-center">
               {item.label}

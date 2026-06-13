@@ -1,53 +1,45 @@
-# Erdrop 💧
+# 💧 Erdrop - Track Every Drop
 
-The ultimate tracking and analytics dashboard for crypto airdrop farming. Stop using messy spreadsheets and start managing your airdrop portfolio with intelligence.
+Erdrop is the ultimate airdrop farming and portfolio management platform. Designed for crypto enthusiasts who manage dozens of wallets across multiple chains, Erdrop streamlines your workflow, tracks your progress, and leverages AI to analyze potential opportunities.
 
 ![Erdrop Dashboard](public/og-image.png)
 
 ## Features
 
-- **Portfolio Tracking**: Track token and NFT airdrops across multiple chains.
-- **Activity Logs**: Keep a granular history of tasks (swaps, bridging, minting) and calculate estimated potential returns.
-- **AI Masterplans**: Generate actionable 4-week farming plans based on your active projects using Gemini 2.5 Flash.
-- **AI Project Analysis**: Automatically analyze projects for red flags, green flags, and potential scores.
-- **Smart Import**: Upload your messy CSV spreadsheets, and let AI automatically map the columns into the Erdrop system.
-- **Market Intelligence**: Real-time trending tokens, NFTs, and crypto news powered by CoinGecko and CryptoPanic.
-- **Automated Alerts**: Hourly cron jobs to notify you via email (Resend) when a mint or claim deadline is approaching.
-- **Web3 Auth**: Passwordless login via Email, Socials, or Crypto Wallets powered by Privy.
+- **Portfolio Ledger**: Track your airdrop wins, pending tasks, and missed opportunities in a clean, comprehensive dashboard.
+- **Multi-Chain Wallet Scanner [BETA]**: Scan `0x` EVM addresses across 8 major networks (Ethereum, Base, Arbitrum, Optimism, zkSync, Scroll, Linea, Zora) in seconds using the GoldRush API.
+- **AI Analysis Engine**: Powered by Google's Gemini, get deep insights into airdrop projects including Bull Cases, Bear Cases, Key Risks, and Funding Status.
+- **Historical Memory**: The AI remembers your previous analyses, creating a historical timeline of a project's evolution.
+- **Market Intelligence**: Real-time trending tokens and NFT collections with 24h price changes.
 
 ## Tech Stack
 
-- **Framework**: Next.js 16.2 (App Router)
-- **Styling**: Tailwind CSS + shadcn/ui + Material Design 3 Guidelines
-- **Auth**: Privy Server Auth
-- **Database**: Supabase (PostgreSQL)
-- **AI Integration**: Google Generative AI (Gemini)
-- **Emails**: Resend
-- **Analytics**: Vercel Analytics
+- **Framework**: Next.js 15 (App Router)
+- **Styling**: Tailwind CSS + Material Design 3 Tokens
+- **Database & Auth**: Supabase (PostgreSQL) + Privy
+- **AI**: Google Gemini Pro API
+- **Web3 Data**: Covalent GoldRush API
 
 ## Local Setup
 
-### Prerequisites
+### 1. Prerequisites
+- Node.js 18+
+- Supabase account
+- Privy account
+- Gemini API Key
+- Covalent GoldRush API Key
 
-You will need accounts for the following services:
-- [Supabase](https://supabase.com/)
-- [Privy](https://privy.io/)
-- [Google AI Studio (Gemini)](https://aistudio.google.com/)
-- [Resend](https://resend.com/)
-
-### 1. Clone & Install
-
+### 2. Clone & Install
 ```bash
-git clone https://github.com/herdisat29/Erdrop.git
-cd Erdrop
+git clone https://github.com/herdisat29/erdrop.git
+cd erdrop
 npm install
 ```
 
-### 2. Environment Variables
+### 3. Environment Variables
+Create a `.env.local` file in the root directory:
 
-Create a `.env.local` file in the root directory based on `.env.example`:
-
-```bash
+```env
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -57,34 +49,26 @@ SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 NEXT_PUBLIC_PRIVY_APP_ID=your_privy_app_id
 PRIVY_APP_SECRET=your_privy_app_secret
 
-# AI & Notifications
+# APIs
 GEMINI_API_KEY=your_gemini_api_key
-RESEND_API_KEY=your_resend_api_key
-
-# Optional Market Data
-CRYPTOPANIC_TOKEN=your_cryptopanic_token
+GOLDRUSH_API_KEY=your_covalent_api_key
 ```
 
-### 3. Run the Development Server
+### 4. Database Setup (Supabase)
+Run the SQL migrations found in `supabase/migrations/` in your Supabase SQL Editor to create the required tables:
+1. `projects`
+2. `logs`
+3. `ai_analyses`
+4. `wallet_scan_cache`
 
+Make sure Row Level Security (RLS) is enabled for all tables!
+
+### 5. Run Development Server
 ```bash
 npm run dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## Database Schema
-
-Erdrop requires the following Supabase tables. Migrations are managed manually or via the Supabase CLI.
-
-- `profiles`: User subscription plans and AI usage limits.
-- `projects`: Core farming projects tracked by the user.
-- `logs`: Activity entries linked to projects.
-- `ai_analyses`: AI generated scores and reviews for projects.
-- `farming_plans`: Generated 4-week task plans.
-- `market_cache`: Caching layer for external market data APIs to prevent rate-limiting.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## License
 
-MIT
-
+MIT License. Copyright (c) 2026 Erdrop.

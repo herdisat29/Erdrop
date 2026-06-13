@@ -83,6 +83,9 @@ export function WalletScanner() {
       <div className="flex items-center gap-2 mb-6">
         <Wifi className="h-5 w-5 text-primary" />
         <h2 className="font-headline-md text-on-surface">Wallet Scanner</h2>
+        <span className="text-[10px] font-label-bold text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded-full uppercase tracking-widest ml-2 border border-green-200 dark:border-green-800">
+          BETA
+        </span>
         <span className="text-[10px] font-label-bold text-on-surface-variant bg-surface-container border border-outline-variant px-2 py-0.5 rounded-full uppercase tracking-widest">
           8 Chains
         </span>
