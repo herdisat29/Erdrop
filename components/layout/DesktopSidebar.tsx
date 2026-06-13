@@ -15,7 +15,7 @@ export function DesktopSidebar({ isPro = false }: { isPro?: boolean }) {
     { href: '/projects', icon: 'folder', label: 'Projects' },
     { href: '/calendar', icon: 'calendar_month', label: 'Calendar' },
     { href: '/logs', icon: 'assignment', label: 'Activity Logs' },
-    { href: '/report', icon: 'analytics', label: 'Portfolio' },
+    { href: '/report', icon: 'analytics', label: 'Ledger' },
   ]
 
   const toolItems = [

@@ -13,6 +13,7 @@ export function MobileNav({ isPro = false }: { isPro?: boolean }) {
         { href: "/", icon: "grid_view", label: "Dashboard" },
         { href: "/projects", icon: "folder", label: "Projects" },
         { href: "/calendar", icon: "calendar_month", label: "Calendar" },
+        { href: "/report", icon: "analytics", label: "Ledger" },
         { href: "/plan", icon: "psychology", label: "AI Plan" },
         { href: "/logs", icon: "assignment", label: "Logs" },
         { href: "/wallets", icon: "account_balance_wallet", label: "Wallets" },
