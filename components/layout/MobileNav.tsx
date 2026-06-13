@@ -40,9 +40,9 @@ export function MobileNav({ isPro = false }: { isPro?: boolean }) {
                 {item.icon}
               </span>
               {item.label === 'AI Plan' && !isPro && (
-                <div className="absolute -top-1.5 -right-6 scale-[0.6] origin-bottom-left pointer-events-none">
-                  <ProBadge />
-                </div>
+                <span className="absolute -top-2 -right-4 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[7px] font-black px-1 rounded uppercase border border-green-200 dark:border-green-800 pointer-events-none">
+                  Beta
+                </span>
               )}
               {item.label === 'Wallets' && (
                 <span className="absolute -top-2 -right-4 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[7px] font-black px-1 rounded uppercase border border-green-200 dark:border-green-800">
@@ -64,9 +64,9 @@ export function MobileNav({ isPro = false }: { isPro?: boolean }) {
         <div className="relative">
           <span className="material-symbols-outlined">download</span>
           {!isPro && (
-            <div className="absolute -top-1.5 -right-6 scale-[0.6] origin-bottom-left pointer-events-none">
-              <ProBadge />
-            </div>
+            <span className="absolute -top-2 -right-4 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[7px] font-black px-1 rounded uppercase border border-green-200 dark:border-green-800 pointer-events-none">
+              Beta
+            </span>
           )}
         </div>
         <span className="font-label-sm text-[10px] mt-0.5 text-center">
