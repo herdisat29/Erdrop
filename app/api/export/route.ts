@@ -37,7 +37,7 @@ export async function GET(req: Request) {
     return new NextResponse('Error fetching projects', { status: 500 })
   }
 
-  const headers = ['Name', 'Type', 'Chain', 'Status', 'Difficulty', 'Est. Reward', 'Mint Price', 'Collection Size', 'Deadline', 'Twitter', 'Website', 'Notes', 'Created At']
+  const headers = ['Name', 'Type', 'Chain', 'Status', 'Difficulty', 'Est. Reward', 'Mint Price', 'Collection Size', 'Deadline', 'Event Type', 'Twitter', 'Website', 'Logo URL', 'Notes', 'Email Notified', 'Created At', 'Updated At']
   
   const rows = (projects || []).map(p => {
     return [
@@ -50,10 +50,14 @@ export async function GET(req: Request) {
       `"${(p.mint_price || '').replace(/"/g, '""')}"`,
       `"${(p.collection_size || '').replace(/"/g, '""')}"`,
       `"${(p.deadline || '').replace(/"/g, '""')}"`,
+      `"${(p.event_type || '').replace(/"/g, '""')}"`,
       `"${(p.twitter_url || '').replace(/"/g, '""')}"`,
       `"${(p.website || '').replace(/"/g, '""')}"`,
+      `"${(p.logo_url || '').replace(/"/g, '""')}"`,
       `"${(p.notes || '').replace(/"/g, '""')}"`,
-      `"${p.created_at}"`
+      `"${p.email_notified ? 'Yes' : 'No'}"`,
+      `"${p.created_at}"`,
+      `"${p.updated_at}"`
     ].join(',')
   })
 
