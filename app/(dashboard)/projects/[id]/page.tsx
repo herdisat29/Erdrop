@@ -35,6 +35,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ id: 
     .from('projects')
     .select('*')
     .eq('id', id)
+    .eq('user_id', user.id)
     .single()
 
   if (projectError || !project) {
@@ -45,6 +46,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ id: 
     .from('logs')
     .select('*')
     .eq('project_id', id)
+    .eq('user_id', user.id)
     .order('logged_at', { ascending: false })
 
   if (logsError) {
@@ -56,6 +58,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ id: 
     .from('ai_analyses')
     .select('*')
     .eq('project_id', id)
+    .eq('user_id', user.id)
     .order('created_at', { ascending: false })
     .limit(10)
 

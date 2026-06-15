@@ -129,6 +129,7 @@ Return ONLY valid JSON. No markdown, no backticks, no extra text.
       .from('ai_analyses')
       .insert({
         project_id: projectId,
+        user_id: user.id,
         potential_score: Number(analysisData.potential_score) || 50,
         recommendation: analysisData.recommendation,
         // New fields
