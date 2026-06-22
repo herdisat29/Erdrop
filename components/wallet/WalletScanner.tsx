@@ -10,7 +10,7 @@ const CHAIN_COLORS: Record<string, string> = {
   base:   'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-700/50',
   op:     'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-200 dark:border-red-700/50',
   arb:    'bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-700/50',
-  zora:   'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-700/50',
+  bsc:    'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700/50',
   scroll: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-700/50',
   linea:  'bg-slate-100 dark:bg-slate-900/30 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/50',
   zksync: 'bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 border-violet-200 dark:border-violet-700/50',
@@ -144,7 +144,7 @@ export function WalletScanner() {
             Scanning across 8 chains...
           </p>
           <div className="grid grid-cols-4 gap-2">
-            {['Ethereum','Base','Optimism','Arbitrum','Zora','Scroll','Linea','zkSync Era'].map(name => (
+            {['Ethereum','Base','Optimism','Arbitrum','BSC','Scroll','Linea','zkSync Era'].map(name => (
               <div key={name} className="bg-surface-container rounded-xl p-3 border border-outline-variant/50 animate-pulse">
                 <div className="h-2 bg-outline-variant rounded mb-2" />
                 <div className="h-2 bg-outline-variant rounded w-2/3" />

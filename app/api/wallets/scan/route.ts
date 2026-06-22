@@ -11,7 +11,7 @@ const CHAINS = [
   { id: 'base-mainnet',      label: 'Base',       icon: 'base' },
   { id: 'optimism-mainnet',  label: 'Optimism',   icon: 'op' },
   { id: 'arbitrum-mainnet',  label: 'Arbitrum',   icon: 'arb' },
-  { id: 'zora-mainnet',      label: 'Zora',       icon: 'zora' },
+  { id: 'bsc-mainnet',       label: 'BSC',        icon: 'bsc' },
   { id: 'scroll-mainnet',    label: 'Scroll',     icon: 'scroll' },
   { id: 'linea-mainnet',     label: 'Linea',      icon: 'linea' },
   { id: 'zksync-mainnet',    label: 'zkSync Era', icon: 'zksync' },

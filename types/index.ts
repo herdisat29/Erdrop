@@ -82,3 +82,19 @@ export interface AiAnalysis {
   recommendation: RecommendationType
   created_at: string
 }
+
+export type ClaimScheduleStatus = 'Pending' | 'Claimed' | 'Missed'
+
+export interface ClaimSchedule {
+  id: string
+  user_id: string
+  project_id: string
+  claim_date: string
+  amount: number | null
+  notes: string | null
+  status: ClaimScheduleStatus
+  created_at: string
+}
+
+export type ClaimScheduleInsert = Omit<ClaimSchedule, 'id' | 'user_id' | 'created_at'>
+export type ClaimScheduleUpdate = Partial<ClaimScheduleInsert>

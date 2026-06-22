@@ -9,7 +9,8 @@ import { LogTable } from '@/components/logs/LogTable'
 import { CreateLogDialog } from '@/components/logs/CreateLogDialog'
 import { ProjectDetailActions } from '@/components/projects/ProjectDetailActions'
 import { AIAnalysis } from '@/components/projects/AIAnalysis'
-import { AiAnalysis } from '@/types'
+import { ClaimSchedules } from '@/components/projects/ClaimSchedules'
+import { AiAnalysis, ClaimSchedule } from '@/types'
 
 export const dynamic = 'force-dynamic'
 
@@ -61,6 +62,13 @@ export default async function ProjectDetail({ params }: { params: Promise<{ id: 
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
     .limit(10)
+
+  const { data: claimSchedules } = await supabase
+    .from('claim_schedules')
+    .select('*')
+    .eq('project_id', id)
+    .eq('user_id', user.id)
+    .order('claim_date', { ascending: true })
 
   const typedLogs = (logs as Log[]) || []
   
@@ -130,6 +138,10 @@ export default async function ProjectDetail({ params }: { params: Promise<{ id: 
 
       <div className="pt-2 pb-4">
         <AIAnalysis projectId={project.id} analyses={(analyses as any[]) || []} />
+      </div>
+
+      <div className="pt-2 pb-4">
+        <ClaimSchedules projectId={project.id} schedules={(claimSchedules as ClaimSchedule[]) || []} />
       </div>
 
       <div className="pt-4">
