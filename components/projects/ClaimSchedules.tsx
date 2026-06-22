@@ -88,12 +88,14 @@ export function ClaimSchedules({ projectId, schedules }: ClaimSchedulesProps) {
           Vesting & Claims
         </h3>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button variant="outline" size="sm" className="font-label-bold uppercase tracking-widest gap-2 rounded-full border-outline-variant hover:bg-surface-container-high squishy-interaction">
-              <Plus className="h-3.5 w-3.5" />
-              Add Schedule
-            </Button>
-          </DialogTrigger>
+          <DialogTrigger 
+            render={
+              <Button variant="outline" size="sm" className="font-label-bold uppercase tracking-widest gap-2 rounded-full border-outline-variant hover:bg-surface-container-high squishy-interaction">
+                <Plus className="h-3.5 w-3.5" />
+                Add Schedule
+              </Button>
+            }
+          />
           <DialogContent className="sm:max-w-[400px] bg-surface-container-lowest border border-outline-variant text-on-surface rounded-3xl">
             <DialogHeader>
               <DialogTitle className="font-headline-md">Add Claim Schedule</DialogTitle>
